@@ -1,0 +1,18 @@
+{
+  "name": "water-projects-launcher",
+  "version": "1.0.0",
+  "description": "Launcher for all water projects",
+  "main": "start-all.js",
+  "scripts": {
+    "dev": "node start-all.js",
+    "start": "node start-all.js"
+  },
+  "dependencies": {
+    "boxen": "^7.1.1",
+    "chalk": "^5.3.0",
+    "concurrently": "^8.2.2",
+    "figlet": "^1.7.0",
+    "gradient-string": "^2.0.2"
+  },
+  "type": "module"
+}
