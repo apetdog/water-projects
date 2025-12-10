@@ -17,11 +17,11 @@ const __dirname = path.dirname(__filename);
 console.clear();
 
 // Display Cool Banner with Slant font
-const title = figlet.textSync('SMART  WATER', {
+const title = figlet.textSync('SMART WATER', {
     font: 'Slant',
     horizontalLayout: 'fitted',
     verticalLayout: 'default',
-    width: 80,
+    width: 120,
     whitespaceBreak: true
 });
 
@@ -86,7 +86,7 @@ const projects = [
         prefixColor: 'magenta',
         desc: '综合水务管理系统 (Vben)',
         port: 9003,
-        path: '/water-admin/'
+        path: '/'
     },
     {
         name: 'IoT监控',
@@ -165,7 +165,7 @@ const welcomeBox = boxen(dashboardContent, {
     backgroundColor: '#001e3c',
     title: '🚀 SMART WATER DASHBOARD',
     titleAlignment: 'center',
-    float: 'center'
+    float: 'left'
 });
 
 console.log(chalk.gray('正在启动所有子系统，请稍候...'));
@@ -188,7 +188,7 @@ const { result } = concurrently(
 setTimeout(() => {
     console.log('\n'); // Add some spacing
     console.log(welcomeBox);
-}, 10000); // 10 seconds delay
+}, 12000); // 12 seconds delay
 
 result.then(
     () => console.log(chalk.green('所有服务已停止。')),
