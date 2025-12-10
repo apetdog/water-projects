@@ -23,8 +23,7 @@ npm install
 可以使用以下命令启动所有项目：
 
 ```bash
-npm run dev
+npm run start
 ```
 项目会依次启动，每个项目会在不同的端口运行。
 
-01a-water-twin-screen 对应的地址为 http://127.0.0.1:3000/water-twin-screen/
