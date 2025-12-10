@@ -13,7 +13,7 @@ const handleSwitchTab = (id) => {
 
 // Assuming the water-twin-screen project is running on a specific port. 
 // You might need to adjust the port if it's different.
-const IFRAME_BASE = 'http://localhost:5173/water-twin-screen'; 
+const IFRAME_BASE = 'http://localhost:9002/water-twin-screen'; 
 </script>
 
 <template>

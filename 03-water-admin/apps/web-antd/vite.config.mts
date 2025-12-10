@@ -6,6 +6,7 @@ export default defineConfig(async () => {
     base: '/water-admin/',
     vite: {
       server: {
+        port: 9003,
         proxy: {
           '/api': {
             changeOrigin: true,

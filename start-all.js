@@ -6,6 +6,7 @@ import boxen from 'boxen';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
+import { existsSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,37 +61,72 @@ console.log(chalk.cyan.bold('                     🌊 全流域智慧水务监�
 const projects = [
     {
         name: '数字孪生',
-        command: 'cd 01-digital-twin-park && npm run dev -- --port 5173',
+        dir: '01-digital-twin-park',
+        command: 'cd 01-digital-twin-park && npm run dev',
+        installCmd: 'npm install',
         prefixColor: 'green',
         desc: '数字孪生园区 (Vue3)',
-        port: 5173,
+        port: 9001,
         path: '/'
     },
     {
         name: '可视化大屏',
-        command: 'cd 01a-water-twin-screen && pnpm run dev -- --port 3000',
+        dir: '01a-water-twin-screen',
+        command: 'cd 01a-water-twin-screen && npm run dev',
+        installCmd: 'npm install --legacy-peer-deps',
         prefixColor: 'blue',
         desc: '水利大屏 (React/嵌入模块)',
-        port: 3000,
+        port: 9002,
         path: '/water-twin-screen/'
     },
     {
         name: '管理后台',
-        command: 'cd 03-water-admin && pnpm run dev:antd -- --port 5200',
+        dir: '03-water-admin',
+        command: 'cd 03-water-admin && pnpm run dev:antd',
+        installCmd: 'pnpm install',
         prefixColor: 'magenta',
         desc: '综合水务管理系统 (Vben)',
-        port: 5200,
-        path: '/water-admin/'
+        port: 9003,
+        path: '/'
     },
     {
         name: 'IoT监控',
-        command: 'cd 04-iot-admin && pnpm run dev:antd -- --port 5300',
+        dir: '04-iot-admin',
+        command: 'cd 04-iot-admin && pnpm run dev:antd',
+        installCmd: 'pnpm install',
         prefixColor: 'cyan',
         desc: '物联网设备监控中心 (Vben)',
-        port: 5300,
+        port: 9004,
         path: '/'
     }
 ];
+
+// Check and Install Dependencies
+console.log(chalk.blue('🔍 检查依赖包安装情况...'));
+projects.forEach(p => {
+    const projectPath = path.join(__dirname, p.dir);
+    const nodeModulesPath = path.join(projectPath, 'node_modules');
+
+    if (!existsSync(nodeModulesPath)) {
+        console.log(chalk.yellow(`📦 [${p.name}] 未发现依赖包，正在自动安装...`));
+        console.log(chalk.gray(`   执行命令: ${p.installCmd}`));
+        
+        try {
+            execSync(p.installCmd, { 
+                cwd: projectPath, 
+                stdio: 'inherit' 
+            });
+            console.log(chalk.green(`✅ [${p.name}] 依赖安装完成`));
+        } catch (e) {
+            console.log(chalk.red(`❌ [${p.name}] 依赖安装失败`));
+            console.error(e);
+            process.exit(1);
+        }
+    } else {
+        console.log(chalk.green(`✅ [${p.name}] 依赖已安装`));
+    }
+});
+console.log(''); // Empty line
 
 // Build Dashboard Content
 const dashboard = projects.map(p => {
@@ -110,7 +146,6 @@ const welcomeBox = boxen(dashboard, {
     titleAlignment: 'center'
 });
 
-console.log(welcomeBox);
 console.log(chalk.gray('正在启动所有子系统，请稍候...\n'));
 
 const { result } = concurrently(
@@ -126,6 +161,12 @@ const { result } = concurrently(
         cwd: __dirname,
     }
 );
+
+// Show dashboard after services start (delayed to ensure it appears after startup logs)
+setTimeout(() => {
+    console.log('\n'); // Add some spacing
+    console.log(welcomeBox);
+}, 10000); // 10 seconds delay
 
 result.then(
     () => console.log(chalk.green('所有服务已停止。')),
