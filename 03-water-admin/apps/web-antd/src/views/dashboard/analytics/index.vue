@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { computed, ref } from 'vue';
 import type { AnalysisOverviewItem } from '@vben/common-ui';
 import type { TabOption } from '@vben/types';
 
@@ -13,6 +14,7 @@ import {
   SvgCardIcon,
   SvgDownloadIcon,
 } from '@vben/icons';
+import { Button, Empty, RangePicker } from 'ant-design-vue';
 
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsData from './analytics-visits-data.vue';
@@ -20,7 +22,18 @@ import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
 
-const overviewItems: AnalysisOverviewItem[] = [
+const loading = ref(false);
+const dataReady = ref(false);
+
+const handleStart = () => {
+  loading.value = true;
+  setTimeout(() => {
+    loading.value = false;
+    dataReady.value = true;
+  }, 3000);
+};
+
+const realOverviewItems: AnalysisOverviewItem[] = [
   {
     icon: SvgCardIcon,
     title: '用户量',
@@ -51,6 +64,17 @@ const overviewItems: AnalysisOverviewItem[] = [
   },
 ];
 
+const overviewItems = computed(() => {
+  if (!dataReady.value) {
+    return realOverviewItems.map((item) => ({
+      ...item,
+      totalValue: 0,
+      value: 0,
+    }));
+  }
+  return realOverviewItems;
+});
+
 const chartTabs: TabOption[] = [
   {
     label: '流量趋势',
@@ -65,25 +89,46 @@ const chartTabs: TabOption[] = [
 
 <template>
   <div class="p-5">
+    <div class="mb-5 flex items-center gap-4 bg-white p-4 dark:bg-black/85 rounded-xl shadow">
+      <RangePicker />
+      <Button :loading="loading" type="primary" @click="handleStart">
+        {{ loading ? '刷新中...' : '刷新' }}
+      </Button>
+    </div>
+
     <AnalysisOverview :items="overviewItems" />
+
     <AnalysisChartsTabs :tabs="chartTabs" class="mt-5">
       <template #trends>
-        <AnalyticsTrends />
+        <AnalyticsTrends v-if="dataReady" />
+        <Empty
+          v-else
+          description="请先开始分析"
+          :image="Empty.PRESENTED_IMAGE_SIMPLE"
+        />
       </template>
       <template #visits>
-        <AnalyticsVisits />
+        <AnalyticsVisits v-if="dataReady" />
+        <Empty
+          v-else
+          description="请先开始分析"
+          :image="Empty.PRESENTED_IMAGE_SIMPLE"
+        />
       </template>
     </AnalysisChartsTabs>
 
     <div class="mt-5 w-full md:flex">
       <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问数量">
-        <AnalyticsVisitsData />
+        <AnalyticsVisitsData v-if="dataReady" />
+        <Empty v-else description="暂无数据" />
       </AnalysisChartCard>
       <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问来源">
-        <AnalyticsVisitsSource />
+        <AnalyticsVisitsSource v-if="dataReady" />
+        <Empty v-else description="暂无数据" />
       </AnalysisChartCard>
       <AnalysisChartCard class="mt-5 md:mt-0 md:w-1/3" title="访问来源">
-        <AnalyticsVisitsSales />
+        <AnalyticsVisitsSales v-if="dataReady" />
+        <Empty v-else description="暂无数据" />
       </AnalysisChartCard>
     </div>
   </div>

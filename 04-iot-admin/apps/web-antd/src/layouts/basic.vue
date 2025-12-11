@@ -5,9 +5,7 @@ import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
-import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
 import { useWatermark } from '@vben/hooks';
-import { BookOpenText, CircleHelp, SvgGithubIcon } from '@vben/icons';
 import {
   BasicLayout,
   LockScreen,
@@ -16,11 +14,14 @@ import {
 } from '@vben/layouts';
 import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
-import { openWindow } from '@vben/utils';
 
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
+import AIAnalysisDialog from '#/components/AIAnalysisDialog.vue';
+import { Button } from 'ant-design-vue';
+
+const showAIAnalysis = ref(false);
 
 const notifications = ref<NotificationItem[]>([
   {
@@ -144,6 +145,18 @@ watch(
 
 <template>
   <BasicLayout @clear-preferences-and-logout="handleLogout">
+    <template #header-right-40>
+      <div class="mr-4 flex items-center">
+        <Button
+          class="!flex items-center gap-1 border-0 bg-gradient-to-r from-blue-500 to-cyan-500 transition-all hover:shadow-lg"
+          shape="round"
+          type="primary"
+          @click="showAIAnalysis = true"
+        >
+          AI 智能分析
+        </Button>
+      </div>
+    </template>
     <template #user-dropdown>
       <UserDropdown
         :avatar
@@ -171,6 +184,7 @@ watch(
       >
         <LoginForm />
       </AuthenticationLoginExpiredModal>
+      <AIAnalysisDialog v-model:visible="showAIAnalysis" />
     </template>
     <template #lock-screen>
       <LockScreen :avatar @to-login="handleLogout" />

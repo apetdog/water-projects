@@ -18,19 +18,21 @@ const IFRAME_BASE = 'http://localhost:9002/water-twin-screen';
 
 <template>
   <div class="container">
-    <Map :showAssistant="currentTab === 'childBtnFour'"></Map>
+    <!-- <Map :showAssistant="currentTab === 'childBtnFour'"></Map> -->
+    <Map :showAssistant="true"></Map>
     <div class="layout">
       <div class="layout_img">
         <ly-top></ly-top>
         
         <!-- Original Content (moved to 4th tab) -->
-        <div class="center_wapper" v-if="currentTab === 'childBtnFour'">
+         <!-- <div class="center_wapper" v-if="currentTab === 'childBtnFour'"> -->
+        <div class="center_wapper">
           <ly-left></ly-left>
           <ly-right></ly-right>
         </div>
 
         <!-- Iframes for Tabs 1, 2, 3 -->
-        <div class="iframe-wrapper" v-if="currentTab === 'childBtnOne' || currentTab === 'childBtnTwo' || currentTab === 'childBtnThree'">
+        <!-- <div class="iframe-wrapper" v-if="currentTab === 'childBtnOne' || currentTab === 'childBtnTwo' || currentTab === 'childBtnThree'">
           <iframe 
             v-if="currentTab === 'childBtnOne'" 
             :src="`${IFRAME_BASE}/page1?hideHeader=true`" 
@@ -46,7 +48,7 @@ const IFRAME_BASE = 'http://localhost:9002/water-twin-screen';
             :src="`${IFRAME_BASE}/page3?hideHeader=true`" 
             class="content-iframe"
           ></iframe>
-        </div>
+        </div> -->
 
         <ly-bottom @switchTab="handleSwitchTab"></ly-bottom>
       </div>
