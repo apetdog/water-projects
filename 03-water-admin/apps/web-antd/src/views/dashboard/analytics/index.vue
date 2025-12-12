@@ -25,6 +25,16 @@ import AnalyticsVisits from './analytics-visits.vue';
 const loading = ref(false);
 const dataReady = ref(false);
 
+// Device connection logic
+const deviceCount = ref(0);
+const deviceName = ref('');
+const handleRefreshDevice = () => {
+  setTimeout(() => {
+    deviceCount.value = 1;
+    deviceName.value = '智能水表-001';
+  }, 500);
+};
+
 const handleStart = () => {
   loading.value = true;
   setTimeout(() => {
@@ -94,6 +104,15 @@ const chartTabs: TabOption[] = [
       <Button :loading="loading" type="primary" @click="handleStart">
         {{ loading ? '刷新中...' : '刷新' }}
       </Button>
+
+      <div class="ml-auto flex items-center gap-2 dark:text-gray-300">
+        <span>链接设备数：{{ deviceCount }}</span>
+        <span v-if="deviceCount > 0" class="mr-2">{{ deviceName }}</span>
+         <span
+          class="cursor-pointer text-blue-500 transition-all duration-300" 
+          @click="handleRefreshDevice" 
+        >刷新</span>
+      </div>
     </div>
 
     <AnalysisOverview :items="overviewItems" />
