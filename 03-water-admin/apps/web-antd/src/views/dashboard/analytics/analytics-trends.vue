@@ -1,114 +1,116 @@
 <script lang="ts" setup>
 import type { EchartsUIType } from '@vben/plugins/echarts';
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, nextTick } from 'vue';
 
-import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+import { EchartsUI } from '@vben/plugins/echarts';
+import * as echarts from 'echarts';
 
 const chartRef = ref<EchartsUIType>();
-const { renderEcharts } = useEcharts(chartRef);
 
-onMounted(() => {
-  renderEcharts({
-    grid: {
-      bottom: 0,
-      containLabel: true,
-      left: '1%',
-      right: '1%',
-      top: '2 %',
+const chartOptions = {
+  animation: true,
+  animationDuration: 8000,
+  animationEasing: 'linear',
+  animationThreshold: 2000,
+  grid: {
+    bottom: 20,
+    containLabel: true,
+    left: '1%',
+    right: '1%',
+    top: '2%',
+  },
+  series: [
+    {
+      areaStyle: {},
+      animation: true,
+      animationDuration: 8000,
+      animationEasing: 'linear',
+      data: [
+        111, 2000, 6000, 16_000, 33_333, 55_555, 64_000, 33_333, 18_000,
+        36_000, 70_000, 42_444, 23_222, 13_000, 8000, 4000, 1200, 333, 222,
+        111,
+      ],
+      itemStyle: {
+        color: '#5ab1ef',
+      },
+      smooth: true,
+      type: 'line',
     },
-    series: [
-      {
-        areaStyle: {},
-        data: [
-          111, 2000, 6000, 16_000, 33_333, 55_555, 64_000, 33_333, 18_000,
-          36_000, 70_000, 42_444, 23_222, 13_000, 8000, 4000, 1200, 333, 222,
-          111,
-        ],
-        itemStyle: {
-          color: '#5ab1ef',
-        },
-        smooth: true,
-        type: 'line',
+    {
+      areaStyle: {},
+      animation: true,
+      animationDuration: 8000,
+      animationEasing: 'linear',
+      data: [
+        33, 66, 88, 333, 3333, 6200, 20_000, 3000, 1200, 13_000, 22_000,
+        11_000, 2221, 1201, 390, 198, 60, 30, 22, 11,
+      ],
+      itemStyle: {
+        color: '#019680',
       },
-      {
-        areaStyle: {},
-        data: [
-          33, 66, 88, 333, 3333, 6200, 20_000, 3000, 1200, 13_000, 22_000,
-          11_000, 2221, 1201, 390, 198, 60, 30, 22, 11,
-        ],
-        itemStyle: {
-          color: '#019680',
-        },
-        smooth: true,
-        type: 'line',
+      smooth: true,
+      type: 'line',
+    },
+  ],
+  tooltip: {
+    axisPointer: {
+      lineStyle: {
+        color: '#019680',
+        width: 1,
       },
+    },
+    trigger: 'axis',
+  },
+  xAxis: {
+    axisTick: {
+      show: false,
+    },
+    boundaryGap: false,
+    data: [
+      '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00',
+      '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00',
+      '22:00', '23:00',
     ],
-    tooltip: {
-      axisPointer: {
-        lineStyle: {
-          color: '#019680',
-          width: 1,
-        },
+    splitLine: {
+      lineStyle: {
+        type: 'solid',
+        width: 1,
       },
-      trigger: 'axis',
+      show: true,
     },
-    // xAxis: {
-    //   axisTick: {
-    //     show: false,
-    //   },
-    //   boundaryGap: false,
-    //   data: Array.from({ length: 18 }).map((_item, index) => `${index + 6}:00`),
-    //   type: 'category',
-    // },
-    xAxis: {
+    type: 'category',
+  },
+  yAxis: [
+    {
       axisTick: {
         show: false,
       },
-      boundaryGap: false,
-      data: [
-        '6:00',
-        '7:00',
-        '8:00',
-        '9:00',
-        '10:00',
-        '11:00',
-        '12:00',
-        '13:00',
-        '14:00',
-        '15:00',
-        '16:00',
-        '17:00',
-        '18:00',
-        '19:00',
-        '20:00',
-        '21:00',
-        '22:00',
-        '23:00',
-      ],
-      splitLine: {
-        lineStyle: {
-          type: 'solid',
-          width: 1,
-        },
+      max: 80_000,
+      splitArea: {
         show: true,
       },
-      type: 'category',
+      splitNumber: 4,
+      type: 'value',
     },
-    yAxis: [
-      {
-        axisTick: {
-          show: false,
-        },
-        max: 80_000,
-        splitArea: {
-          show: true,
-        },
-        splitNumber: 4,
-        type: 'value',
-      },
-    ],
-  });
+  ],
+};
+
+onMounted(async () => {
+  await nextTick();
+  
+  setTimeout(() => {
+    const el = chartRef.value?.$el;
+    if (!el) return;
+    
+    // 直接使用 echarts.init 初始化，完全绕过 useEcharts
+    const chartInstance = echarts.init(el);
+    
+    // 设置配置
+    chartInstance.setOption(chartOptions);
+    
+    console.log('图表已初始化，动画配置:', chartOptions.animationDuration);
+  }, 100);
 });
 </script>
 

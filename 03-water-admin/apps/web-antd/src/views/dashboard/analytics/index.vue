@@ -37,10 +37,11 @@ const handleRefreshDevice = () => {
 
 const handleStart = () => {
   loading.value = true;
+  dataReady.value = false;
   setTimeout(() => {
     loading.value = false;
     dataReady.value = true;
-  }, 3000);
+  }, 1000);
 };
 
 const realOverviewItems: AnalysisOverviewItem[] = [
