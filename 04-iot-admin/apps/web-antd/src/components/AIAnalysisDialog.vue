@@ -184,10 +184,11 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
     :closable="false"
     :mask-closable="true"
     width="1000px"
+    centered
     class="ai-chat-modal"
     @cancel="handleClose"
   >
-    <div class="flex flex-col h-[800px] bg-white dark:bg-[#1f1f1f] rounded-lg overflow-hidden">
+    <div class="flex flex-col h-[90vh] md:h-[70vh] bg-white dark:bg-[#1f1f1f] rounded-lg overflow-hidden">
       <!-- Header -->
       <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
         <div class="flex items-center gap-3">
@@ -215,7 +216,7 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
           class="flex w-full"
           :class="msg.type === 'user' ? 'justify-end' : 'justify-start'"
         >
-          <div class="flex max-w-[80%] gap-3" :class="msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'">
+          <div class="flex max-w-[90%] md:max-w-[80%] gap-3" :class="msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'">
             <!-- Avatar -->
             <div class="flex-shrink-0">
               <Avatar v-if="msg.type === 'user'" :src="userAvatar" class="bg-blue-500 flex items-center justify-center">
@@ -240,25 +241,31 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
               >
                 <span v-if="msg.content">{{ msg.content }}</span>
                 
-                <div v-if="msg.videos && msg.videos.length" class="mt-0 grid grid-cols-1 gap-2 min-w-[300px]">
+                <div v-if="msg.videos && msg.videos.length" class="mt-0 grid grid-cols-1 gap-2 w-full min-w-[200px] sm:min-w-[300px]">
                   <div 
                     v-for="video in msg.videos" 
                     :key="video"
-                    class="relative w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800"
+                    class="relative w-full rounded-lg overflow-hidden bg-transparent"
                     style="aspect-ratio: 16/9;"
                   >
                     <!-- Loading Placeholder -->
                     <div 
                       v-if="!videoLoadedMap[video]" 
-                      class="absolute inset-0 flex items-center justify-center z-10"
+                      class="absolute inset-0 flex items-center justify-center z-10 bg-gray-100 dark:bg-gray-800"
                     >
                       <Spin />
                     </div>
                     
                     <video 
+                      v-show="videoLoadedMap[video]"
                       :src="video" 
                       controls 
                       autoplay
+                      muted
+                      playsinline
+                      webkit-playsinline
+                      x5-video-player-type="h5-page"
+                      x5-playsinline
                       class="w-full h-full object-cover"
                       @loadedmetadata="() => handleVideoLoad(video)"
                     ></video>
