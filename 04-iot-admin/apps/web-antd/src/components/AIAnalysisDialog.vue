@@ -21,6 +21,7 @@ const messages = ref<Array<{ type: 'user' | 'ai'; content: string; time: string;
     time: new Date().toLocaleTimeString(),
   },
 ]);
+const videoLoadedMap = ref<Record<string, boolean>>({});
 
 const messagesContainer = ref<HTMLElement | null>(null);
 
@@ -32,7 +33,8 @@ const scrollToBottom = () => {
   });
 };
 
-const handleVideoLoad = () => {
+const handleVideoLoad = (videoSrc: string) => {
+  videoLoadedMap.value[videoSrc] = true;
   scrollToBottom();
 };
 
@@ -239,15 +241,28 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
                 <span v-if="msg.content">{{ msg.content }}</span>
                 
                 <div v-if="msg.videos && msg.videos.length" class="mt-0 grid grid-cols-1 gap-2 min-w-[300px]">
-                  <video 
+                  <div 
                     v-for="video in msg.videos" 
                     :key="video"
-                    :src="video" 
-                    controls 
-                    autoplay
-                    class="w-full rounded-lg shadow-md"
-                    @loadedmetadata="handleVideoLoad"
-                  ></video>
+                    class="relative w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800"
+                    style="aspect-ratio: 16/9;"
+                  >
+                    <!-- Loading Placeholder -->
+                    <div 
+                      v-if="!videoLoadedMap[video]" 
+                      class="absolute inset-0 flex items-center justify-center z-10"
+                    >
+                      <Spin />
+                    </div>
+                    
+                    <video 
+                      :src="video" 
+                      controls 
+                      autoplay
+                      class="w-full h-full object-cover"
+                      @loadedmetadata="() => handleVideoLoad(video)"
+                    ></video>
+                  </div>
                 </div>
               </div>
             </div>
