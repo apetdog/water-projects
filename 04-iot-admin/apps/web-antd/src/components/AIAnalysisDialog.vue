@@ -13,7 +13,7 @@ const emit = defineEmits(['update:visible', 'close']);
 const userStore = useUserStore();
 const inputValue = ref('');
 const loading = ref(false);
-const messages = ref<Array<{ type: 'user' | 'ai'; content: string; time: string }>>([
+const messages = ref<Array<{ type: 'user' | 'ai'; content: string; time: string; videos?: string[] }>>([
   {
     type: 'ai',
     content: '你好！我是您的智能分析助手。我可以帮您分析设备数据、生成报表或回答相关问题。请问有什么可以帮您？',
@@ -29,6 +29,10 @@ const scrollToBottom = () => {
       messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
     }
   });
+};
+
+const handleVideoLoad = () => {
+  scrollToBottom();
 };
 
 const handleSend = () => {
@@ -52,8 +56,29 @@ const handleSend = () => {
   setTimeout(() => {
     loading.value = false;
     let aiResponse = '';
+    let aiVideos: string[] = [];
     
-    if (userMessage.includes('告警')) {
+    if (userMessage.includes('预演')) {
+      aiResponse = `经过深度思考与模型推演，基于当前的降雨量、水位监测数据以及上游泄洪情况，系统已构建高精度数字孪生场景。
+
+当前模拟参数：
+- 降雨强度：50mm/h (暴雨级别)
+- 上游来水流量：1200m³/s
+- 土壤饱和度：95%
+
+正在启动全流域数字孪生预演，模拟未来 24 小时内的水情演变过程...`;
+      aiVideos = ['/admin_ai_video_01.mp4'];
+    } else if (userMessage.includes('洪涝')) {
+      aiResponse = `经过综合分析，系统检测到多项关键指标已接近临界值。在无人工干预的自然演进模式下，预测未来 4 小时内出现洪涝灾害的概率超过 85%。
+
+风险研判：
+1. 低洼区域（A区、C区）预计积水深度将超过 0.5米。
+2. 2号排水干渠排水能力将达到瓶颈。
+3. 重点防护目标可能受到威胁。
+
+以下是基于当前数据的洪涝灾害模拟演练视频...`;
+      aiVideos = ['/admin_ai_video_03.mp4'];
+    } else if (userMessage.includes('告警')) {
       aiResponse = `[告警分析报告]
 
 根据最近24小时的监控数据，系统共捕获到3次高风险水位告警，主要集中在2号泵站区域。
@@ -121,6 +146,19 @@ AI 预测：根据当前用水模型推演，预计明日早高峰流量将达�
         i++;
         scrollToBottom();
         setTimeout(typeWriter, 30); // Adjust speed here
+      } else if (aiVideos.length > 0) {
+        // Send a separate message for video
+        messages.value.push({
+          type: 'ai',
+          content: '',
+          time: new Date().toLocaleTimeString(),
+          videos: aiVideos
+        });
+        nextTick(() => {
+          scrollToBottom();
+          // Double check scroll after a short delay to ensure video container is rendered
+          setTimeout(scrollToBottom, 100);
+        });
       }
     };
     typeWriter();
@@ -142,11 +180,11 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
     :footer="null"
     :closable="false"
     :mask-closable="true"
-    width="800px"
+    width="1000px"
     class="ai-chat-modal"
     @cancel="handleClose"
   >
-    <div class="flex flex-col h-[600px] bg-white dark:bg-[#1f1f1f] rounded-lg overflow-hidden">
+    <div class="flex flex-col h-[800px] bg-white dark:bg-[#1f1f1f] rounded-lg overflow-hidden">
       <!-- Header -->
       <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
         <div class="flex items-center gap-3">
@@ -159,7 +197,7 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
           </div>
         </div>
         <Button type="text" class="text-white hover:bg-white/20" @click="handleClose">
-          <IconifyIcon icon="ion:close-outline" />
+          <IconifyIcon icon="ion:close-outline" class="size-6" />
         </Button>
       </div>
 
@@ -187,15 +225,30 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
 
             <!-- Content -->
             <div class="flex flex-col" :class="msg.type === 'user' ? 'items-end' : 'items-start'">
+              <span class="text-xs text-gray-400 mb-1 mx-2">{{ msg.time }}</span>
               <div 
-                class="p-3 rounded-2xl text-sm shadow-sm whitespace-pre-wrap"
-                :class="msg.type === 'user' 
-                  ? 'bg-blue-500 text-white rounded-tr-none' 
-                  : 'bg-white dark:bg-[#2a2a2a] text-gray-800 dark:text-gray-200 rounded-tl-none'"
+                class="p-3 rounded-2xl text-sm shadow-sm whitespace-pre-wrap max-w-full"
+                :class="[
+                  msg.type === 'user' 
+                    ? 'bg-blue-500 text-white rounded-tr-none' 
+                    : 'bg-white dark:bg-[#2a2a2a] text-gray-800 dark:text-gray-200 rounded-tl-none',
+                  !msg.content && msg.videos && msg.videos.length ? '!p-1 !bg-transparent !shadow-none' : ''
+                ]"
               >
-                {{ msg.content }}
+                <span v-if="msg.content">{{ msg.content }}</span>
+                
+                <div v-if="msg.videos && msg.videos.length" class="mt-0 grid grid-cols-1 gap-2 min-w-[300px]">
+                  <video 
+                    v-for="video in msg.videos" 
+                    :key="video"
+                    :src="video" 
+                    controls 
+                    autoplay
+                    class="w-full rounded-lg shadow-md"
+                    @loadedmetadata="handleVideoLoad"
+                  ></video>
+                </div>
               </div>
-              <span class="text-xs text-gray-400 mt-1 mx-2">{{ msg.time }}</span>
             </div>
           </div>
         </div>
@@ -218,7 +271,7 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
         <div class="flex gap-2">
           <Input.TextArea
             v-model:value="inputValue"
-            placeholder="输入您的问题，例如：最近的设备告警情况如何？"
+            placeholder="输入您的问题，例如：预演、洪涝、最近的设备告警情况如何？"
             :auto-size="{ minRows: 1, maxRows: 4 }"
             @pressEnter.prevent="handleSend"
             class="flex-1 !resize-none"
