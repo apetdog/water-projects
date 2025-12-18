@@ -13,6 +13,7 @@ const emit = defineEmits(['update:visible', 'close']);
 const userStore = useUserStore();
 const inputValue = ref('');
 const loading = ref(false);
+const baseUrl = import.meta.env.BASE_URL;
 const messages = ref<Array<{ type: 'user' | 'ai'; content: string; time: string; videos?: string[] }>>([
   {
     type: 'ai',
@@ -67,7 +68,7 @@ const handleSend = () => {
 - 土壤饱和度：95%
 
 正在启动全流域数字孪生预演，模拟未来 24 小时内的水情演变过程...`;
-      aiVideos = ['/admin_ai_video_01.mp4'];
+      aiVideos = [`${baseUrl}admin_ai_video_01.mp4`];
     } else if (userMessage.includes('洪涝')) {
       aiResponse = `经过综合分析，系统检测到多项关键指标已接近临界值。在无人工干预的自然演进模式下，预测未来 4 小时内出现洪涝灾害的概率超过 85%。
 
@@ -77,7 +78,7 @@ const handleSend = () => {
 3. 重点防护目标可能受到威胁。
 
 以下是基于当前数据的洪涝灾害模拟演练视频...`;
-      aiVideos = ['/admin_ai_video_03.mp4'];
+      aiVideos = [`${baseUrl}admin_ai_video_03.mp4`];
     } else if (userMessage.includes('告警')) {
       aiResponse = `[告警分析报告]
 
