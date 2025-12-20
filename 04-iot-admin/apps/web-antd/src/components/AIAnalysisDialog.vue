@@ -1,88 +1,170 @@
-<script lang="ts" setup>
-import { computed, ref, nextTick } from 'vue';
-import { Modal, Input, Button, Avatar, Spin } from 'ant-design-vue';
-import { IconifyIcon } from '@vben/icons';
-import { useUserStore } from '@vben/stores';
+<script lang="ts"
+  setup>
+  import { computed, ref, nextTick, watch } from 'vue';
+  import { Modal, Input, Button, Avatar, Spin, Menu, MenuItem } from 'ant-design-vue';
+  import { IconifyIcon } from '@vben/icons';
+  import { useUserStore } from '@vben/stores';
 
-const props = defineProps<{
-  visible: boolean;
-}>();
+  const props = defineProps<{
+    visible: boolean;
+  }>();
 
-const emit = defineEmits(['update:visible', 'close']);
+  const emit = defineEmits(['update:visible', 'close']);
 
-const userStore = useUserStore();
-const inputValue = ref('');
-const loading = ref(false);
-const baseUrl = import.meta.env.BASE_URL;
-const messages = ref<Array<{ type: 'user' | 'ai'; content: string; time: string; videos?: string[] }>>([
-  {
-    type: 'ai',
-    content: '你好！我是您的智能分析助手。我可以帮您分析设备数据、生成报表或回答相关问题。请问有什么可以帮您？',
-    time: new Date().toLocaleTimeString(),
-  },
-]);
-const videoLoadedMap = ref<Record<string, boolean>>({});
+  const userStore = useUserStore();
+  const inputValue = ref('');
+  const loading = ref(false);
+  const baseUrl = import.meta.env.BASE_URL;
+  const showCommandMenu = ref(false);
+  const commandMenuPosition = ref({ top: 0, left: 0 });
+  const inputRef = ref();
 
-const messagesContainer = ref<HTMLElement | null>(null);
+  const commandQuery = ref('');
 
-const scrollToBottom = () => {
-  nextTick(() => {
-    if (messagesContainer.value) {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+  const commands = [
+    { label: '帮我进行洪水演进模拟分析', value: '帮我进行洪水演进模拟分析' },
+    { label: '进行水动力分析，评估流速与流向', value: '进行水动力分析，评估流速与流向' },
+    { label: '监测当前水深分布情况，生成报告', value: '监测当前水深分布情况，生成报告' },
+    { label: '模拟泄洪调度方案，预测下游影响', value: '模拟泄洪调度方案，预测下游影响' },
+    { label: '评估淹没范围，计算受灾面积', value: '评估淹没范围，计算受灾面积' },
+  ];
+
+  const filteredCommands = computed(() => {
+    if (!commandQuery.value) return commands;
+    return commands.filter(cmd =>
+      cmd.label.toLowerCase().includes(commandQuery.value.toLowerCase())
+    );
+  });
+
+  const getHighlightedText = (text: string) => {
+    if (!commandQuery.value) return [{ text, highlight: false }];
+
+    const parts: { text: string; highlight: boolean }[] = [];
+    const regex = new RegExp(`(${commandQuery.value})`, 'gi');
+    const splitText = text.split(regex);
+
+    splitText.forEach(part => {
+      if (part.toLowerCase() === commandQuery.value.toLowerCase()) {
+        parts.push({ text: part, highlight: true });
+      } else if (part) {
+        parts.push({ text: part, highlight: false });
+      }
+    });
+
+    return parts;
+  };
+
+  const messages = ref<Array<{ type: 'user' | 'ai'; content: string; time: string; videos?: string[] }>>([
+    {
+      type: 'ai',
+      content: '你好！我是您的智能分析助手。我可以帮您分析设备数据、生成报表或回答相关问题。请问有什么可以帮您？',
+      time: new Date().toLocaleTimeString(),
+    },
+  ]);
+  const videoLoadedMap = ref<Record<string, boolean>>({});
+
+  const messagesContainer = ref<HTMLElement | null>(null);
+
+  const scrollToBottom = (force = false) => {
+    nextTick(() => {
+      if (messagesContainer.value) {
+        const { scrollTop, scrollHeight, clientHeight } = messagesContainer.value;
+        // Only scroll if we are already near the bottom (within 100px) or if forced
+        if (force || scrollHeight - scrollTop - clientHeight < 100) {
+          messagesContainer.value.scrollTop = scrollHeight;
+        }
+      }
+    });
+  };
+
+  const handleVideoLoad = (videoSrc: string) => {
+    videoLoadedMap.value[videoSrc] = true;
+    scrollToBottom(true);
+  };
+
+  const handleInput = (e: any) => {
+    const value = e.target.value;
+    const lastSlashIndex = value.lastIndexOf('/');
+
+    if (lastSlashIndex !== -1) {
+      showCommandMenu.value = true;
+      commandQuery.value = value.slice(lastSlashIndex + 1);
+    } else {
+      showCommandMenu.value = false;
+      commandQuery.value = '';
     }
-  });
-};
+  };
 
-const handleVideoLoad = (videoSrc: string) => {
-  videoLoadedMap.value[videoSrc] = true;
-  scrollToBottom();
-};
+  const handleCommandSelect = (command: string) => {
+    inputValue.value = command;
+    showCommandMenu.value = false;
+    handleSend();
+  };
 
-const handleSend = () => {
-  if (!inputValue.value.trim() || loading.value) return;
+  const handleSend = () => {
+    if (!inputValue.value.trim() || loading.value) return;
 
-  const userMessage = inputValue.value;
-  messages.value.push({
-    type: 'user',
-    content: userMessage,
-    time: new Date().toLocaleTimeString(),
-  });
-  
-  inputValue.value = '';
-  loading.value = true;
-  scrollToBottom();
+    const userMessage = inputValue.value;
+    messages.value.push({
+      type: 'user',
+      content: userMessage,
+      time: new Date().toLocaleTimeString(),
+    });
 
-  // Simulate AI response
-  loading.value = true;
-  scrollToBottom();
+    inputValue.value = '';
+    loading.value = true;
+    scrollToBottom(true);
 
-  setTimeout(() => {
-    loading.value = false;
-    let aiResponse = '';
-    let aiVideos: string[] = [];
-    
-    if (userMessage.includes('预演')) {
-      aiResponse = `经过深度思考与模型推演，基于当前的降雨量、水位监测数据以及上游泄洪情况，系统已构建高精度数字孪生场景。
+    // Simulate AI response
+    loading.value = true;
+    scrollToBottom(true);
 
-当前模拟参数：
-- 降雨强度：50mm/h (暴雨级别)
-- 上游来水流量：1200m³/s
-- 土壤饱和度：95%
+    setTimeout(() => {
+      loading.value = false;
+      let aiResponse = '';
+      let aiVideos: string[] = [];
 
-正在启动全流域数字孪生预演，模拟未来 24 小时内的水情演变过程...`;
-      aiVideos = [`${baseUrl}admin_ai_video_01.mp4`];
-    } else if (userMessage.includes('洪涝')) {
-      aiResponse = `经过综合分析，系统检测到多项关键指标已接近临界值。在无人工干预的自然演进模式下，预测未来 4 小时内出现洪涝灾害的概率超过 85%。
+      if (userMessage.includes('洪水演进')) {
+        aiResponse = `[洪水演进推演]
+      
+正在基于高精度地形数据与水文模型推演未来24小时洪水演进过程。
+计算参数：降雨量 120mm，上游来水 1500m³/s。
+预测结果：洪峰预计将于今日 14:00 到达，最高水位 25.8米。`;
+        aiVideos = [`${baseUrl}洪水演进.mp4`];
+      } else if (userMessage.includes('水动力')) {
+        aiResponse = `[水动力分析]
 
-风险研判：
-1. 低洼区域（A区、C区）预计积水深度将超过 0.5米。
-2. 2号排水干渠排水能力将达到瓶颈。
-3. 重点防护目标可能受到威胁。
+系统正在进行水动力全要素数值分析。
+分析结果：
+1. 河道主流流速分布不均，弯道外侧流速达到 2.5m/s。
+2. 桥墩附近存在局部冲刷风险，建议加强监测。`;
+        aiVideos = [`${baseUrl}水动力.mp4`];
+      } else if (userMessage.includes('水深')) {
+        aiResponse = `[水深分布监测]
 
-以下是基于当前数据的洪涝灾害模拟演练视频...`;
-      aiVideos = [`${baseUrl}admin_ai_video_03.mp4`];
-    } else if (userMessage.includes('告警')) {
-      aiResponse = `[告警分析报告]
+实时水深场反演完成。
+数据解读：
+- 平均水深：0.8米
+- 最大水深：2.3米（位于低洼A区）
+- 深色区域表示水深超过1.5米，人员车辆请勿涉水通过。`;
+        aiVideos = [`${baseUrl}水深.mp4`];
+      } else if (userMessage.includes('泄洪')) {
+        aiResponse = `[泄洪调度分析]
+
+正在推演泄洪闸开启后的下游水情变化。
+调度方案：开启3孔泄洪闸，下泄流量 800m³/s。
+影响评估：下游水位预计上涨 0.5米，未超过警戒水位，方案可行。`;
+        aiVideos = [`${baseUrl}泄洪.mp4`];
+      } else if (userMessage.includes('淹没')) {
+        aiResponse = `[淹没范围评估]
+
+基于当前水情数据的淹没风险分析报告：
+1. 预计淹没面积：3.5 平方公里。
+2. 重点影响区域：沿河农田、滨江公园及部分低洼道路。
+3. 建议立即疏散受影响区域人员。`;
+        aiVideos = [`${baseUrl}淹没.mp4`];
+      } else if (userMessage.includes('告警')) {
+        aiResponse = `[告警分析报告]
 
 根据最近24小时的监控数据，系统共捕获到3次高风险水位告警，主要集中在2号泵站区域。
 1. 第一次告警 (10:23:45): 2号泵站进水口水位超标，达到 4.5m (阈值 4.0m)，持续时间 5分钟。原因分析：可能是由于上游突发排水导致。
@@ -93,8 +175,8 @@ const handleSend = () => {
 • 立即派遣运维人员检查2号泵站传感器及线路状态。
 • 调取10:00-11:00期间的视频监控，排查外部因素。
 • 关注未来4小时的天气变化，防止暴雨叠加。`;
-    } else if (userMessage.includes('设备')) {
-      aiResponse = `[设备运行状态概览]
+      } else if (userMessage.includes('设备')) {
+        aiResponse = `[设备运行状态概览]
 
 当前系统接入设备总数：18台。
 • 在线设备：15台 (83.3%)
@@ -108,8 +190,8 @@ const handleSend = () => {
   3. 备用电源系统：处于待机维护模式。
 
 智能诊断：离线设备主要集中在东区边缘地带，结合网络拓扑分析，该区域4G信号强度较弱（-105dBm），建议排查网络基站或考虑增设信号增强器。`;
-    } else if (userMessage.includes('趋势')) {
-      aiResponse = `[流量趋势智能预测]
+      } else if (userMessage.includes('趋势')) {
+        aiResponse = `[流量趋势智能预测]
 
 基于过去7天的数据模型分析：
 1. 总体趋势：本周流量总体平稳，日均流量约为 12,500 m³，环比上周增长 1.2%。
@@ -120,8 +202,8 @@ const handleSend = () => {
 
 AI 预测：根据当前用水模型推演，预计明日早高峰流量将达到 850 m³/h，接近管道承载阈值的 85%。
 建议：建议在明日 08:30 前提前启动备用泵组进行预增压，平衡管网压力。`;
-    } else {
-      aiResponse = `收到您的指令："${userMessage}"。
+      } else {
+        aiResponse = `收到您的指令："${userMessage}"。
 
 正在调用后台大数据引擎进行分析...
 [√] 解析自然语言指令
@@ -130,67 +212,60 @@ AI 预测：根据当前用水模型推演，预计明日早高峰流量将达�
 [√] 生成可视化报表数据
 
 分析完成。根据当前系统状态，暂未发现与您描述直接相关的重大异常。您可以尝试询问更具体的内容，例如：“查看2号泵站的详细参数”、“导出昨日的水质分析报告”或“预测下周的用水量趋势”。`;
-    }
-
-    // Typewriter effect
-    messages.value.push({
-      type: 'ai',
-      content: '',
-      time: new Date().toLocaleTimeString(),
-    });
-
-    let i = 0;
-    const typeWriter = () => {
-      if (i < aiResponse.length) {
-        const lastMessage = messages.value[messages.value.length - 1];
-        if (lastMessage) {
-          lastMessage.content += aiResponse.charAt(i);
-        }
-        i++;
-        scrollToBottom();
-        setTimeout(typeWriter, 30); // Adjust speed here
-      } else if (aiVideos.length > 0) {
-        // Send a separate message for video
-        messages.value.push({
-          type: 'ai',
-          content: '',
-          time: new Date().toLocaleTimeString(),
-          videos: aiVideos
-        });
-        nextTick(() => {
-          scrollToBottom();
-          // Double check scroll after a short delay to ensure video container is rendered
-          setTimeout(scrollToBottom, 100);
-        });
       }
-    };
-    typeWriter();
 
-  }, 1000);
-};
+      // Typewriter effect
+      messages.value.push({
+        type: 'ai',
+        content: '',
+        time: new Date().toLocaleTimeString(),
+      });
 
-const handleClose = () => {
-  emit('update:visible', false);
-  emit('close');
-};
+      let i = 0;
+      const typeWriter = () => {
+        if (i < aiResponse.length) {
+          const lastMessage = messages.value[messages.value.length - 1];
+          if (lastMessage) {
+            lastMessage.content += aiResponse.charAt(i);
+          }
+          i++;
+          scrollToBottom();
+          setTimeout(typeWriter, 30); // Adjust speed here
+        } else if (aiVideos.length > 0) {
+          // Send a separate message for video
+          messages.value.push({
+            type: 'ai',
+            content: '',
+            time: new Date().toLocaleTimeString(),
+            videos: aiVideos
+          });
+          nextTick(() => {
+            scrollToBottom(true);
+            // Double check scroll after a short delay to ensure video container is rendered
+            setTimeout(() => scrollToBottom(true), 100);
+          });
+        }
+      };
+      typeWriter();
 
-const userAvatar = computed(() => userStore.userInfo?.avatar || '');
+    }, 1000);
+  };
+
+  const handleClose = () => {
+    emit('update:visible', false);
+    emit('close');
+  };
+
+  const userAvatar = computed(() => userStore.userInfo?.avatar || '');
 </script>
 
 <template>
-  <Modal
-    :open="visible"
-    :footer="null"
-    :closable="false"
-    :mask-closable="true"
-    width="1000px"
-    centered
-    class="ai-chat-modal"
-    @cancel="handleClose"
-  >
+  <Modal :open="visible" :footer="null" :closable="false" :mask-closable="true" width="800px" centered
+    class="ai-chat-modal" @cancel="handleClose">
     <div class="flex flex-col h-[90vh] md:h-[70vh] bg-white dark:bg-[#1f1f1f] rounded-lg overflow-hidden">
       <!-- Header -->
-      <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
+      <div
+        class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
         <div class="flex items-center gap-3">
           <div class="p-2 bg-white/20 rounded-full">
             <IconifyIcon icon="ion:robot-outline" class="text-xl" />
@@ -206,69 +281,49 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
       </div>
 
       <!-- Messages Area -->
-      <div 
-        ref="messagesContainer"
-        class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-[#141414]"
-      >
-        <div 
-          v-for="(msg, index) in messages" 
-          :key="index" 
-          class="flex w-full"
-          :class="msg.type === 'user' ? 'justify-end' : 'justify-start'"
-        >
-          <div class="flex max-w-[90%] md:max-w-[80%] gap-3" :class="msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'">
+      <div ref="messagesContainer"
+        class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-[#141414] flex flex-col">
+        <div v-for="(msg, index) in messages" :key="index" class="flex w-full"
+          :class="msg.type === 'user' ? 'justify-end' : 'justify-start'">
+          <div class="flex max-w-[90%] md:max-w-[80%] gap-3"
+            :class="msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'">
             <!-- Avatar -->
             <div class="flex-shrink-0">
               <Avatar v-if="msg.type === 'user'" :src="userAvatar" class="bg-blue-500 flex items-center justify-center">
-                <template #icon><IconifyIcon icon="ion:person-outline" /></template>
+                <template #icon>
+                  <IconifyIcon icon="ion:person-outline" />
+                </template>
               </Avatar>
               <Avatar v-else class="bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
-                <template #icon><IconifyIcon icon="ion:robot-outline" /></template>
+                <template #icon>
+                  <IconifyIcon icon="ion:robot-outline" />
+                </template>
               </Avatar>
             </div>
 
             <!-- Content -->
             <div class="flex flex-col" :class="msg.type === 'user' ? 'items-end' : 'items-start'">
               <span class="text-xs text-gray-400 mb-1 mx-2">{{ msg.time }}</span>
-              <div 
-                class="p-3 rounded-2xl text-sm shadow-sm whitespace-pre-wrap max-w-full"
-                :class="[
-                  msg.type === 'user' 
-                    ? 'bg-blue-500 text-white rounded-tr-none' 
-                    : 'bg-white dark:bg-[#2a2a2a] text-gray-800 dark:text-gray-200 rounded-tl-none',
-                  !msg.content && msg.videos && msg.videos.length ? '!p-1 !bg-transparent !shadow-none' : ''
-                ]"
-              >
+              <div class="p-3 rounded-2xl text-sm shadow-sm whitespace-pre-wrap max-w-full" :class="[
+                msg.type === 'user'
+                  ? 'bg-blue-500 text-white rounded-tr-none'
+                  : 'bg-white dark:bg-[#2a2a2a] text-gray-800 dark:text-gray-200 rounded-tl-none',
+                !msg.content && msg.videos && msg.videos.length ? '!p-1 !bg-transparent !shadow-none' : ''
+              ]">
                 <span v-if="msg.content">{{ msg.content }}</span>
-                
-                <div v-if="msg.videos && msg.videos.length" class="mt-0 grid grid-cols-1 gap-2 w-full min-w-[200px] sm:min-w-[300px]">
-                  <div 
-                    v-for="video in msg.videos" 
-                    :key="video"
-                    class="relative w-full rounded-lg overflow-hidden bg-transparent"
-                    style="aspect-ratio: 16/9;"
-                  >
+
+                <div v-if="msg.videos && msg.videos.length"
+                  class="mt-0 grid grid-cols-1 gap-2 w-full min-w-[200px] sm:min-w-[300px]">
+                  <div v-for="video in msg.videos" :key="video"
+                    class="relative w-full rounded-lg overflow-hidden bg-transparent" style="aspect-ratio: 16/9;">
                     <!-- Loading Placeholder -->
-                    <div 
-                      v-if="!videoLoadedMap[video]" 
-                      class="absolute inset-0 flex items-center justify-center z-10 bg-gray-100 dark:bg-gray-800"
-                    >
+                    <div v-if="!videoLoadedMap[video]"
+                      class="absolute inset-0 flex items-center justify-center z-10 bg-gray-100 dark:bg-gray-800">
                       <Spin />
                     </div>
-                    
-                    <video 
-                      v-show="videoLoadedMap[video]"
-                      :src="video" 
-                      controls 
-                      autoplay
-                      muted
-                      playsinline
-                      webkit-playsinline
-                      x5-video-player-type="h5-page"
-                      x5-playsinline
-                      class="w-full h-full object-cover"
-                      @loadedmetadata="() => handleVideoLoad(video)"
-                    ></video>
+
+                    <video v-show="videoLoadedMap[video]" :src="video" controls autoplay muted
+                      class="w-full h-full object-cover" @loadedmetadata="() => handleVideoLoad(video)"></video>
                   </div>
                 </div>
               </div>
@@ -279,7 +334,9 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
         <div v-if="loading" class="flex justify-start w-full">
           <div class="flex max-w-[80%] gap-3">
             <Avatar class="bg-gradient-to-r from-blue-500 to-cyan-500">
-              <template #icon><IconifyIcon icon="ion:robot-outline" /></template>
+              <template #icon>
+                <IconifyIcon icon="ion:robot-outline" />
+              </template>
             </Avatar>
             <div class="bg-white dark:bg-[#2a2a2a] p-3 rounded-lg rounded-tl-none shadow-sm flex items-center">
               <Spin size="small" />
@@ -290,22 +347,31 @@ const userAvatar = computed(() => userStore.userInfo?.avatar || '');
       </div>
 
       <!-- Input Area -->
-      <div class="p-4 bg-white dark:bg-[#1f1f1f] border-t border-gray-200 dark:border-gray-700">
+      <div class="p-4 bg-white dark:bg-[#1f1f1f] border-t border-gray-200 dark:border-gray-700 relative">
+        <!-- Command Menu -->
+        <div v-if="showCommandMenu"
+          class="absolute bottom-full left-4 mb-2 bg-white dark:bg-[#2a2a2a] rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50 w-120">
+          <div class="py-1">
+            <div v-for="cmd in filteredCommands" :key="cmd.value"
+              class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm transition-colors"
+              @click="handleCommandSelect(cmd.value)">
+              <span v-for="(part, index) in getHighlightedText(cmd.label)" :key="index"
+                :class="{ 'text-blue-500 font-bold': part.highlight }">
+                {{ part.text }}
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div class="flex gap-2">
-          <Input.TextArea
-            v-model:value="inputValue"
-            placeholder="输入您的问题，例如：预演、洪涝、最近的设备告警情况如何？"
-            :auto-size="{ minRows: 1, maxRows: 4 }"
-            @pressEnter.prevent="handleSend"
-            class="flex-1 !resize-none"
-          />
-          <Button 
-            type="primary" 
-            class="h-auto px-6 bg-gradient-to-r from-blue-500 to-cyan-500 border-0"
-            :loading="loading"
-            @click="handleSend"
-          >
-            <template #icon><IconifyIcon icon="ion:paper-plane-outline" /></template>
+          <Input.TextArea ref="inputRef" v-model:value="inputValue" placeholder="输入您的问题，例如：洪水演进、水动力、水深、泄洪、淹没..."
+            :auto-size="{ minRows: 1, maxRows: 4 }" @pressEnter.prevent="handleSend" @change="handleInput"
+            class="flex-1 !resize-none" />
+          <Button type="primary" class="h-auto px-6 bg-gradient-to-r from-blue-500 to-cyan-500 border-0"
+            :loading="loading" @click="handleSend">
+            <template #icon>
+              <IconifyIcon icon="ion:paper-plane-outline" />
+            </template>
           </Button>
         </div>
       </div>
