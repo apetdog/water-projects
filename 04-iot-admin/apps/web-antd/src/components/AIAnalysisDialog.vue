@@ -20,6 +20,7 @@
   const inputRef = ref();
 
   const commandQuery = ref('');
+  const selectedCommandIndex = ref(0);
 
   const commands = [
     { label: '帮我进行洪水演进模拟分析', value: '帮我进行洪水演进模拟分析' },
@@ -34,6 +35,10 @@
     return commands.filter(cmd =>
       cmd.label.toLowerCase().includes(commandQuery.value.toLowerCase())
     );
+  });
+
+  watch(filteredCommands, () => {
+    selectedCommandIndex.value = 0;
   });
 
   const getHighlightedText = (text: string) => {
@@ -99,6 +104,29 @@
     inputValue.value = command;
     showCommandMenu.value = false;
     handleSend();
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!showCommandMenu.value) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedCommandIndex.value = (selectedCommandIndex.value + 1) % filteredCommands.value.length;
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedCommandIndex.value = (selectedCommandIndex.value - 1 + filteredCommands.value.length) % filteredCommands.value.length;
+    }
+  };
+
+  const handleEnter = (e: any) => {
+    if (showCommandMenu.value && filteredCommands.value.length > 0) {
+      const selectedCmd = filteredCommands.value[selectedCommandIndex.value];
+      if (selectedCmd) {
+        handleCommandSelect(selectedCmd.value);
+      }
+    } else {
+      handleSend();
+    }
   };
 
   const handleSend = () => {
@@ -352,9 +380,11 @@ AI 预测：根据当前用水模型推演，预计明日早高峰流量将达�
         <div v-if="showCommandMenu"
           class="absolute bottom-full left-4 mb-2 bg-white dark:bg-[#2a2a2a] rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50 w-120">
           <div class="py-1">
-            <div v-for="cmd in filteredCommands" :key="cmd.value"
-              class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm transition-colors"
-              @click="handleCommandSelect(cmd.value)">
+            <div v-for="(cmd, index) in filteredCommands" :key="cmd.value"
+              class="px-4 py-2 cursor-pointer text-sm transition-colors"
+              :class="index === selectedCommandIndex ? 'bg-blue-50 dark:bg-blue-900/30' : 'hover:bg-gray-100 dark:hover:bg-gray-700'"
+              @click="handleCommandSelect(cmd.value)"
+              @mouseenter="selectedCommandIndex = index">
               <span v-for="(part, index) in getHighlightedText(cmd.label)" :key="index"
                 :class="{ 'text-blue-500 font-bold': part.highlight }">
                 {{ part.text }}
@@ -365,7 +395,8 @@ AI 预测：根据当前用水模型推演，预计明日早高峰流量将达�
 
         <div class="flex gap-2">
           <Input.TextArea ref="inputRef" v-model:value="inputValue" placeholder="输入您的问题，例如：洪水演进、水动力、水深、泄洪、淹没..."
-            :auto-size="{ minRows: 1, maxRows: 4 }" @pressEnter.prevent="handleSend" @change="handleInput"
+            :auto-size="{ minRows: 1, maxRows: 4 }" @pressEnter.prevent="handleEnter" @change="handleInput"
+            @keydown="handleKeyDown"
             class="flex-1 !resize-none" />
           <Button type="primary" class="h-auto px-6 bg-gradient-to-r from-blue-500 to-cyan-500 border-0"
             :loading="loading" @click="handleSend">
