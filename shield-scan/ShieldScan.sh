@@ -16,12 +16,14 @@ BOLD='\033[1m'
 BLINK='\033[5m'
 RESET='\033[0m'
 
+# 默认运行时长（秒），可以通过脚本第一个参数覆盖
+DEFAULT_DURATION=600
+
+# 捕获退出信号，恢复光标
+
 # 清屏并隐藏光标
 clear
 tput civis
-
-# 捕获退出信号，恢复光标
-trap 'tput cnorm; exit' INT TERM
 
 # 生成随机IP地址
 random_ip() {
@@ -615,9 +617,9 @@ data_waterfall() {
                     # 根据位置和帧数改变颜色
                     local color_idx=$(( (h + frame) % 3 ))
                     case $color_idx in
-                        0) echo -ne "${CYAN}${char}${RESET}" ;;
-                        1) echo -ne "${BLUE}${char}${RESET}" ;;
-                        2) echo -ne "${WHITE}${char}${RESET}" ;;
+                        0) echo -ne "${GREEN}${char}${RESET}" ;;
+                        1) echo -ne "${GREEN}${char}${RESET}" ;;
+                        2) echo -ne "${BOLD}${GREEN}${char}${RESET}" ;;
                     esac
                 else
                     echo -ne " "
@@ -767,17 +769,61 @@ code_injection_detect() {
     echo ""
 }
 
+# 打开URL函数
+open_url() {
+    local url="$1"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        open "$url"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        if command -v xdg-open > /dev/null; then
+            xdg-open "$url"
+        else
+            echo "请手动打开: $url"
+        fi
+    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+        start "$url"
+    else
+        # 尝试通用方法
+        if command -v xdg-open > /dev/null; then
+            xdg-open "$url"
+        elif command -v open > /dev/null; then
+            open "$url"
+        elif command -v start > /dev/null; then
+            start "$url"
+        else
+            echo "无法自动打开浏览器，请访问: $url"
+        fi
+    fi
+}
+
 # 主循环
 main() {
     echo -e "${BOLD}${WHITE}"
     echo "╔══════════════════════════════════════════════════════════╗"
-    echo "║          网络安全监控系统 v3.14.159                      ║"
-    echo "║          Security Monitoring System                      ║"
+    echo "║                                                          ║"
+    #以此参数作为运行时长（如果提供），否则使用默认值 "║          网络安全监控系统 v3.14.159                      ║"
+    local duration=${1:-$DEFAULT_DURATION}
+
+    echo "║               Security Monitoring System                 ║"
+    echo "║                                                          ║"
     echo "╚══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     sleep 1
     
+    local start_time=$(date +%s)
+    local duration=${1:-$DEFAULT_DURATION} # 运行时长（秒）
+    
     while true; do
+        local current_time=$(date +%s)
+        local elapsed=$((current_time - start_time))
+        
+        if [ $elapsed -ge $duration ]; then
+            echo -e "\n${BOLD}${GREEN}==================== 演示结束 ====================${RESET}"
+            echo -e "${YELLOW}正在跳转至管理系统...${RESET}"
+            sleep 2
+            break
+        fi
+
         system_scan
         sleep 0.5
         
@@ -830,10 +876,13 @@ main() {
         sleep 1
         
         echo -e "${BOLD}${GREEN}==================== 扫描周期完成 ====================${RESET}"
-        echo -e "${CYAN}等待下一轮扫描...${RESET}\n"
+        echo -e "${CYAN}等待下一轮扫描... (已运行: $((elapsed / 60))分$((elapsed % 60))秒 / 总计: $((duration / 60))分)${RESET}\n"
         sleep 2
     done
+    
+    # 结束后打开网址
+    open_url "https://cn.moodl.ink/water-admin"
 }
 
 # 运行主程序
-main
+main "$@"
