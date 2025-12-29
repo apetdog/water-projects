@@ -796,14 +796,47 @@ open_url() {
     fi
 }
 
+# 帮助信息
+usage() {
+    echo "Usage: $0 [options]"
+    echo "Options:"
+    echo "  -t, --time <seconds>  设置运行时长（秒），默认: ${DEFAULT_DURATION}s"
+    echo "  -h, --help            显示帮助信息"
+}
+
 # 主循环
 main() {
+    local duration=$DEFAULT_DURATION
+    
+    # 解析参数
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -t|--time)
+                if [[ -n "$2" && "$2" =~ ^[0-9]+$ ]]; then
+                    duration="$2"
+                    shift 2
+                else
+                    echo "错误: --time 需要一个数字参数"
+                    usage
+                    return 1
+                fi
+                ;;
+            -h|--help)
+                usage
+                return 0
+                ;;
+            *)
+                echo "未知选项: $1"
+                usage
+                return 1
+                ;;
+        esac
+    done
+
     echo -e "${BOLD}${WHITE}"
     echo "╔══════════════════════════════════════════════════════════╗"
     echo "║                                                          ║"
-    #以此参数作为运行时长（如果提供），否则使用默认值 "║          网络安全监控系统 v3.14.159                      ║"
-    local duration=${1:-$DEFAULT_DURATION}
-
+    echo "║                网络安全监控系统 v3.14.159               ║"
     echo "║               Security Monitoring System                 ║"
     echo "║                                                          ║"
     echo "╚══════════════════════════════════════════════════════════╝"
@@ -811,74 +844,72 @@ main() {
     sleep 1
     
     local start_time=$(date +%s)
-    local duration=${1:-$DEFAULT_DURATION} # 运行时长（秒）
     
+    # 检查是否超时
+    check_timeout() {
+        local current_time=$(date +%s)
+        local elapsed=$((current_time - start_time))
+        if [ $elapsed -ge $duration ]; then
+            return 0
+        fi
+        return 1
+    }
+
     while true; do
+        if check_timeout; then break; fi
+
+        # 定义要执行的任务列表
+        local steps=(
+            system_scan
+            network_monitor
+            intrusion_detection
+            firewall_update
+            virus_db_update
+            crypto_handshake
+            resource_monitor
+            log_analysis
+            world_map_attacks
+            realtime_chart
+            radar_scan
+            matrix_rain
+            password_crack
+            data_waterfall
+            ascii_shield
+            file_transfer
+            code_injection_detect
+        )
+
+        for step in "${steps[@]}"; do
+            if check_timeout; then break 2; fi
+            $step
+            if check_timeout; then break 2; fi
+            
+            if [[ "$step" == "code_injection_detect" ]]; then
+                sleep 1
+            else
+                sleep 0.5
+            fi
+        done
+        
         local current_time=$(date +%s)
         local elapsed=$((current_time - start_time))
         
-        if [ $elapsed -ge $duration ]; then
-            echo -e "\n${BOLD}${GREEN}==================== 演示结束 ====================${RESET}"
-            echo -e "${YELLOW}正在跳转至管理系统...${RESET}"
-            sleep 2
-            break
+        # 格式化总时长显示
+        local total_fmt
+        if [ $duration -lt 60 ]; then
+             total_fmt="${duration}秒"
+        else
+             total_fmt="$((duration / 60))分"
         fi
-
-        system_scan
-        sleep 0.5
-        
-        network_monitor
-        sleep 0.5
-        
-        intrusion_detection
-        sleep 0.5
-        
-        firewall_update
-        sleep 0.5
-        
-        virus_db_update
-        sleep 0.5
-        
-        crypto_handshake
-        sleep 0.5
-        
-        resource_monitor
-        sleep 0.5
-        
-        log_analysis
-        sleep 0.5
-        
-        world_map_attacks
-        sleep 0.5
-        
-        realtime_chart
-        sleep 0.5
-        
-        radar_scan
-        sleep 0.5
-        
-        matrix_rain
-        sleep 0.5
-        
-        password_crack
-        sleep 0.5
-        
-        data_waterfall
-        sleep 0.5
-        
-        ascii_shield
-        sleep 0.5
-        
-        file_transfer
-        sleep 0.5
-        
-        code_injection_detect
-        sleep 1
         
         echo -e "${BOLD}${GREEN}==================== 扫描周期完成 ====================${RESET}"
-        echo -e "${CYAN}等待下一轮扫描... (已运行: $((elapsed / 60))分$((elapsed % 60))秒 / 总计: $((duration / 60))分)${RESET}\n"
+        echo -e "${CYAN}等待下一轮扫描... (已运行: $((elapsed / 60))分$((elapsed % 60))秒 / 总计: ${total_fmt})${RESET}\n"
         sleep 2
     done
+    
+    echo -e "\n${BOLD}${GREEN}==================== 扫描结束 ====================${RESET}"
+    echo -e "${YELLOW}正在跳转至管理系统...${RESET}"
+    sleep 2
     
     # 结束后打开网址
     open_url "https://cn.moodl.ink/water-admin"

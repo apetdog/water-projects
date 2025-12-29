@@ -26,6 +26,26 @@ chmod +x ShieldScan.sh
 ./ShieldScan.sh
 ```
 
+### 命令行参数
+
+脚本支持以下参数配置：
+
+- `-t, --time <seconds>`: 设置演示运行时长（单位：秒）。默认值为 600 秒（10 分钟）。
+- `-h, --help`: 显示帮助信息。
+
+**示例：**
+
+```bash
+# 运行默认时长（10分钟）
+./ShieldScan.sh
+
+# 运行 5 分钟 (300秒)
+./ShieldScan.sh -t 300
+
+# 运行 1 分钟并显示帮助
+./ShieldScan.sh --time 60
+```
+
 ## Windows 用户说明
 
 **Windows 上建议下载一个 Git**
