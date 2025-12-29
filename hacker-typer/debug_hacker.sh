@@ -16,266 +16,374 @@ BOLD='\033[1m'
 clear
 
 # 模拟主机名
-HOST="${RED}root@darknet-core${RESET}:${BLUE}~/exploits${RESET}# "
+HOST="${GREEN}scientist@gaia-institute${RESET}:${BLUE}~/research-data${RESET}$ "
 
 # 定义几个不同的输出块
 BLOCKS=(
-# 短消息：拒绝访问
+# 短消息：系统状态正常
 "
-${RED}[!] ACCESS DENIED${RESET}
-${RED}[!] Insufficient privileges to execute this command.${RESET}
-${GRAY}Audit log updated: event_id=9923${RESET}
-"
-
-# 短消息：Ping
-"
-${CYAN}Pinging target-system (192.168.1.55) with 32 bytes of data:${RESET}
-Reply from 192.168.1.55: bytes=32 time=2ms TTL=64
-Reply from 192.168.1.55: bytes=32 time=3ms TTL=64
-Reply from 192.168.1.55: bytes=32 time=2ms TTL=64
-Reply from 192.168.1.55: bytes=32 time=2ms TTL=64
-
-${GREEN}Ping statistics for 192.168.1.55:${RESET}
-    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+${GREEN}[OK] SYSTEM STATUS CHECK${RESET}
+${GREEN}[OK] CPU Load: 12% (Optimal)${RESET}
+${GREEN}[OK] Memory Usage: 3.4GB / 32GB${RESET}
+${BLUE}[INFO] All research modules are active and running efficiently.${RESET}
 "
 
-# 短消息：正在连接
+# 短消息：网络连接
 "
-${BLUE}[*] Initiating satellite uplink...${RESET}
-${YELLOW}[...] Handshaking with satellite G-14${RESET}
-${GREEN}[+] Connection established.${RESET}
-${GRAY}Latency: 450ms | Jitter: 12ms${RESET}
-"
-
-# 中等：Nmap Scan
-"
-${GREEN}[+] Initializing Nmap Scan...${RESET}
-${GRAY}Starting Nmap 7.92 ( https://nmap.org ) at 2024-03-15 13:37 EST${RESET}
-Nmap scan report for ${WHITE}target-system.corp${RESET} (${YELLOW}192.168.1.55${RESET})
-Host is up (0.0023s latency).
-Not shown: 995 closed ports
-PORT     STATE SERVICE    VERSION
-21/tcp   open  ftp        ${CYAN}vsftpd 2.3.4${RESET}
-22/tcp   open  ssh        ${CYAN}OpenSSH 4.7p1 Debian 8ubuntu1${RESET}
-80/tcp   open  http       ${CYAN}Apache httpd 2.2.8 ((Ubuntu) DAV/2)${RESET}
-139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
-445/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
-${MAGENTA}Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel${RESET}
+${BLUE}[*] Connecting to Global Science Network...${RESET}
+${YELLOW}[...] Verifying credentials with Open Access Repository${RESET}
+${GREEN}[+] Connection secured (TLS 1.3).${RESET}
+${GRAY}Latency: 24ms | Bandwidth: 10Gbps${RESET}
 "
 
-# 中等：Metasploit
+# 中等：环境监测卫星数据
 "
-${BLUE}[*] Metasploit Framework Console${RESET}
-${WHITE}msf6 >${RESET} use exploit/unix/ftp/vsftpd_234_backdoor
-${WHITE}msf6 exploit(unix/ftp/vsftpd_234_backdoor) >${RESET} set RHOSTS 192.168.1.55
-RHOSTS => 192.168.1.55
-${WHITE}msf6 exploit(unix/ftp/vsftpd_234_backdoor) >${RESET} run
-
-${GREEN}[+]${RESET} 192.168.1.55:21 - Banner: 220 (vsFTPd 2.3.4)
-${GREEN}[+]${RESET} 192.168.1.55:21 - USER: 331 Please specify the password.
-${GREEN}[+]${RESET} 192.168.1.55:21 - Backdoor service has been spawned, handling...
-${GREEN}[+]${RESET} Found shell.
-${WHITE}[!] Command shell session 1 opened (192.168.1.10:4444 -> 192.168.1.55:6200)${RESET}
+${BLUE}[*] Receiving telemetry from GAIA-SAT-1${RESET}
+${GRAY}Orbit: Low Earth Orbit (LEO) | Inclination: 98.2°${RESET}
+${WHITE}Processing sensor data stream...${RESET}
+[Sector A1] Atmospheric CO2: ${GREEN}415 ppm (Stable)${RESET}
+[Sector A1] Ozone Layer Thickness: ${GREEN}298 DU (Recovering)${RESET}
+[Sector B3] Amazon Rainforest Cover: ${YELLOW}Analyzing spectral signature...${RESET}
+${GREEN}[+] Deforestation alert level: LOW${RESET}
+${GREEN}[+] Reforestation initiatives detected in Sector B3-North.${RESET}
+${CYAN}Data packet saved to /data/climate/2025-12-29.dat${RESET}
 "
 
-# 中等：Compiling
+# 中等：DNA序列分析
 "
-${CYAN}Compiling payload...${RESET}
-gcc -o exploit exploit.c -fno-stack-protector -z execstack
-exploit.c: In function ‘main’:
-exploit.c:15:5: ${MAGENTA}warning:${RESET} implicit declaration of function ‘gets’; did you mean ‘fgets’? [-Wimplicit-function-declaration]
-     gets(buffer);
-     ^~~~
-     fgets
-/usr/bin/ld: /tmp/ccQ2w8s9.o: in function \`main':
-exploit.c:(.text+0x24): warning: the \`gets' function is dangerous and should not be used.
-${GREEN}[+] Build successful.${RESET}
-"
-
-# 长：Brute force
-"
-${GRAY}[SYSTEM]${RESET} Brute forcing SSH credentials...
-${RED}[-]${RESET} root:123456 - Failed
-${RED}[-]${RESET} root:password - Failed
-${RED}[-]${RESET} root:toor - Failed
-${RED}[-]${RESET} admin:admin - Failed
-${RED}[-]${RESET} user:1234 - Failed
-${RED}[-]${RESET} user:password - Failed
-${RED}[-]${RESET} guest:guest - Failed
-${RED}[-]${RESET} test:test - Failed
-${RED}[-]${RESET} root:root - Failed
-${RED}[-]${RESET} admin:123456 - Failed
-${RED}[-]${RESET} service:service - Failed
-${RED}[-]${RESET} deploy:deploy - Failed
-${RED}[-]${RESET} oracle:oracle - Failed
-${RED}[-]${RESET} postgres:postgres - Failed
-${RED}[-]${RESET} mysql:mysql - Failed
-${RED}[-]${RESET} apache:apache - Failed
-${RED}[-]${RESET} tomcat:tomcat - Failed
-${RED}[-]${RESET} weblogic:weblogic - Failed
-${RED}[-]${RESET} support:support - Failed
-${RED}[-]${RESET} ftp:ftp - Failed
-${RED}[-]${RESET} backup:backup - Failed
-${RED}[-]${RESET} git:git - Failed
-${RED}[-]${RESET} jenkins:jenkins - Failed
-${RED}[-]${RESET} docker:docker - Failed
-${RED}[-]${RESET} kubernetes:kubernetes - Failed
-${RED}[-]${RESET} ubuntu:ubuntu - Failed
-${RED}[-]${RESET} centos:centos - Failed
-${RED}[-]${RESET} ec2-user:ec2-user - Failed
-${RED}[-]${RESET} vagrant:vagrant - Failed
-${RED}[-]${RESET} pi:raspberry - Failed
-${GREEN}[+]${RESET} admin:P@ssw0rd123 - ${BOLD}SUCCESS!${RESET}
-${BLUE}[*]${RESET} Establishing encrypted tunnel...
-${GREEN}[OK]${RESET} AES-256 connection established.
+${MAGENTA}[*] DNA Sequencing in progress...${RESET}
+${GRAY}Sample ID: H-2025-Alpha (Rare Orchid Species)${RESET}
+GCATGCATGCATGCATGCATGCATGCATGCATGCATGCAT
+${GREEN}Matching genetic markers...${RESET}
+Marker 1 (Growth Rate): ${GREEN}POSITIVE${RESET}
+Marker 2 (Drought Resistance): ${GREEN}POSITIVE${RESET}
+Marker 3 (Pest Resistance): ${GREEN}POSITIVE${RESET}
+${WHITE}Analysis complete.${RESET}
+${BLUE}[INFO] This species shows high potential for arid environment restoration.${RESET}
+${GREEN}[+] Sequence uploaded to Global Biodiversity Database.${RESET}
 "
 
-# 超长：Hex Dump
+# 中等：太阳能电站效率优化
 "
-${YELLOW}dumping memory range 0x08048000-0x08049000${RESET}
-08048000  7f 45 4c 46 01 01 01 00  00 00 00 00 00 00 00 00  |.ELF............|
-08048010  02 00 03 00 01 00 00 00  54 80 04 08 34 00 00 00  |........T...4...|
-08048020  2c 00 00 00 00 00 00 00  34 00 20 00 01 00 00 00  |,.......4. .....|
-08048030  00 00 00 00 01 00 00 00  00 00 00 00 00 80 04 08  |................|
-08048040  00 80 04 08 0c 01 00 00  0c 01 00 00 05 00 00 00  |................|
-08048050  00 10 00 00 01 00 00 00  0c 01 00 00 0c 11 04 08  |................|
-08048060  0c 11 04 08 0c 00 00 00  0c 00 00 00 06 00 00 00  |................|
-08048070  00 10 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048080  01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048090  45 00 00 00 00 00 00 00  50 e5 74 64 06 00 00 00  |E.......P.td....|
-080480a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-080480b0  04 00 00 00 10 00 00 00  01 00 00 00 47 4e 55 00  |............GNU.|
-080480c0  00 00 00 00 02 00 00 00  06 00 00 00 20 00 00 00  |............ ...|
-080480d0  03 00 00 00 47 4e 55 00  9a c9 52 48 3e 8d 2e 02  |....GNU...RH>...|
-080480e0  7f 45 4c 46 01 01 01 00  00 00 00 00 00 00 00 00  |.ELF............|
-080480f0  02 00 03 00 01 00 00 00  54 80 04 08 34 00 00 00  |........T...4...|
-08048100  2c 00 00 00 00 00 00 00  34 00 20 00 01 00 00 00  |,.......4. .....|
-08048110  00 00 00 00 01 00 00 00  00 00 00 00 00 80 04 08  |................|
-08048120  00 80 04 08 0c 01 00 00  0c 01 00 00 05 00 00 00  |................|
-08048130  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048140  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048150  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048160  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048170  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048180  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048190  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-080481a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-080481b0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-080481c0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-080481d0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-080481e0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-080481f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048200  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048210  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-08048220  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-${RED}[CRITICAL] Password hash found in heap memory!${RESET}
+${YELLOW}[*] Solar Farm Grid Optimization${RESET}
+${GRAY}Location: Sahara Desert Station 4${RESET}
+Panel 001: Efficiency 98% - ${GREEN}OPTIMAL${RESET}
+Panel 002: Efficiency 97% - ${GREEN}OPTIMAL${RESET}
+Panel 003: Efficiency 92% - ${YELLOW}Cleaning required${RESET}
+Panel 004: Efficiency 98% - ${GREEN}OPTIMAL${RESET}
+...
+${BLUE}[*] Adjusting tilt angles for afternoon sun position...${RESET}
+Tilt changed to 42.5°
+${GREEN}[+] Total power output increased by 2.3%${RESET}
+${GREEN}[+] Battery storage at 95% capacity.${RESET}
 "
 
-# 巨长：Package Install
+# 长：医学药物模拟
 "
-${GREEN}[+] Updating package lists...${RESET}
-${GRAY}Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease${RESET}
-${GRAY}Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease${RESET}
-${GRAY}Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease${RESET}
-${GRAY}Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease${RESET}
-${WHITE}Reading package lists... Done${RESET}
-${WHITE}Building dependency tree... Done${RESET}
-${WHITE}Reading state information... Done${RESET}
-${CYAN}The following additional packages will be installed:${RESET}
-  libpython3.10-minimal libpython3.10-stdlib python3.10-minimal python3-distutils python3-lib2to3
-  python3-pkg-resources python3-setuptools python3.10
-${CYAN}Suggested packages:${RESET}
-  python3-doc python3-tk python3-venv python3.10-venv python3.10-doc binfmt-support
-${GREEN}The following NEW packages will be installed:${RESET}
-  python3-pip
-${GREEN}The following packages will be upgraded:${RESET}
-  libpython3.10-minimal libpython3.10-stdlib python3.10-minimal python3-distutils python3-lib2to3
-  python3-pkg-resources python3-setuptools python3.10
-8 upgraded, 1 newly installed, 0 to remove and 12 not upgraded.
-Need to get 14.2 MB of archives.
-After this operation, 3,482 kB of additional disk space will be used.
-${YELLOW}Do you want to continue? [Y/n] Y${RESET}
-${GRAY}Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-minimal amd64 3.10.6-1~22.04.2 [810 kB]${RESET}
-${GRAY}Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-minimal amd64 3.10.6-1~22.04.2 [2,058 kB]${RESET}
-${GRAY}Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-stdlib amd64 3.10.6-1~22.04.2 [1,837 kB]${RESET}
-${GRAY}Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10 amd64 3.10.6-1~22.04.2 [514 kB]${RESET}
-${GRAY}Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-lib2to3 all 3.10.6-1~22.04.2 [77.4 kB]${RESET}
-${GRAY}Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-distutils all 3.10.6-1~22.04.2 [137 kB]${RESET}
-${GRAY}Get:7 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-setuptools all 59.6.0-1.2ubuntu0.22.04.1 [339 kB]${RESET}
-${GRAY}Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-pip all 22.0.2+dfsg-1ubuntu0.2 [1,304 kB]${RESET}
-${WHITE}Fetched 14.2 MB in 2s (6,854 kB/s)${RESET}
-(Reading database ... 204851 files and directories currently installed.)
-Preparing to unpack .../libpython3.10-minimal_3.10.6-1~22.04.2_amd64.deb ...
-Unpacking libpython3.10-minimal:amd64 (3.10.6-1~22.04.2) over (3.10.4-3ubuntu0.1) ...
-Preparing to unpack .../python3.10-minimal_3.10.6-1~22.04.2_amd64.deb ...
-Unpacking python3.10-minimal (3.10.6-1~22.04.2) over (3.10.4-3ubuntu0.1) ...
-Preparing to unpack .../libpython3.10-stdlib_3.10.6-1~22.04.2_amd64.deb ...
-Unpacking libpython3.10-stdlib:amd64 (3.10.6-1~22.04.2) over (3.10.4-3ubuntu0.1) ...
-Preparing to unpack .../python3.10_3.10.6-1~22.04.2_amd64.deb ...
-Unpacking python3.10 (3.10.6-1~22.04.2) over (3.10.4-3ubuntu0.1) ...
-Preparing to unpack .../python3-lib2to3_3.10.6-1~22.04.2_all.deb ...
-Unpacking python3-lib2to3 (3.10.6-1~22.04.2) over (3.10.4-0ubuntu1) ...
-Preparing to unpack .../python3-distutils_3.10.6-1~22.04.2_all.deb ...
-Unpacking python3-distutils (3.10.6-1~22.04.2) over (3.10.4-0ubuntu1) ...
-Setting up libpython3.10-minimal:amd64 (3.10.6-1~22.04.2) ...
-Setting up python3.10-minimal (3.10.6-1~22.04.2) ...
-Setting up libpython3.10-stdlib:amd64 (3.10.6-1~22.04.2) ...
-Setting up python3-lib2to3 (3.10.6-1~22.04.2) ...
-Setting up python3-distutils (3.10.6-1~22.04.2) ...
-Setting up python3.10 (3.10.6-1~22.04.2) ...
-Setting up python3-pip (22.0.2+dfsg-1ubuntu0.2) ...
-Processing triggers for man-db (2.10.2-1) ...
-Processing triggers for install-info (6.8-4build1) ...
-${GREEN}[+] Installation completed successfully.${RESET}
+${CYAN}[*] Running Molecular Dynamics Simulation${RESET}
+${GRAY}Target Protein: Alzheimer's Beta-Amyloid${RESET}
+${GRAY}Candidate Drug: C22H30N6O4 (Compound-X)${RESET}
+Step 1: Docking simulation...
+[0%] ....................
+[25%] ....................
+[50%] ....................
+[75%] ....................
+[100%] .................... ${GREEN}COMPLETE${RESET}
+${WHITE}Binding Affinity: -12.4 kcal/mol${RESET}
+${GREEN}[+] Strong binding detected!${RESET}
+${WHITE}Checking for side effects...${RESET}
+Liver Toxicity: ${GREEN}LOW${RESET}
+Heart Interaction: ${GREEN}NONE${RESET}
+${BLUE}[INFO] Compound-X is a promising candidate for clinical trials.${RESET}
 "
 
-# 巨长：SQL Dump
+# 长：火星探测车遥测
 "
-${BLUE}[*] Starting SQLMap 1.5.8#stable${RESET}
-${WHITE}[14:22:15] [INFO] testing connection to the target URL${RESET}
-${WHITE}[14:22:16] [INFO] checking if the target is protected by some WAF/IPS${RESET}
-${WHITE}[14:22:17] [INFO] testing if the target URL content is stable${RESET}
-${WHITE}[14:22:18] [INFO] target URL content is stable${RESET}
-${WHITE}[14:22:18] [INFO] testing if GET parameter 'id' is dynamic${RESET}
-${WHITE}[14:22:18] [INFO] GET parameter 'id' appears to be dynamic${RESET}
-${WHITE}[14:22:19] [INFO] heuristic (basic) test shows that GET parameter 'id' might be injectable (possible DBMS: 'MySQL')${RESET}
-${WHITE}[14:22:20] [INFO] testing for SQL injection on GET parameter 'id'${RESET}
-${GREEN}[14:22:20] [INFO] GET parameter 'id' is 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)' injectable${RESET}
-${WHITE}[14:22:20] [INFO] checking if the injection point on GET parameter 'id' is a false positive${RESET}
-${WHITE}[14:22:25] [INFO] GET parameter 'id' is vulnerable. Do you want to keep testing the others (if any)? [y/N] N${RESET}
-${WHITE}[14:22:26] [INFO] the back-end DBMS is MySQL${RESET}
-${WHITE}[14:22:26] [INFO] fetching database names${RESET}
-${WHITE}[14:22:26] [INFO] fetching tables for database: 'users'${RESET}
-${WHITE}[14:22:27] [INFO] fetching columns for table 'admin_users' in database 'users'${RESET}
-${WHITE}[14:22:27] [INFO] fetching entries for table 'admin_users' in database 'users'${RESET}
-${YELLOW}Database: users
-Table: admin_users
-[14 entries]
-+----+----------+----------------------------------+---------------------+
-| id | username | password_hash                    | last_login          |
-+----+----------+----------------------------------+---------------------+
-| 1  | admin    | 5f4dcc3b5aa765d61d8327deb882cf99 | 2024-03-15 10:00:01 |
-| 2  | root     | 8d969eef6ecad3c29a3a629280e686cf | 2024-03-14 23:59:59 |
-| 3  | support  | 098f6bcd4621d373cade4e832627b4f6 | 2024-03-15 08:30:00 |
-| 4  | dev_team | 1a1dc91c907325c69271ddf0c944bc72 | 2024-03-15 09:15:22 |
-| 5  | manager  | 21232f297a57a5a743894a0e4a801fc3 | 2024-03-13 14:22:11 |
-| 6  | test     | e10adc3949ba59abbe56e057f20f883e | 2024-02-28 11:11:11 |
-| 7  | guest    | 084e0343a0486ff05530df6c705c8bb4 | 2024-03-01 12:00:00 |
-| 8  | backup   | 4a7d1ed414474e4033ac29ccb8653d9b | 2024-03-15 01:00:00 |
-| 9  | api_user | 7c4a8d09ca3762af61e59520943dc264 | 2024-03-15 14:22:00 |
-| 10 | system   | 87d9bb400c0634691f0e3baaf1e2fd0d | 2024-03-15 00:00:01 |
-| 11 | audit    | b0baee9d279d34fa1dfd71aadb908c3f | 2024-03-10 09:45:33 |
-| 12 | finance  | f5bb0c8de146c67b44babbf4e6584cc0 | 2024-03-14 16:20:10 |
-| 13 | hr       | c4ca4238a0b923820dcc509a6f75849b | 2024-03-14 10:10:10 |
-| 14 | security | c81e728d9d4c2f636f067f89cc14862c | 2024-03-15 13:00:00 |
-+----+----------+----------------------------------+---------------------+${RESET}
-${GREEN}[14:22:28] [INFO] table 'admin_users' dumped to CSV file '/home/user/.sqlmap/output/dump/admin_users.csv'${RESET}
+${RED}[*] Mars Rover 'Curiosity-2' Status Update${RESET}
+${GRAY}Sol: 452 | Battery: 88% | Temp: -45°C${RESET}
+${WHITE}Executing geological survey command sequence...${RESET}
+[CMD] Move Forward 10m... ${GREEN}DONE${RESET}
+[CMD] Activate Drill... ${GREEN}DONE${RESET}
+[CMD] Collect Sample... ${GREEN}DONE${RESET}
+[CMD] Analyze Mineral Composition...
+Spectrometer Results:
+- Silicon Dioxide: 45%
+- Iron Oxide: 18%
+- Aluminum Oxide: 10%
+- ${MAGENTA}Water Ice Traces: DETECTED${RESET}
+${GREEN}[!] SIGNIFICANT DISCOVERY: Subsurface water ice confirmed in Sector 7G.${RESET}
+${BLUE}[*] Transmitting high-res images to Earth...${RESET}
+"
+
+# 巨长：气候模型模拟
+"
+${BLUE}[*] Initializing Global Climate Model (GCM) v5.0${RESET}
+${GRAY}Scenario: RCP 2.6 (High Mitigation)${RESET}
+${WHITE}Loading oceanic currents data...${RESET} ${GREEN}OK${RESET}
+${WHITE}Loading atmospheric circulation data...${RESET} ${GREEN}OK${RESET}
+${WHITE}Loading cryosphere data...${RESET} ${GREEN}OK${RESET}
+Year 2030: Temp Anomaly +1.2°C | Sea Level +5cm
+Year 2040: Temp Anomaly +1.3°C | Sea Level +12cm
+Year 2050: Temp Anomaly +1.4°C | Sea Level +18cm
+Year 2060: Temp Anomaly +1.4°C | Sea Level +22cm
+${GREEN}[+] Peak temperature stabilized.${RESET}
+${GREEN}[+] Renewable energy transition effective.${RESET}
+${GREEN}[+] Arctic ice volume stabilizing.${RESET}
+${BLUE}[INFO] Simulation confirms that immediate action can limit warming to 1.5°C.${RESET}
+"
+
+# 巨长：教育资源分发
+"
+${MAGENTA}[*] Digital Library Synchronization${RESET}
+${GRAY}Target Region: Rural Schools Network (Global)${RESET}
+${WHITE}Syncing textbooks and interactive lessons...${RESET}
+Uploading 'Physics_Basics_v3.pdf'... ${GREEN}100%${RESET}
+Uploading 'World_History_Interactive.iso'... ${GREEN}100%${RESET}
+Uploading 'Mathematics_for_Everyone.epub'... ${GREEN}100%${RESET}
+Uploading 'Coding_101_Python.mp4'... ${GREEN}100%${RESET}
+Uploading 'Biology_Virtual_Lab.exe'... ${GREEN}100%${RESET}
+...
+${GREEN}[+] 1,500 schools updated.${RESET}
+${GREEN}[+] 500,000 students now have access to latest educational materials.${RESET}
+${BLUE}[INFO] Knowledge bridge established successfully.${RESET}
+"
+
+# 巨长：海洋清理无人机群
+"
+${CYAN}[*] Ocean Cleanup Drone Swarm Control${RESET}
+${GRAY}Deployment Zone: Great Pacific Garbage Patch${RESET}
+${WHITE}Drone 01 Status:${RESET} Collecting plastic waste... ${GREEN}[Capacity: 85%]${RESET}
+${WHITE}Drone 02 Status:${RESET} Collecting plastic waste... ${GREEN}[Capacity: 90%]${RESET}
+${WHITE}Drone 03 Status:${RESET} Returning to mothership for unloading...
+${WHITE}Drone 04 Status:${RESET} Scanning for marine life to avoid...
+${YELLOW}[!] Turtle detected near Drone 05 path.${RESET}
+${GREEN}[+] Drone 05 course corrected. Wildlife safe.${RESET}
+${WHITE}Total Waste Collected Today: 45.2 Tons${RESET}
+${WHITE}Recycling Potential: 98%${RESET}
+${BLUE}[INFO] The ocean is getting cleaner, one day at a time.${RESET}
+"
+
+# 巨长：智慧城市交通优化
+"
+${YELLOW}[*] Smart City Traffic Management System${RESET}
+${GRAY}City: Metropolis | Time: 08:30 AM (Rush Hour)${RESET}
+${WHITE}Analyzing traffic flow sensors...${RESET}
+Zone A (Downtown): Congestion detected.
+Zone B (Bridge): Flowing freely.
+Zone C (School District): Heavy traffic.
+${BLUE}[*] Optimizing traffic light timing...${RESET}
+- Increasing green light duration on Main St. by 15s.
+- Diverting autonomous vehicles to Ring Road.
+- Prioritizing public transport buses at intersections.
+${GREEN}[+] Congestion reduced by 24%.${RESET}
+${GREEN}[+] Average commute time reduced by 10 minutes.${RESET}
+${GREEN}[+] CO2 emissions reduced by 15% due to less idling.${RESET}
+"
+
+# 巨长：粒子物理实验数据 (CERN)
+"
+${MAGENTA}[*] Large Hadron Collider (LHC) Experiment Run${RESET}
+${GRAY}Detector: ATLAS | Energy: 13.6 TeV${RESET}
+${WHITE}Collision Event #992837482${RESET}
+Tracking particles...
+- Muon detected (pT = 45 GeV)
+- Electron detected (pT = 32 GeV)
+- Jet detected (pT = 120 GeV)
+${YELLOW}Analyzing invariant mass...${RESET}
+Calculating Higgs boson probability...
+...
+...
+${GREEN}[!] RESONANCE FOUND AT 125 GeV${RESET}
+${GREEN}[+] Higgs boson candidate confirmed with 5-sigma certainty.${RESET}
+${BLUE}[INFO] Standard Model validation continues.${RESET}
+"
+
+# 巨长：分布式计算 (Folding@Home)
+"
+${CYAN}[*] Distributed Computing Node${RESET}
+${GRAY}Project: Cancer Research | Work Unit: 18492${RESET}
+${WHITE}Downloading protein structure...${RESET} ${GREEN}DONE${RESET}
+${WHITE}Simulating folding pathway...${RESET}
+Frame 1: Energy -500 kJ/mol
+Frame 2: Energy -520 kJ/mol
+Frame 3: Energy -510 kJ/mol (Local minimum escaped)
+Frame 4: Energy -550 kJ/mol
+...
+Frame 1000: Energy -800 kJ/mol (Native state reached)
+${GREEN}[+] Work Unit completed successfully.${RESET}
+${GREEN}[+] Results uploaded to central server.${RESET}
+${BLUE}[INFO] Contribution added to finding a cure.${RESET}
+"
+
+# 新增 1: 精准农业无人机网络
+"
+${GREEN}[*] Agri-Tech Drone Swarm 'Harvest-Moon'${RESET}
+${GRAY}Region: Central Valley | Crop: Organic Wheat${RESET}
+${WHITE}Scanning Field Sector 7...${RESET}
+Soil Moisture: 45% (Low)
+Nitrogen Levels: 22% (Sub-optimal)
+Pest Detection: ${GREEN}NONE${RESET}
+${BLUE}[*] Activating Precision Irrigation Systems...${RESET}
+Sprinkler 4A: ON [Target: +10% Moisture]
+Sprinkler 4B: ON [Target: +12% Moisture]
+${YELLOW}[*] Deploying Bio-Fertilizer Drone Unit...${RESET}
+Payload released at coordinates 34.2N, 118.4W.
+${GREEN}[+] Crop health projection updated: +15% Yield.${RESET}
+${GREEN}[+] Water usage optimized. 300 Gallons saved.${RESET}
+"
+
+# 新增 2: 野生动物迁徙追踪
+"
+${BLUE}[*] Global Wildlife Tracking System${RESET}
+${GRAY}Target: Blue Whale Pod #42 (The Singers)${RESET}
+${WHITE}Satellite Lock: ACQUIRED${RESET}
+Current Location: South Pacific (45.3S, 150.2W)
+Depth: 200m
+Heart Rate: 8 bpm (Resting)
+${MAGENTA}Audio Analysis in progress...${RESET}
+- Frequency: 15Hz - 20Hz
+- Pattern: 'Migration Song Type B'
+${GREEN}[+] New calf signature detected in the pod!${RESET}
+${GREEN}[+] Pod is safely navigating away from shipping lanes.${RESET}
+${BLUE}[INFO] Marine Protection Area enforced.${RESET}
+"
+
+# 新增 3: 地震预警网络
+"
+${RED}[!] SEISMIC ALERT NETWORK TRIGGERED${RESET}
+${GRAY}Sensor Array: Pacific Rim | Event ID: EQ-2025-998${RESET}
+${WHITE}Triangulating Epicenter...${RESET}
+P-Wave detected at Station 04.
+S-Wave detected at Station 08 (Lag: 4.2s).
+Epicenter: 40km offshore. Depth: 15km.
+${YELLOW}Calculating Magnitude...${RESET}
+Estimated Magnitude: 4.2 (Minor)
+${GREEN}[+] Tsunami Threat: NONE${RESET}
+${GREEN}[+] Critical Infrastructure: SECURE${RESET}
+${BLUE}[INFO] Data logged for geological study.${RESET}
+"
+
+# 新增 4: 聚变反应堆状态
+"
+${CYAN}[*] ITER Fusion Reactor Control${RESET}
+${GRAY}Experiment: Long-Pulse Plasma Discharge${RESET}
+${WHITE}Magnetic Confinement System: ACTIVE${RESET}
+Toroidal Field: 11.8 Tesla
+Poloidal Field: 6.2 Tesla
+${YELLOW}Injecting Deuterium-Tritium Fuel Pellet...${RESET}
+Heating Plasma...
+Core Temperature: 80 Million K
+Core Temperature: 100 Million K ${GREEN}[IGNITION THRESHOLD]${RESET}
+${GREEN}[+] Plasma State: STABLE${RESET}
+${GREEN}[+] Net Energy Gain (Q) > 1.05${RESET}
+${BLUE}[INFO] Clean, limitless energy generation simulation successful.${RESET}
+"
+
+# 新增 5: 卫星互联网连接
+"
+${MAGENTA}[*] Star-Link Constellation Gateway${RESET}
+${GRAY}Target: Remote Village School (Andes Mountains)${RESET}
+${WHITE}Establishing Downlink...${RESET}
+Satellite: V2-458 (Overhead)
+Signal Strength: 98% (-45dBm)
+Handshake: ACK
+${BLUE}[*] Routing Traffic...${RESET}
+Bandwidth Allocated: 500 Mbps
+Latency: 28ms
+${GREEN}[+] Internet Access Restored.${RESET}
+${GREEN}[+] Telemedicine Portal: ONLINE${RESET}
+${GREEN}[+] Digital Classroom: ONLINE${RESET}
+"
+
+# 新增 6: 道德网络防御
+"
+${RED}[*] Cyber Defense Grid - White Hat Protocol${RESET}
+${GRAY}Monitoring Critical Hospital Infrastructure${RESET}
+${YELLOW}[!] Intrusion Attempt Detected on Port 443${RESET}
+Signature: Ransomware.Variant.X
+Source: Botnet (Distributed)
+${BLUE}[*] Activating Counter-Measures...${RESET}
+- Isolating affected subnet.
+- Deploying Decryption Keys.
+- Tracing Command & Control Server.
+${GREEN}[+] Attack Neutralized.${RESET}
+${GREEN}[+] Patient Data Integrity: 100%${RESET}
+${GREEN}[+] Vulnerability Patched (CVE-2025-8842).${RESET}
+${BLUE}[INFO] Hospital operations continuing normally.${RESET}
+"
+
+# 新增 7: 智能电网负载平衡
+"
+${YELLOW}[*] Continental Smart Grid Controller${RESET}
+${GRAY}Region: Northern Hemisphere | Season: Winter${RESET}
+${WHITE}Monitoring Power Demand...${RESET}
+Current Load: 450 GW (Peak)
+Renewable Supply: 380 GW
+Gap: 70 GW
+${BLUE}[*] Balancing Load...${RESET}
+- Importing excess Wind Power from North Sea Grid.
+- Activating Hydro-Storage Release.
+- Discharging Community Battery Banks (20% depth).
+${GREEN}[+] Grid Frequency Stabilized at 50.00 Hz.${RESET}
+${GREEN}[+] Blackout Prevented.${RESET}
+${GREEN}[+] Fossil Fuel Peaker Plants: OFFLINE (Not needed)${RESET}
+"
+
+# 新增 8: 生物3D打印实验室
+"
+${CYAN}[*] Bio-Fabrication Laboratory${RESET}
+${GRAY}Printer: Organ-X 5000 | Task: Cardiac Tissue Patch${RESET}
+${WHITE}Preparing Bio-Ink...${RESET}
+Stem Cells: Induced Pluripotent (iPS)
+Scaffold: Alginate-Collagen Mix
+${YELLOW}Printing Layer 1 of 200...${RESET}
+Printing Layer 45...
+Printing Layer 90...
+Printing Layer 180...
+${GREEN}[+] Printing Complete.${RESET}
+${GREEN}[+] Cell Viability: 99.8%${RESET}
+${GREEN}[+] Vascularization: Successful${RESET}
+${BLUE}[INFO] Tissue ready for transplant testing.${RESET}
+"
+
+# 新增 9: 系外行星搜寻
+"
+${BLUE}[*] Deep Space Telescope Data Analysis${RESET}
+${GRAY}Target Star: KIC-8462852 (Tabby's Star)${RESET}
+${WHITE}Analyzing Light Curve...${RESET}
+Transit Event Detected: T-0
+Brightness Dip: 0.8%
+Duration: 4.5 Hours
+Periodicity: Confirmed
+${MAGENTA}Calculating Planetary Parameters...${RESET}
+Radius: 1.2 x Earth
+Orbit: Habitable Zone (Goldilocks)
+Atmosphere Spectrography: Nitrogen, Oxygen, Water Vapor detected.
+${GREEN}[!] POTENTIAL EARTH-ANALOGUE CONFIRMED${RESET}
+${BLUE}[INFO] Adding to 'Candidates for Life' catalog.${RESET}
+"
+
+# 新增 10: 濒危语言AI翻译保存
+"
+${MAGENTA}[*] Cultural Heritage Preservation AI${RESET}
+${GRAY}Input Source: Audio Archive Tape #1984${RESET}
+${GRAY}Language: Ainu (Critically Endangered)${RESET}
+${WHITE}Processing Waveform...${RESET}
+Noise Reduction: Active
+Speaker Separation: Active
+${BLUE}[*] Translating to Universal Knowledge Graph...${RESET}
+Detected Phrase: 'Kamuy' -> Concept: 'Spirit/God in Nature'
+Detected Phrase: 'Yukara' -> Concept: 'Epic Saga'
+${GREEN}[+] 45 New Words Archived.${RESET}
+${GREEN}[+] Grammar Structure Mapped.${RESET}
+${GREEN}[+] Cultural Context Preserved.${RESET}
+${BLUE}[INFO] This language will never be lost.${RESET}
 "
 )
 
 # 欢迎信息
-echo -e "${BOLD}Advanced Terminal Simulator v2.0${RESET}"
-echo -e "Type any command and press ENTER to simulate execution."
+echo -e "${BOLD}Scientific Research Terminal v2.0${RESET}"
+echo -e "Type any command and press ENTER to simulate research operations."
 echo ""
 
 while true; do
