@@ -11,7 +11,6 @@ const chartRef = ref<EchartsUIType>();
 const chartOptions = {
   animation: true,
   animationDuration: 8000,
-  animationEasing: 'linear',
   animationThreshold: 2000,
   grid: {
     bottom: 20,
@@ -25,11 +24,9 @@ const chartOptions = {
       areaStyle: {},
       animation: true,
       animationDuration: 8000,
-      animationEasing: 'linear',
       data: [
-        111, 2000, 6000, 16_000, 33_333, 55_555, 64_000, 33_333, 18_000,
-        36_000, 70_000, 42_444, 23_222, 13_000, 8000, 4000, 1200, 333, 222,
-        111,
+        3000, 15_000, 35_000, 53_000, 63_000, 70_000, 72_000, 73_000, 74_500,
+        75_000, 72_000, 60_000, 48_000, 35_000, 22_000, 12_000, 5000, 2000,
       ],
       itemStyle: {
         color: '#5ab1ef',
@@ -41,10 +38,9 @@ const chartOptions = {
       areaStyle: {},
       animation: true,
       animationDuration: 8000,
-      animationEasing: 'linear',
       data: [
-        33, 66, 88, 333, 3333, 6200, 20_000, 3000, 1200, 13_000, 22_000,
-        11_000, 2221, 1201, 390, 198, 60, 30, 22, 11,
+        1000, 4000, 9000, 15_000, 20_000, 23_000, 24_000, 23_500, 22_000,
+        20_000, 18_000, 15_000, 12_000, 9000, 6000, 3500, 1500, 500,
       ],
       itemStyle: {
         color: '#019680',
