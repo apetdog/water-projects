@@ -17,10 +17,8 @@ import {
 import { Button, Empty, RangePicker } from 'ant-design-vue';
 
 import AnalyticsTrends from './analytics-trends.vue';
-import AnalyticsVisitsData from './analytics-visits-data.vue';
-import AnalyticsVisitsSales from './analytics-visits-sales.vue';
-import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
+import AnalyticsAI from './components/AnalyticsAI.vue';
 
 const loading = ref(false);
 const dataReady = ref(false);
@@ -137,19 +135,8 @@ const chartTabs: TabOption[] = [
       </template>
     </AnalysisChartsTabs>
 
-    <div class="mt-5 w-full md:flex">
-      <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问数量">
-        <AnalyticsVisitsData v-if="dataReady" />
-        <Empty v-else description="暂无数据" />
-      </AnalysisChartCard>
-      <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问来源">
-        <AnalyticsVisitsSource v-if="dataReady" />
-        <Empty v-else description="暂无数据" />
-      </AnalysisChartCard>
-      <AnalysisChartCard class="mt-5 md:mt-0 md:w-1/3" title="访问来源">
-        <AnalyticsVisitsSales v-if="dataReady" />
-        <Empty v-else description="暂无数据" />
-      </AnalysisChartCard>
+    <div class="mt-5 w-full">
+      <AnalyticsAI />
     </div>
   </div>
 </template>
