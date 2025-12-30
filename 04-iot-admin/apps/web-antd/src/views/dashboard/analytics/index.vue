@@ -25,13 +25,13 @@ const stats = [
   },
   {
     title: '联网设备',
-    count: 1,
+    count: 0,
     icon: 'lucide:globe',
     color: 'bg-purple-500',
   },
   {
     title: '正常',
-    count: 1,
+    count: 0,
     icon: 'lucide:file-check',
     color: 'bg-green-600',
   },
