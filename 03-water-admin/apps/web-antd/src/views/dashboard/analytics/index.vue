@@ -115,7 +115,6 @@ const chartTabs: TabOption[] = [
     </div>
 
     <AnalysisOverview :items="overviewItems" />
-
     <AnalysisChartsTabs :tabs="chartTabs" class="mt-5">
       <template #trends>
         <AnalyticsTrends v-if="dataReady" />

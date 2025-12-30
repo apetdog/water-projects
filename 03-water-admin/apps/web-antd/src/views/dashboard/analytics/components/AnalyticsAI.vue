@@ -43,72 +43,78 @@ const handleSend = () => {
   scrollToBottom();
 
   // Keyword Analysis & Image Generation
-  analyzeKeywords(userMessage);
+  // analyzeKeywords(userMessage); // Moved inside typeMessage callback to delay image generation
 
   // Simulate AI Response
   setTimeout(async () => {
     loading.value = false;
     let aiResponse = '';
+    let targetImageIndex = -1;
 
     const action = quickActions.find(a => a.message === userMessage);
     if (action) {
       aiResponse = action.response;
+      targetImageIndex = action.imageIndex;
     } else if (userMessage.includes('水质')) {
       aiResponse = '【智能水质分析】\n\n根据最新多参数监测数据，当前区域水质状况评级为：优（Grade I）。\n\n各项核心指标实时读数如下：\n- 溶解氧 (DO)：7.5 mg/L（正常）\n- pH值：7.2（中性偏弱碱，理想）\n- 浊度：2.1 NTU（清澈）\n\n综合评价：水体自净能力强，生态环境保持良好，未发现任何异常排污迹象。左侧已为您生成详细的光谱分析影像。';
+      targetImageIndex = 0;
     } else if (userMessage.includes('水位') || userMessage.includes('趋势')) {
       aiResponse = '【水位趋势研判】\n\n监测数据显示，过去24小时内，受上游降雨及调蓄影响，水位呈现“先升后稳”的趋势。\n\n关键数据：\n- 当前水位：18.52米\n- 距警戒水位：尚余3.48米\n- 变化速率：+0.01米/小时（缓慢）\n\n预测：基于水文模型推演，未来6小时水位将维持在18.50-18.55米区间震荡，无超警风险。建议维持常规巡查频次。左侧已为您展示水位变化趋势图。';
+      targetImageIndex = 2;
     } else if (userMessage.includes('设备')) {
       aiResponse = '【设备健康诊断】\n\n全网设备巡检完成，当前设备在线率为98.5%。\n\n异常通报：\n- 发现3台边缘采集终端（编号：IOT-092, IOT-093, IOT-095）信号不稳定，疑似受雷雨天气干扰。\n- 其余核心泵站、闸门控制器及水质监测浮标均运行正常。\n\n处置建议：系统已自动下发重启指令尝试恢复，建议运维人员密切关注后续信号质量。左侧已列出关键设备运行拓扑图。';
+      targetImageIndex = 4;
     } else if (userMessage.includes('分析') || userMessage.includes('报告')) {
       aiResponse = '【综合态势感知报告】\n\n正在为您生成本周水务综合运行分析报告...\n\n报告摘要：\n1. 水质方面：整体达标率100%，III类及以上水体占比提升至95%。\n2. 水量调度：本周累计调水量500万方，有效保障了下游灌溉及生态用水。\n3. 设施运维：完成例行巡检12次，处理设备隐患2处。\n\n详细报告已生成，包含水质光谱图、水位过程线及设备状态表。左侧为您展示综合分析概览。';
     } else {
       aiResponse = `收到您的指令：“${userMessage}”。\n\n正在调用Water-AI v2.0模型进行全域数据检索与关联分析...\n\n分析进度：\n- 语义理解：完成\n- 数据匹配：找到相关记录 15 条\n- 趋势预测：正在计算...\n\n初步结论：根据现有数据，该指令涉及的区域目前运行平稳。左侧已为您生成最匹配的监测影像，请结合影像进行研判。`;
+      targetImageIndex = 0;
     }
 
-    await typeMessage(aiResponse);
+    await typeMessage(aiResponse, targetImageIndex);
   }, 1500);
 };
 
 const quickActions = [
   { 
-    label: '水质监测', 
-    message: '请展示当前水质监测情况', 
+    label: '控制站状态', 
+    message: '查询当前控制站运行状态', 
     imageIndex: 0, 
-    response: '【水质监测报告 2024-05-20】\n\n根据最新实时监测数据分析，该区域水质状况整体保持优良。具体指标如下：\n1. 溶解氧 (DO)：7.2 mg/L，处于非常健康水平，利于水生生物存活。\n2. 化学需氧量 (COD)：15 mg/L，远低于国家III类水标准。\n3. 氨氮含量：0.4 mg/L，较上月下降0.1 mg/L。\n\n结论：未发现异常污染物排放，水生态系统运行稳定。左侧已为您生成详细的水质光谱监测影像，请查阅。' 
+    response: '【控制站运行监测】\n\n当前“鱼岭”控制站实时监测数据如下：\n- 实时流量：1000 m³/s（最大流量 5000 m³/s）\n- 实时水位：60 m\n- 警戒水位：60 m\n- 保证水位：65 m\n\n分析：当前水位已触及警戒水位（60m），但流量仍处于可控范围。建议密切关注上游来水情况，做好调度准备。左侧已为您展示控制站详细状态图。' 
   },
   { 
-    label: '污染源追踪', 
-    message: '分析一下潜在的污染源分布', 
+    label: '淹没总览', 
+    message: '生成淹没模拟分析报告', 
     imageIndex: 1, 
-    response: '【污染源追踪与溯源分析】\n\n系统通过多光谱影像对比与AI算法分析，已完成全流域污染源排查。结果如下：\n1. 潜在风险点：发现上游A区（坐标：E114.32, N30.58）存在微量异常排放迹象，疑似为初期雨水径流携带的面源污染。\n2. 扩散路径：污染物随水流向东南方向扩散，预计扩散半径为1.5公里。\n\n建议：建议立即派遣无人机进行定点核查，并加强对上游A区周边排水口的监管力度。左侧为您展示污染源热力分布图。' 
+    response: '【淹没模拟信息总览】\n\n基于当前水情推演的淹没影响评估：\n- 影响范围：河段长度 10 km，涉及北坪村、鱼岭村。\n- 淹没深度：超土地线 1 m，超移民线 1.6 m。\n- 淹没历时：预计持续 6 小时。\n\n综合影响：预计影响人口 2000 人，土地 100 亩，房屋 2000 m²。左侧已生成淹没信息总览图。' 
   },
   { 
-    label: '实时水位', 
-    message: '查看今日实时水位变化趋势', 
+    label: '社会指标', 
+    message: '查看社会影响指标总览', 
     imageIndex: 2, 
-    response: '【实时水位动态简报】\n\n截至今日16:00，核心监测点水位情况如下：\n- 当前水位：24.56米\n- 警戒水位：28.00米\n- 历史最高：29.12米\n\n趋势分析：过去24小时内，受上游调水影响，水位呈现“缓慢爬升后趋于平稳”的态势，平均每小时上涨0.02米，目前已稳定在安全区间。预计未来12小时水位将维持在24.50-24.60米之间波动。左侧已为您绘制今日水位精细变化趋势图。' 
+    response: '【社会指标影响总览】\n\n本次淹没模拟对社会指标的综合影响如下：\n- 受影响人口：2000 个\n- 受淹没土地：100 亩\n- 受损房屋：2000 m²\n\n分析：人口与房屋影响较大，主要集中在沿河低洼地带。建议优先保障人员撤离，并评估房屋结构安全。左侧已展示社会指标影响概览图。' 
   },
   { 
-    label: '洪涝预警', 
-    message: '生成未来24小时洪涝风险预警', 
+    label: '人口影响', 
+    message: '分析受淹没影响人口结构', 
     imageIndex: 3, 
-    response: '【未来24小时洪涝风险预警】\n\n基于气象卫星数据与水文模型综合研判：\n1. 降雨预测：预计未来24小时流域内将有中到大雨，局部暴雨，累计降雨量可能达到50-80mm。\n2. 积水风险：低洼地区（特别是B区和D区）存在轻度积水风险，积水深度预计在10-20cm。\n3. 河道行洪：河道行洪能力充足，但需警惕城市内涝对排水管网的压力。\n\n预警级别：黄色预警（低风险）。建议提前疏通排水管网，做好防汛准备。左侧已生成洪涝风险模拟演练影像。' 
+    response: '【受灾人口结构分析】\n\n本次模拟淹没共计影响人口 2000 人。结构分布如下：\n- 城镇人口：1300 人\n- 农村人口： 700 人\n\n建议：重点关注城镇密集区域的疏散通道畅通情况，并为农村地区提供必要的应急转移支援。左侧已展示受灾人口统计图表。' 
   },
   { 
-    label: '设备概览', 
-    message: '汇报关键设备运行状态', 
+    label: '土地影响', 
+    message: '统计受淹没土地类型及面积', 
     imageIndex: 4, 
-    response: '【关键设备运行健康度报告】\n\n系统已完成对全网108台关键设备的巡检扫描，整体健康度评分：96分。\n1. 运行正常：105台设备各项参数指标均在正常阈值内。\n2. 异常预警：3号泵站的2号机组检测到振动频率轻微异常（偏离度5%），建议在下次例行维护时重点检查轴承磨损情况。\n3. 离线设备：无关键节点离线。\n\n结论：整个监控网络运行稳健，数据传输链路畅通。左侧为您展示关键设备拓扑与状态分布图。' 
+    response: '【受灾土地类型统计】\n\n本次模拟淹没影响土地总面积 100 亩。各类土地受损明细：\n- 耕地：30 亩\n- 园地：29 亩\n- 林地：24 亩\n- 草地：17 亩\n\n评估：耕地与园地受损较重，建议农业部门提前介入评估农业经济损失。左侧已展示土地影响分类统计图。' 
   },
   { 
-    label: '能耗分析', 
-    message: '统计本月全网能耗数据', 
+    label: '房屋受损', 
+    message: '评估房屋受损情况', 
     imageIndex: 5, 
-    response: '【月度能耗统计与节能分析】\n\n本月（截至今日）全网设备总能耗统计如下：\n- 总耗电量：12,450 kWh\n- 环比上月：下降 5.2%\n- 同比去年：下降 8.1%\n\n节能成效分析：得益于上周实施的“智能错峰运行策略”，在夜间低流量时段自动降低了泵站功率，有效减少了无效能耗。预计全年可节省电费约5万元。左侧为您展示本月能耗构成及趋势分析图表。' 
+    response: '【房屋受损评估报告】\n\n根据淹没模型计算，预计受损房屋面积达 2000 m²。\n\n重点区域：\n- 鱼岭村沿河低洼地带房屋风险最高。\n- 北坪村部分老旧土坯房需重点排查倒塌风险。\n\n建议：建议立即启动房屋安全应急预案，组织人员转移安置。左侧为您展示房屋受损分布详细数据。' 
   },
 ];
 
-const typeMessage = (text: string) => {
+const typeMessage = (text: string, imageIndex: number = -1) => {
   return new Promise<void>((resolve) => {
     messages.value.push({
       type: 'ai',
@@ -118,13 +124,35 @@ const typeMessage = (text: string) => {
 
     const currentMessage = messages.value[messages.value.length - 1];
     let i = 0;
+    let imageShown = false;
     const type = () => {
       if (i < text.length && currentMessage) {
         currentMessage.content += text.charAt(i);
         i++;
         scrollToBottom();
+        
+        // Show image after about 30 characters (simulating analysis complete)
+        if (!imageShown && i > 30 && imageIndex !== -1) {
+           imageShown = true;
+           isGeneratingImages.value = true;
+           currentImages.value = [];
+           setTimeout(() => {
+             currentImages.value = [allImages[imageIndex]!];
+             isGeneratingImages.value = false;
+           }, 800);
+        }
+
         setTimeout(type, 30);
       } else {
+        // Fallback: ensure image is shown if text is short
+        if (!imageShown && imageIndex !== -1) {
+           isGeneratingImages.value = true;
+           currentImages.value = [];
+           setTimeout(() => {
+             currentImages.value = [allImages[imageIndex]!];
+             isGeneratingImages.value = false;
+           }, 800);
+        }
         resolve();
       }
     };
@@ -269,7 +297,7 @@ const handleEnter = (e: KeyboardEvent) => {
 
             <div class="flex flex-col" :class="msg.type === 'user' ? 'items-end' : 'items-start'">
               <span class="text-xs text-gray-400 mb-1 mx-1">{{ msg.time }}</span>
-              <div class="p-3 rounded-2xl text-sm shadow-sm leading-relaxed" 
+              <div class="p-3 rounded-2xl text-sm shadow-sm leading-relaxed whitespace-pre-wrap" 
                    :class="msg.type === 'user' ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white dark:bg-[#2a2a2a] text-gray-800 dark:text-gray-200 rounded-tl-none border border-gray-100 dark:border-gray-700'">
                 {{ msg.content }}
               </div>
@@ -299,7 +327,7 @@ const handleEnter = (e: KeyboardEvent) => {
             class="!resize-none !rounded-xl !pr-12 !border-gray-200 dark:!border-gray-700 focus:!border-blue-500 !shadow-none"
             @keydown.enter="handleEnter"
           />
-          <Button type="primary" shape="circle" class="absolute right-2 bottom-1.5 shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600 border-0" 
+          <Button type="primary" shape="circle" class="absolute right-2 bottom-0 shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600 border-0" 
             :loading="loading" @click="handleSend">
             <template #icon><IconifyIcon icon="ion:paper-plane" /></template>
           </Button>
