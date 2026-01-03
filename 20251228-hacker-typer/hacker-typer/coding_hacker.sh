@@ -35,7 +35,15 @@ check_input() {
         echo -e "${RED}║                                                      ║${RESET}"
         echo -e "${RED}╚══════════════════════════════════════════════════════╝${RESET}"
         echo -e "\n"
-        exit 0
+        
+        # Open URL
+        open "https://cn.moodl.ink/water-admin"
+        
+        # Reset history to avoid re-triggering
+        INPUT_HISTORY=""
+        
+        # Do not exit
+        # exit 0
     fi
 }
 
