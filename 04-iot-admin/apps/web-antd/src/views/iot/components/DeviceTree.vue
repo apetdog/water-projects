@@ -10,7 +10,7 @@ const autoExpandParent = ref<boolean>(true);
 
 const treeData: TreeProps['treeData'] = [
   {
-    title: '福建泉州大学水位计',
+    title: 'IoT监测点水位计',
     key: '0-0',
     children: [
       {

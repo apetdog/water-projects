@@ -22,8 +22,8 @@ onMounted(() => {
         barMaxWidth: 80,
         // color: '#4f69fd',
         data: [
-          3000, 2000, 3333, 5000, 3200, 4200, 3200, 2100, 3000, 5100, 6000,
-          3200, 4800,
+          1200, 1800, 2400, 3100, 3800, 4600, 5200, 5900, 6500, 7200, 7800,
+          8600,
         ],
         type: 'bar',
       },
@@ -38,7 +38,9 @@ onMounted(() => {
       trigger: 'axis',
     },
     xAxis: {
-      data: Array.from({ length: 12 }).map((_item, index) => `${index + 1}月`),
+      data: Array.from({ length: 12 }).map(
+        (_item, index) => `第${index + 1}次`,
+      ),
       type: 'category',
     },
     yAxis: {

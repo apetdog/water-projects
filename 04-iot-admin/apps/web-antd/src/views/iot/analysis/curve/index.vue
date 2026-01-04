@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { EchartsUI, useEcharts, type EchartsUIType } from '@vben/plugins/echarts';
 
-import { Button, Card, DatePicker, Radio, Space } from 'ant-design-vue';
+import { Button, DatePicker, Radio, Space } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';
 
 import DeviceTree from '../../components/DeviceTree.vue';

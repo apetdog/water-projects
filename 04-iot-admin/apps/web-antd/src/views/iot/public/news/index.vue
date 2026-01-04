@@ -8,7 +8,7 @@ import {
   Table,
   Tag,
 } from 'ant-design-vue';
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 
 import NewsModal from './components/NewsModal.vue';
 import { newsList } from '../../mock/news';

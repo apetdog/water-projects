@@ -5,10 +5,8 @@ import { useVbenModal } from '@vben/common-ui';
 import {
   Button,
   Checkbox,
-  Input,
   Space,
   Table,
-  Tabs,
   Tag,
 } from 'ant-design-vue';
 
@@ -28,8 +26,6 @@ const handleBack = () => {
 const handlePassthrough = () => {
   passthroughModalApi.open();
 };
-
-const activeKey = 'realtime';
 
 const realtimeColumns = [
   { title: '告警', dataIndex: 'alarm', key: 'alarm' },

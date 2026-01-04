@@ -23,7 +23,7 @@ function generateMockDataList(count: number) {
       quantity: faker.number.int({ min: 1, max: 100 }),
       available: faker.datatype.boolean(),
       category: faker.commerce.department(),
-      releaseDate: faker.date.past(),
+      releaseDate: new Date('2026-01-09'),
       rating: faker.number.float({ min: 1, max: 5 }),
       description: faker.commerce.productDescription(),
       weight: faker.number.float({ min: 0.1, max: 10 }),

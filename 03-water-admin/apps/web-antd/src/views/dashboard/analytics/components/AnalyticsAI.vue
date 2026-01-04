@@ -162,13 +162,13 @@ const typeMessage = (text: string, imageIndex: number = -1) => {
 
 // --- Image Logic ---
 const allImages = [
-  '/aimg-01.png',
-  '/aimg-02.png',
-  '/aimg-03.png',
-  '/aimg-04.png',
-  '/aimg-05.png',
-  '/aimg-06.png',
-];
+  'aimg-01.png',
+  'aimg-02.png',
+  'aimg-03.png',
+  'aimg-04.png',
+  'aimg-05.png',
+  'aimg-06.png',
+].map((img) => `${import.meta.env.BASE_URL}${img}`);
 
 const currentImages = ref<string[]>([]);
 const isGeneratingImages = ref(false);

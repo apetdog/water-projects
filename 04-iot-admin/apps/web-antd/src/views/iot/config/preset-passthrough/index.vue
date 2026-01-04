@@ -2,7 +2,6 @@
 import { useVbenModal } from '@vben/common-ui';
 import {
   Button,
-  Input,
   Table,
 } from 'ant-design-vue';
 import { ref } from 'vue';

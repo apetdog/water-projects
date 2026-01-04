@@ -90,7 +90,7 @@ const chartTabs: TabOption[] = [
     value: 'trends',
   },
   {
-    label: '月访问量',
+    label: '雷达水位计',
     value: 'visits',
   },
 ];

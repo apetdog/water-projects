@@ -1,11 +1,11 @@
 <script lang="ts"
   setup>
   import { computed, ref, nextTick, watch } from 'vue';
-  import { Modal, Input, Button, Avatar, Spin, Menu, MenuItem } from 'ant-design-vue';
+  import { Modal, Input, Button, Avatar, Spin } from 'ant-design-vue';
   import { IconifyIcon } from '@vben/icons';
   import { useUserStore } from '@vben/stores';
 
-  const props = defineProps<{
+  defineProps<{
     visible: boolean;
   }>();
 
@@ -16,7 +16,6 @@
   const loading = ref(false);
   const baseUrl = import.meta.env.BASE_URL;
   const showCommandMenu = ref(false);
-  const commandMenuPosition = ref({ top: 0, left: 0 });
   const inputRef = ref();
 
   const commandQuery = ref('');
@@ -118,7 +117,7 @@
     }
   };
 
-  const handleEnter = (e: any) => {
+  const handleEnter = () => {
     if (showCommandMenu.value && filteredCommands.value.length > 0) {
       const selectedCmd = filteredCommands.value[selectedCommandIndex.value];
       if (selectedCmd) {

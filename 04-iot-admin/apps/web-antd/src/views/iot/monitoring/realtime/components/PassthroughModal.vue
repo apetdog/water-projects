@@ -5,7 +5,6 @@ import {
   Button,
   Checkbox,
   Input,
-  Modal,
   Space,
   Table,
 } from 'ant-design-vue';
