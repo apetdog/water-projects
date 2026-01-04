@@ -31,32 +31,38 @@ export const RightPageIndex = () => {
     rightData ? (
       <RightPage>
         <RightTopBox>
-          <div className='right-top'>
-            <ModuleTitle>
-              <i className='iconfont'>&#xe7f7;</i>
-              <span>常驻人口统计</span>
-            </ModuleTitle>
-            <div className='right-top-content'>
-              <BrowseCategories
-                browseCategories={rightData.browseCategories}
-              ></BrowseCategories>
-              <img
-                alt='地球'
-                className='earth-gif'
-                src={earthRotate}
-              />
+          <BorderBox13 className='right-top-borderBox13'>
+            <div className='right-top'>
+              <ModuleTitle>
+                <i className='iconfont'>&#xe7f7;</i>
+                <span>常驻人口统计</span>
+              </ModuleTitle>
+              <div className='right-top-content'>
+                <BrowseCategories
+                  browseCategories={rightData.browseCategories}
+                ></BrowseCategories>
+                <img
+                  alt='地球'
+                  className='earth-gif'
+                  src={earthRotate}
+                />
+              </div>
             </div>
-          </div>
+          </BorderBox13>
         </RightTopBox>
 
         <RightCenterBox>
-          <ModuleTitle>
-            <i className='iconfont'>&#xe7fd;</i>
-            <span>重点监控</span>
-          </ModuleTitle>
-          <div style={{marginTop: '20px'}}>
-             <KeyMonitoring />
-          </div>
+          <BorderBox13 className='right-center-borderBox13'>
+            <div className='right-center'>
+              <ModuleTitle>
+                <i className='iconfont'>&#xe7fd;</i>
+                <span>重点监控</span>
+              </ModuleTitle>
+              <div style={{marginTop: '20px', height: 'calc(100% - 40px)'}}>
+                 <KeyMonitoring />
+              </div>
+            </div>
+          </BorderBox13>
         </RightCenterBox>
 
         <RightBottomBox>
@@ -67,14 +73,18 @@ export const RightPageIndex = () => {
                 <span>园区热力与满意度</span>
               </ModuleTitle>
               
-              <div style={{display: 'flex', width: '100%', height: '100%'}}>
-                 <div style={{flex: 1}}>
+              <div style={{display: 'flex', width: '100%', flex: 1, minHeight: 0}}>
+                 <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <div style={{textAlign: 'center', color: '#fff', marginBottom: '10px'}}>园区热力指数</div>
-                    <HeatIndex />
+                    <div style={{flex: 1, minHeight: 0}}>
+                      <HeatIndex />
+                    </div>
                  </div>
-                 <div style={{flex: 1}}>
+                 <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <div style={{textAlign: 'center', color: '#fff', marginBottom: '10px'}}>企业服务满意度</div>
-                    <Satisfaction />
+                    <div style={{flex: 1, minHeight: 0}}>
+                      <Satisfaction />
+                    </div>
                  </div>
               </div>
             </div>
