@@ -9,7 +9,7 @@ import {
 import { TopBox, TimeBox } from './style';
 
 const stateInfo = {
-  title: '大数据可视化平台',
+  title: '智慧管控平台',
   weekday: [
     '星期天',
     '星期一',
