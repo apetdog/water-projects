@@ -14,15 +14,15 @@ export default eventHandler(async (event) => {
     "data": [
               {
                 "id": 123456789012345678901234567890123456789012345678901234567890,
-                "name": "John Doe",
+                "name": "Test User 1",
                 "age": 30,
-                "email": "john-doe@demo.com"
+                "email": "user1@demo.com"
                 },
                 {
                 "id": 987654321098765432109876543210987654321098765432109876543210,
-                "name": "Jane Smith",
+                "name": "Test User 2",
                 "age": 25,
-                "email": "jane@demo.com"
+                "email": "user2@demo.com"
                 }
             ]
   }

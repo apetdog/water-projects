@@ -8,7 +8,7 @@ interface StatusTableItem {
 const baseStatusTableData: StatusTableItem[] = [
   {
     key: '1',
-    unit: '福建泉州大学水位计',
+    unit: 'IoT监测点水位计',
     status: '正常',
     count: 1,
   },
@@ -20,7 +20,7 @@ const generatedStatusTableData: StatusTableItem[] = Array.from({ length: 17 }).m
   return {
     key: `${id}`,
     unit: `模拟站点 ${id}`,
-    status: statuses[index % 3],
+    status: statuses[index % 3] || '离线',
     count: 1,
   };
 });

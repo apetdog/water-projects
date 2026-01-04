@@ -17,10 +17,10 @@ const baseConfigTaskList: ConfigTaskItem[] = [
     type: '数据采集',
     intervalType: '分钟',
     interval: '10',
-    firstTime: '2025-12-09 10:00:00',
-    nextTime: '2025-12-09 10:10:00',
+    firstTime: '2026-01-09 10:00:00',
+    nextTime: '2026-01-09 10:10:00',
     status: '运行中',
-    createTime: '2025-12-01 09:00:00',
+    createTime: '2026-01-01 09:00:00',
   },
 ];
 
@@ -32,10 +32,10 @@ const generatedConfigTaskList: ConfigTaskItem[] = Array.from({ length: 17 }).map
     type: '数据采集',
     intervalType: '分钟',
     interval: '10',
-    firstTime: '2025-12-09 10:00:00',
-    nextTime: '2025-12-09 10:10:00',
+    firstTime: '2026-01-09 10:00:00',
+    nextTime: '2026-01-09 10:10:00',
     status: index % 2 === 0 ? '运行中' : '已停止',
-    createTime: '2025-12-01 09:00:00',
+    createTime: '2026-01-01 09:00:00',
   };
 });
 
