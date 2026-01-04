@@ -68,3 +68,29 @@ export const TimeBox = styled.div`
     color: ${TitleColor};
   }
 `;
+
+export const TabBox = styled.div`
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 999;
+`;
+
+export const TabItem = styled.div<{ $active: boolean }>`
+  cursor: pointer;
+  padding: 5px 15px;
+  font-size: 16px;
+  color: ${props => props.$active ? '#50e3c2' : '#fff'};
+  background: ${props => props.$active ? 'rgba(80, 227, 194, 0.2)' : 'transparent'};
+  border: 1px solid ${props => props.$active ? '#50e3c2' : 'transparent'};
+  border-radius: 4px;
+  transition: all 0.3s;
+  
+  &:hover {
+    color: #50e3c2;
+    background: rgba(80, 227, 194, 0.1);
+  }
+`;

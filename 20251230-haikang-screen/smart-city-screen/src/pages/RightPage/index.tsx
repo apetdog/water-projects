@@ -9,9 +9,9 @@ import { rightPageDataApi } from '@/api/mock/index'
 import earthRotate from '@/assets/images/earth-rotate.gif'
 
 import BrowseCategories from './charts/BrowseCategories'
-import UserIdentityCategory from './charts/UserIdentityCategory'
-import OfflinePortal from './charts/OfflinePortal'
-import Feedback from './charts/Feedback'
+import { KeyMonitoring } from '@/components/KeyMonitoring'
+import HeatIndex from './charts/HeatIndex'
+import Satisfaction from './charts/Satisfaction'
 
 export const RightPageIndex = () => {
   const [rightData, setRightData] = useState<rightPageDataType | undefined>(undefined)
@@ -34,7 +34,7 @@ export const RightPageIndex = () => {
           <div className='right-top'>
             <ModuleTitle>
               <i className='iconfont'>&#xe7f7;</i>
-              <span>关联数据类别分布</span>
+              <span>常驻人口统计</span>
             </ModuleTitle>
             <div className='right-top-content'>
               <BrowseCategories
@@ -52,11 +52,11 @@ export const RightPageIndex = () => {
         <RightCenterBox>
           <ModuleTitle>
             <i className='iconfont'>&#xe7fd;</i>
-            <span>平均用户类别排布</span>
+            <span>重点监控</span>
           </ModuleTitle>
-          <UserIdentityCategory
-            userIdentityCategory={rightData.userIdentityCategory}
-          ></UserIdentityCategory>
+          <div style={{marginTop: '20px'}}>
+             <KeyMonitoring />
+          </div>
         </RightCenterBox>
 
         <RightBottomBox>
@@ -64,30 +64,18 @@ export const RightPageIndex = () => {
             <div className='right-bottom'>
               <ModuleTitle>
                 <i className='iconfont'>&#xe790;</i>
-                <span>今日线下门户流量</span>
+                <span>园区热力与满意度</span>
               </ModuleTitle>
-              {/* 反馈 */}
-              <div className='feedback-box'>
-                {rightData.offline
-                  ? rightData.offline.feedback.map((item, index) => {
-                    return (
-                      <div className='feedback-box-item' key={index}>
-                        <Feedback FeedbackData={item}></Feedback>
-                        <span className='dis-text'>{item.title}</span>
-                      </div>
-                    )
-                  })
-                  : ''}
-              </div>
-              {/* 门店 */}
-              <div className='offline-portal-box'>
-                {rightData.offline ? (
-                  <OfflinePortal
-                    offlinePortalData={rightData.offline.offlinePortalData}
-                  />
-                ) : (
-                  ''
-                )}
+              
+              <div style={{display: 'flex', width: '100%', height: '100%'}}>
+                 <div style={{flex: 1}}>
+                    <div style={{textAlign: 'center', color: '#fff', marginBottom: '10px'}}>园区热力指数</div>
+                    <HeatIndex />
+                 </div>
+                 <div style={{flex: 1}}>
+                    <div style={{textAlign: 'center', color: '#fff', marginBottom: '10px'}}>企业服务满意度</div>
+                    <Satisfaction />
+                 </div>
               </div>
             </div>
           </BorderBox13>

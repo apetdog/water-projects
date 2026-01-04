@@ -5,8 +5,9 @@ import {
   Decoration8,
   Decoration6,
 } from '@jiaminghi/data-view-react';
+import useConfigStore from '@/store/index';
 
-import { TopBox, TimeBox } from './style';
+import { TopBox, TimeBox, TabBox, TabItem } from './style';
 
 const stateInfo = {
   title: '智慧管控平台',
@@ -21,9 +22,17 @@ const stateInfo = {
   ],
 }
 
+const tabs = [
+  { key: 'comprehensive', label: '综合态势' },
+  { key: 'security', label: '智慧安防' },
+  { key: 'video', label: '视频融合' },
+  { key: 'ecology', label: '绿色生态' },
+]
+
 const TopPageIndex = () => {
   const [timeStr, setTimeStr] = useState('')
   const timing = useRef<number | null>(null)
+  const { activeTab, setActiveTab } = useConfigStore()
 
   // 设置时间
   const setTimingFn = () => {
@@ -74,6 +83,17 @@ const TopPageIndex = () => {
           </TimeBox>
         </div>
       </TopBox>
+      <TabBox>
+        {tabs.map(tab => (
+          <TabItem 
+            key={tab.key} 
+            $active={activeTab === tab.key}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </TabItem>
+        ))}
+      </TabBox>
     </>
   );
 }

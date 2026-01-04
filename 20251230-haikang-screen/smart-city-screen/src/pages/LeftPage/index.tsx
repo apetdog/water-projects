@@ -1,8 +1,8 @@
 import { BorderBox12, BorderBox13 } from '@jiaminghi/data-view-react';
 import { useEffect, useState } from 'react';
 import { ModuleTitle } from '@/style/globalStyledSet';
-import TrafficSituation from './charts/TrafficSituation';
-import UserSituation from './charts/UserSituation';
+import { DroneView } from '@/components/DroneView';
+import IndustrialRadar from './charts/IndustrialRadar';
 import { LeftPage, LeftTopBox, LeftBottomBox } from './style';
 import { leftPageDataType } from '@/api/mock/leftPageData'
 import { get } from '@/api/http'
@@ -33,20 +33,11 @@ export const LeftPageIndex = () => {
           <div className='left-top'>
             <ModuleTitle>
               <i className='iconfont'>&#xe78f;</i>
-              <span>今日流量态势</span>
+              <span>无人机视角</span>
             </ModuleTitle>
-            <div className='title-dis'>
-              <span>
-                平均接纳次数(小时):
-                <span className='title-dis-keyword'>{leftData.accessFrequency}次</span>
-              </span>
-              <span>
-                流量峰值:
-                <span className='title-dis-keyword'>{leftData.peakFlow}M</span>
-              </span>
+            <div style={{ marginTop: '20px', height: 'calc(100% - 40px)' }}>
+               <DroneView />
             </div>
-            {/* 图表 */}
-            <TrafficSituation trafficStatus={leftData.trafficStatus}></TrafficSituation>
           </div>
         </BorderBox12>
       </LeftTopBox>
@@ -57,10 +48,12 @@ export const LeftPageIndex = () => {
           <div className='left-bottom'>
             <ModuleTitle>
               <i className='iconfont'>&#xe88e;</i>
-              <span>用户数据状态</span>
+              <span>产业结构分析</span>
             </ModuleTitle>
             {/* 图表 */}
-            <UserSituation userStatus={leftData.userStatus}></UserSituation>
+            <div style={{ width: '100%', height: '300px' }}>
+              <IndustrialRadar />
+            </div>
           </div>
         </BorderBox13>
       </LeftBottomBox>

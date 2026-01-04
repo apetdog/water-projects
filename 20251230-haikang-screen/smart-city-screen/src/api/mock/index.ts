@@ -3,25 +3,16 @@ import { RequestHttpEnum, ResultEnum } from '@/enums/httpEnum'
 import leftPageData from './leftPageData'
 import centerPageData from './centerPageData'
 import rightPageData from './rightPageData'
-
-// export const leftPageDataAccessFrequencyApi =
-//   '/api/leftPageData/accessFrequency'
-// export const leftPageDataPeakFlowApi = '/api/leftPageData/peakFlow'
-// export const leftPageDataTrafficStatusApi = '/api/leftPageData/trafficStatus'
-// export const leftPageDataUserStatusApi = '/api/leftPageData/userStatus'
-
-// export const centerPageDataDetailsListApi = '/api/centerPageData/detailsList'
-// export const centerPageDataMapDataApi = '/api/centerPageData/mapData'
-
-// export const rightPageDataBrowseCategoriesApi =
-//   '/api/rightPageData/browseCategories'
-// export const rightPageDataUserIdentityCategoryApi =
-//   '/api/rightPageData/userIdentityCategory'
-// export const rightPageDataOfflineApi = '/api/rightPageData/offline'
+import securityPageData from './securityPageData'
+import videoPageData from './videoPageData'
+import ecologyPageData from './ecologyPageData'
 
 export const leftPageDataApi = '/api/leftPageData'
 export const centerPageDataApi = '/api/centerPageData'
 export const rightPageDataApi = '/api/rightPageData'
+export const securityPageDataApi = '/api/securityPageData'
+export const videoPageDataApi = '/api/videoPageData'
+export const ecologyPageDataApi = '/api/ecologyPageData'
 
 const successObject = (data: unknown) => {
   return {
@@ -47,54 +38,21 @@ const mockMethod: MockMethod[] = [
     method: RequestHttpEnum.GET,
     response: () => successObject(rightPageData)
   },
-  // ----------------------------
-  // {
-  //   url: leftPageDataAccessFrequencyApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(leftPageData.accessFrequency)
-  // },
-  // {
-  //   url: leftPageDataPeakFlowApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(leftPageData.peakFlow)
-  // },
-  // {
-  //   url: leftPageDataTrafficStatusApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(leftPageData.trafficStatus)
-  // },
-  // {
-  //   url: leftPageDataUserStatusApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(leftPageData.userStatus)
-  // },
-  // // 中间
-  // {
-  //   url: centerPageDataDetailsListApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(centerPageData.detailsList)
-  // },
-  // {
-  //   url: centerPageDataMapDataApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(centerPageData.mapData)
-  // },
-  // // 右侧
-  // {
-  //   url: rightPageDataBrowseCategoriesApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(rightPageData.browseCategories)
-  // },
-  // {
-  //   url: rightPageDataUserIdentityCategoryApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(rightPageData.userIdentityCategory)
-  // },
-  // {
-  //   url: rightPageDataOfflineApi,
-  //   method: RequestHttpEnum.GET,
-  //   response: () => successObject(rightPageData.offline)
-  // }
+  {
+    url: securityPageDataApi,
+    method: RequestHttpEnum.GET,
+    response: () => successObject(securityPageData)
+  },
+  {
+    url: videoPageDataApi,
+    method: RequestHttpEnum.GET,
+    response: () => successObject(videoPageData)
+  },
+  {
+    url: ecologyPageDataApi,
+    method: RequestHttpEnum.GET,
+    response: () => successObject(ecologyPageData)
+  }
 ]
 
 export default mockMethod
