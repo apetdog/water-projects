@@ -13,6 +13,7 @@ export const RightPage = styled.div`
 export const RightTopBox = styled.div`
   position: relative;
   flex: 1;
+  min-height: 0;
   width: 100%;
   .right-top-borderBox13 {
     width: inherit;
@@ -42,6 +43,7 @@ export const RightTopBox = styled.div`
 export const RightCenterBox = styled.div`
   position: relative;
   flex: 1;
+  min-height: 0;
   width: 100%;
   .right-center-borderBox13 {
     width: inherit;
@@ -59,6 +61,7 @@ export const RightCenterBox = styled.div`
 export const RightBottomBox = styled.div`
   position: relative;
   flex: 1;
+  min-height: 0;
   width: 100%;
   .right-bottom-borderBox13 {
     width: inherit;

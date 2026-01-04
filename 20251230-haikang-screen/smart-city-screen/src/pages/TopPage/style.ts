@@ -72,8 +72,8 @@ export const TimeBox = styled.div`
 
 export const LeftTabBox = styled.div`
   position: absolute;
-  top: 40px;
-  left: 28%;
+  top: 60px;
+  left: 5%;
   display: flex;
   gap: 20px;
   z-index: 999;
@@ -81,8 +81,8 @@ export const LeftTabBox = styled.div`
 
 export const RightTabBox = styled.div`
   position: absolute;
-  top: 40px;
-  right: 28%;
+  top: 60px;
+  right: 5%;
   display: flex;
   gap: 20px;
   z-index: 999;

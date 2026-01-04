@@ -14,6 +14,7 @@ export const LeftPage = styled.div`
 export const LeftTopBox = styled.div`
   position: relative;
   flex: 1;
+  min-height: 0;
   width: 100%;
   .left-top-borderBox12 {
     width: inherit;
@@ -31,6 +32,7 @@ export const LeftTopBox = styled.div`
 export const LeftMiddleBox = styled.div`
   position: relative;
   flex: 1;
+  min-height: 0;
   width: 100%;
   .left-middle-borderBox13 {
     width: inherit;
@@ -48,6 +50,7 @@ export const LeftMiddleBox = styled.div`
 export const LeftBottomBox = styled.div`
   position: relative;
   flex: 1;
+  min-height: 0;
   width: 100%;
   .left-bottom-borderBox13 {
     width: inherit;
