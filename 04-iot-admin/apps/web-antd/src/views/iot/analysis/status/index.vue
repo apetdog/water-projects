@@ -2,11 +2,8 @@
 import { EchartsUI, useEcharts, type EchartsUIType } from '@vben/plugins/echarts';
 
 import {
-  Button,
-  Card,
   DatePicker,
   Radio,
-  Space,
   Table,
 } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';

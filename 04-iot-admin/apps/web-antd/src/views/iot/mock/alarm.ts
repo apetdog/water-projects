@@ -49,8 +49,8 @@ const generatedAlarmList: AlarmItem[] = Array.from({ length: 15 }).map((_, index
     address: '002512010117',
     time: `2026-01-0${(index % 9) + 1} 1${index % 10}:00:00`,
     content: `模拟告警内容 ${id}`,
-    level: levels[index % 3],
-    status: statuses[index % 2],
+    level: levels[index % 3] || 'low',
+    status: statuses[index % 2] || 'unresolved',
   };
 });
 

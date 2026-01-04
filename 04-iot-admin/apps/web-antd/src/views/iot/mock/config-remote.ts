@@ -44,7 +44,7 @@ const generatedConfigRemoteList: ConfigRemoteItem[] = Array.from({ length: 15 })
   return {
     key: `${id}`,
     address: '002512010117',
-    type: types[index % 3],
+    type: types[index % 3] || '接收',
     name: `模拟远程命令 ${id}`,
     time: `2026-01-09 ${10 + (index % 10)}:${10 + index}:00`,
     rawData: `{"Func":${id},"Dev":"002512010117","Data":""}`,

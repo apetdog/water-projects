@@ -5,8 +5,6 @@ import {
   Dropdown,
   Input,
   Menu,
-  Select,
-  Switch,
   Table,
 } from 'ant-design-vue';
 import { ref } from 'vue';
@@ -26,7 +24,6 @@ const [SaveTemplateModalComponent, saveTemplateModalApi] = useVbenModal({
 });
 
 // Search
-const searchType = ref('name');
 const searchText = ref('');
 
 // Main Table (Fields)

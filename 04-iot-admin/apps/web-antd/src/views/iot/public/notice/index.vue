@@ -8,7 +8,7 @@ import {
   Table,
   Tag,
 } from 'ant-design-vue';
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 
 import NoticeModal from './components/NoticeModal.vue';
 import { noticeList } from '../../mock/notice';

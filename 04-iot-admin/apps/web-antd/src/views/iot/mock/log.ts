@@ -53,7 +53,7 @@ const generatedLogData: LogItem[] = Array.from({ length: 14 }).map((_, index) =>
   return {
     key: `${id}`,
     address: '002512010117',
-    type: types[index % 3],
+    type: types[index % 3] || '接收',
     name: `模拟日志 ${id}`,
     time: `2026-01-09 ${18 - Math.floor(index / 6)}:${59 - (index % 60)}`,
     rawData: `{"Func":${id},"Dev":"002512010117","Data":""}`,
