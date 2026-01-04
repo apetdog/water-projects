@@ -7,7 +7,7 @@ import {
 } from '@jiaminghi/data-view-react';
 import useConfigStore from '@/store/index';
 
-import { TopBox, TimeBox, TabBox, TabItem } from './style';
+import { TopBox, TimeBox, LeftTabBox, RightTabBox, TabItem } from './style';
 
 const stateInfo = {
   title: '智慧管控平台',
@@ -22,9 +22,12 @@ const stateInfo = {
   ],
 }
 
-const tabs = [
+const leftTabs = [
   { key: 'comprehensive', label: '综合态势' },
   { key: 'security', label: '智慧安防' },
+]
+
+const rightTabs = [
   { key: 'video', label: '视频融合' },
   { key: 'ecology', label: '绿色生态' },
 ]
@@ -83,8 +86,9 @@ const TopPageIndex = () => {
           </TimeBox>
         </div>
       </TopBox>
-      <TabBox>
-        {tabs.map(tab => (
+      
+      <LeftTabBox>
+        {leftTabs.map(tab => (
           <TabItem 
             key={tab.key} 
             $active={activeTab === tab.key}
@@ -93,7 +97,19 @@ const TopPageIndex = () => {
             {tab.label}
           </TabItem>
         ))}
-      </TabBox>
+      </LeftTabBox>
+
+      <RightTabBox>
+        {rightTabs.map(tab => (
+          <TabItem 
+            key={tab.key} 
+            $active={activeTab === tab.key}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </TabItem>
+        ))}
+      </RightTabBox>
     </>
   );
 }

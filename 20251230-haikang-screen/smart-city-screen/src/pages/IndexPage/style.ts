@@ -19,4 +19,6 @@ export const IndexPageContent = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
+  height: calc(100% - 100px);
+  margin-top: 10px;
 `

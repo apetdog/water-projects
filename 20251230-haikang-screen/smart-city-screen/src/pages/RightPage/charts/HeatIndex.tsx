@@ -19,7 +19,7 @@ const HeatIndex = () => {
   };
 
   return (
-    <div style={{ width: '100%', height: '200px' }}>
+    <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
       <ScrollBoard config={config} />
     </div>
   );

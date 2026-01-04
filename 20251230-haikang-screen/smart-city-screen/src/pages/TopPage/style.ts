@@ -5,6 +5,7 @@ export const TopBox = styled.div`
   .top_box {
     display: flex;
     justify-content: center;
+    position: relative;
 
     .top_decoration10 {
       position: relative;
@@ -64,16 +65,24 @@ export const TimeBox = styled.div`
   text-align: right;
   color: #fff;
   h3{
-    font-size: 18px;
+    font-size: 14px;
     color: ${TitleColor};
   }
 `;
 
-export const TabBox = styled.div`
+export const LeftTabBox = styled.div`
   position: absolute;
-  top: 70px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 60px;
+  left: 5%;
+  display: flex;
+  gap: 20px;
+  z-index: 999;
+`;
+
+export const RightTabBox = styled.div`
+  position: absolute;
+  top: 60px;
+  right: 5%;
   display: flex;
   gap: 20px;
   z-index: 999;
