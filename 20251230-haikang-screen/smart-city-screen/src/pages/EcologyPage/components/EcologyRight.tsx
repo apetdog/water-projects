@@ -10,7 +10,7 @@ type Props = {
 export const EcologyRight = ({ selectedLampPost, energyAnalysis, photovoltaic }: Props) => {
   return (
     <div style={{ width: '450px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
-       <BorderBox13 style={{height: '32%', padding: '20px'}}>
+       <BorderBox13 style={{flex: 1, minHeight: 0, padding: '20px'}}>
           <ModuleTitle>
               <i className='iconfont'>&#xe790;</i>
               <span>智慧灯杆详情</span>
@@ -31,7 +31,7 @@ export const EcologyRight = ({ selectedLampPost, energyAnalysis, photovoltaic }:
           )}
        </BorderBox13>
        
-       <BorderBox12 style={{height: '32%', padding: '20px'}}>
+       <BorderBox12 style={{flex: 1, minHeight: 0, padding: '20px'}}>
           <ModuleTitle>
               <i className='iconfont'>&#xe7fd;</i>
               <span>园区能耗分析</span>
@@ -51,7 +51,7 @@ export const EcologyRight = ({ selectedLampPost, energyAnalysis, photovoltaic }:
           </div>
        </BorderBox12>
        
-       <BorderBox12 style={{height: '32%', padding: '20px'}}>
+       <BorderBox12 style={{flex: 1, minHeight: 0, padding: '20px'}}>
           <ModuleTitle>
               <i className='iconfont'>&#xe633;</i>
               <span>光伏发电收益</span>

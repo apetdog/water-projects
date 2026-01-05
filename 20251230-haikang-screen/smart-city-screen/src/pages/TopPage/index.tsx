@@ -5,7 +5,7 @@ import {
   Decoration8,
   Decoration6,
 } from '@jiaminghi/data-view-react';
-import useConfigStore from '@/store/index';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { TopBox, TimeBox, LeftTabBox, RightTabBox, TabItem } from './style';
 
@@ -23,19 +23,24 @@ const stateInfo = {
 }
 
 const leftTabs = [
-  { key: 'comprehensive', label: '综合态势' },
-  { key: 'security', label: '智慧安防' },
+  { key: 'comprehensive', label: '综合态势', path: '/comprehensive' },
+  { key: 'security', label: '智慧安防', path: '/security' },
 ]
 
 const rightTabs = [
-  { key: 'video', label: '视频融合' },
-  { key: 'ecology', label: '绿色生态' },
+  { key: 'video', label: '视频融合', path: '/video' },
+  { key: 'ecology', label: '绿色生态', path: '/ecology' },
 ]
 
 const TopPageIndex = () => {
   const [timeStr, setTimeStr] = useState('')
   const timing = useRef<number | null>(null)
-  const { activeTab, setActiveTab } = useConfigStore()
+  const navigate = useNavigate()
+  const location = useLocation()
+  
+  // Determine active tab based on current path
+  const currentPath = location.pathname
+  const activeTab = [...leftTabs, ...rightTabs].find(tab => currentPath.includes(tab.path))?.key || 'comprehensive'
 
   // 设置时间
   const setTimingFn = () => {
@@ -54,6 +59,10 @@ const TopPageIndex = () => {
       if (timing.current) clearInterval(timing.current)
     }
   }, [])
+
+  const handleTabClick = (path: string) => {
+    navigate(path)
+  }
 
   return (
     <>
@@ -92,7 +101,7 @@ const TopPageIndex = () => {
           <TabItem 
             key={tab.key} 
             $active={activeTab === tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => handleTabClick(tab.path)}
           >
             {tab.label}
           </TabItem>
@@ -104,7 +113,7 @@ const TopPageIndex = () => {
           <TabItem 
             key={tab.key} 
             $active={activeTab === tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => handleTabClick(tab.path)}
           >
             {tab.label}
           </TabItem>

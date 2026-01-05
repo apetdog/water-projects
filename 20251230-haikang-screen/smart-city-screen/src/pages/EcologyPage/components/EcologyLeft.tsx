@@ -39,7 +39,7 @@ export const EcologyLeft = ({ environmentFactors, waterQuality, carbonEmission }
 
   return (
     <div style={{ width: '450px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
-       <BorderBox12 style={{height: '32%', padding: '20px'}}>
+       <BorderBox12 style={{flex: 1, minHeight: 0, padding: '20px'}}>
           <ModuleTitle>
               <i className='iconfont'>&#xe78f;</i>
               <span>环境六要素</span>
@@ -53,7 +53,7 @@ export const EcologyLeft = ({ environmentFactors, waterQuality, carbonEmission }
               <div>⏲️ 气压: {environmentFactors?.pressure}</div>
           </div>
        </BorderBox12>
-       <BorderBox13 style={{height: '32%', padding: '20px'}}>
+       <BorderBox13 style={{flex: 1, minHeight: 0, padding: '20px'}}>
           <ModuleTitle>
               <i className='iconfont'>&#xe88e;</i>
               <span>空气质量趋势</span>
@@ -62,15 +62,15 @@ export const EcologyLeft = ({ environmentFactors, waterQuality, carbonEmission }
               <AirQualityChart />
           </div>
        </BorderBox13>
-       <div style={{display: 'flex', justifyContent: 'space-between', height: '32%'}}>
-           <BorderBox12 style={{width: '48%', padding: '10px'}}>
+       <div style={{display: 'flex', justifyContent: 'space-between', flex: 1, minHeight: 0, gap: '20px'}}>
+           <BorderBox12 style={{flex: 1, padding: '10px'}}>
                <ModuleTitle><span>水质监测</span></ModuleTitle>
                <div style={{height: '100px', display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
                    <WaterLevelPond config={config} style={{width: '100px', height: '100px'}} />
                </div>
                <div style={{textAlign: 'center', color: '#fff', marginTop: '10px'}}>pH: {waterQuality?.ph} ({waterQuality?.status})</div>
            </BorderBox12>
-           <BorderBox12 style={{width: '48%', padding: '10px'}}>
+           <BorderBox12 style={{flex: 1, padding: '10px'}}>
                <ModuleTitle><span>碳排放指标</span></ModuleTitle>
                <div style={{textAlign: 'center', color: '#fff', marginTop: '30px'}}>
                    <div style={{fontSize: '30px', color: '#50e3c2'}}>{carbonEmission?.dailyReduction}</div>

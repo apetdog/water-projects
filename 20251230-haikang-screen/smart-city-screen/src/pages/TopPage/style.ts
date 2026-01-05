@@ -60,8 +60,8 @@ export const TopBox = styled.div`
 
 export const TimeBox = styled.div`
   position: absolute;
-  right: 30px;
-  top: 40px;
+  right: 16px;
+  top: 30px;
   text-align: right;
   color: #fff;
   h3{
@@ -72,8 +72,8 @@ export const TimeBox = styled.div`
 
 export const LeftTabBox = styled.div`
   position: absolute;
-  top: 60px;
-  left: 5%;
+  top: 32px;
+  left: 15%;
   display: flex;
   gap: 20px;
   z-index: 999;
@@ -81,8 +81,8 @@ export const LeftTabBox = styled.div`
 
 export const RightTabBox = styled.div`
   position: absolute;
-  top: 60px;
-  right: 5%;
+  top: 32px;
+  right: 15%;
   display: flex;
   gap: 20px;
   z-index: 999;
