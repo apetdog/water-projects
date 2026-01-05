@@ -23,7 +23,7 @@ export default class Camera {
       0.1,
       15000
     );
-    this.instance.position.set(-2.7,76,151)
+    this.instance.position.set(-2.7, 100, 151); // Lifted up Y
     this.scene.add(this.instance);
   }
 

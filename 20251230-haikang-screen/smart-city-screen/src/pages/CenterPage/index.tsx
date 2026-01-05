@@ -319,23 +319,7 @@ export const CenterPageIndex = () => {
 
   return (
     <div className='center-page' style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
-      {/* 3D City Map Iframe */}
-      <iframe 
-        id="city-3d-iframe"
-        src="http://localhost:8080"
-        style={{
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          zIndex: 0,
-          pointerEvents: 'auto' // Allow interaction with 3D scene directly if needed, or 'none' if only via buttons
-        }}
-        title="3D City Map"
-      />
-
+      
       <AlarmBtn onClick={handleCall}>
         <i className='iconfont'>&#xe61d;</i>
         <WaveChart>

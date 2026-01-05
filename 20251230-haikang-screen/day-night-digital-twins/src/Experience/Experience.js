@@ -133,7 +133,22 @@ export default class Experience {
         direction.y = 0;
         direction.normalize();
 
-        if (action === "move-forward") {
+        if (action === "rotate-up") {
+             // Rotate up around target (decrease polar angle)
+             // We can manipulate the camera position relative to target
+             const offset = new THREE.Vector3().subVectors(this.camera.instance.position, this.controls.target);
+             const spherical = new THREE.Spherical().setFromVector3(offset);
+             spherical.phi = Math.max(0.1, spherical.phi - rotateStep); // Prevent going below 0
+             offset.setFromSpherical(spherical);
+             this.camera.instance.position.copy(this.controls.target).add(offset);
+        } else if (action === "rotate-down") {
+             // Rotate down around target (increase polar angle)
+             const offset = new THREE.Vector3().subVectors(this.camera.instance.position, this.controls.target);
+             const spherical = new THREE.Spherical().setFromVector3(offset);
+             spherical.phi = Math.min(Math.PI - 0.1, spherical.phi + rotateStep); // Prevent going above PI
+             offset.setFromSpherical(spherical);
+             this.camera.instance.position.copy(this.controls.target).add(offset);
+        } else if (action === "move-forward") {
             this.controls.target.addScaledVector(direction, moveStep);
             this.camera.instance.position.addScaledVector(direction, moveStep);
         } else if (action === "move-backward") {

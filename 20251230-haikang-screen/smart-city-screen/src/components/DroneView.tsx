@@ -1,87 +1,69 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  background: #000;
-  border: 1px solid #1e3a8a;
-  cursor: pointer;
+  /* background: rgba(0, 0, 0, 0.3); */
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   color: #fff;
   overflow: hidden;
-
-  &:hover {
-    border-color: #50e3c2;
-  }
+  padding: 10px;
 `;
 
-const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.9);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const VideoPlaceholder = styled.div`
-  width: 80%;
-  height: 80%;
-  background: #111;
-  border: 2px solid #50e3c2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  color: #fff;
-  flex-direction: column;
-`;
-
-const ControlPanel = styled.div`
+const DPad = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 20px;
+  gap: 5px;
+  align-items: center;
+  justify-items: center;
+  background: rgba(80, 227, 194, 0.1);
+  padding: 10px;
   border-radius: 50%;
-  border: 1px solid #50e3c2;
+  border: 1px dashed rgba(80, 227, 194, 0.3);
+`;
+
+const ActionGroup = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 `;
 
 const ControlBtn = styled.button`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: rgba(80, 227, 194, 0.2);
-  border: 1px solid #50e3c2;
-  color: #fff;
-  font-size: 20px;
+  background: rgba(80, 227, 194, 0.15);
+  border: 1px solid rgba(80, 227, 194, 0.5);
+  color: #50e3c2;
+  font-size: 18px;
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  outline: none;
 
   &:hover {
-    background: rgba(80, 227, 194, 0.5);
+    background: rgba(80, 227, 194, 0.4);
+    box-shadow: 0 0 10px rgba(80, 227, 194, 0.4);
     transform: scale(1.1);
   }
 
   &:active {
     transform: scale(0.95);
   }
+  
+  &.center-btn {
+    background: rgba(80, 227, 194, 0.3);
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 export const DroneView = () => {
-  const [expanded, setExpanded] = useState(false);
-
   const sendCommand = (action: string) => {
     const iframe = document.getElementById('city-3d-iframe') as HTMLIFrameElement;
     if (iframe && iframe.contentWindow) {
@@ -90,52 +72,30 @@ export const DroneView = () => {
   };
 
   return (
-    <>
-      <Container onClick={() => setExpanded(true)}>
-        <div style={{textAlign: 'center'}}>
-          <div style={{fontSize: '20px', marginBottom: '10px'}}>🚁 无人机视角 (控制台)</div>
-          <div style={{color: '#0f0'}}>● LIVE</div>
-          <div style={{fontSize: '12px', marginTop: '10px', color: '#aaa'}}>点击打开控制</div>
-        </div>
-      </Container>
-      {expanded && (
-        <Modal onClick={(e) => {
-            // Only close if clicking the background, not the controls
-            if (e.target === e.currentTarget) setExpanded(false);
-        }}>
-          <VideoPlaceholder style={{ background: 'rgba(0,0,0,0.8)', border: 'none' }}>
-            <h2 style={{ marginBottom: '30px', color: '#50e3c2' }}>无人机飞行控制</h2>
-            
-            <div style={{ display: 'flex', gap: '50px', alignItems: 'center' }}>
-                {/* Direction Controls */}
-                <ControlPanel>
-                    <div />
-                    <ControlBtn onClick={() => sendCommand('move-forward')}>⬆</ControlBtn>
-                    <div />
-                    
-                    <ControlBtn onClick={() => sendCommand('rotate-left')}>↺</ControlBtn>
-                    <ControlBtn onClick={() => sendCommand('reset')}>●</ControlBtn>
-                    <ControlBtn onClick={() => sendCommand('rotate-right')}>↻</ControlBtn>
-                    
-                    <div />
-                    <ControlBtn onClick={() => sendCommand('move-backward')}>⬇</ControlBtn>
-                    <div />
-                </ControlPanel>
+    <Container>
+      {/* Direction Controls (Left Side) */}
+      <DPad>
+        <div />
+        <ControlBtn onClick={() => sendCommand('rotate-up')} title="向上旋转">⬆</ControlBtn>
+        <div />
+        
+        <ControlBtn onClick={() => sendCommand('rotate-left')} title="左旋">↺</ControlBtn>
+        <ControlBtn className="center-btn" onClick={() => sendCommand('reset')} title="复位">●</ControlBtn>
+        <ControlBtn onClick={() => sendCommand('rotate-right')} title="右旋">↻</ControlBtn>
+        
+        <div />
+        <ControlBtn onClick={() => sendCommand('rotate-down')} title="向下旋转">⬇</ControlBtn>
+        <div />
+      </DPad>
 
-                {/* Elevation & Zoom */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    <ControlBtn onClick={() => sendCommand('move-up')} title="上升">🚀</ControlBtn>
-                    <ControlBtn onClick={() => sendCommand('move-down')} title="下降">🛬</ControlBtn>
-                    <div style={{ height: '20px' }} />
-                    <ControlBtn onClick={() => sendCommand('zoom-in')} title="放大">➕</ControlBtn>
-                    <ControlBtn onClick={() => sendCommand('zoom-out')} title="缩小">➖</ControlBtn>
-                </div>
-            </div>
-
-            <div style={{fontSize: '16px', marginTop: '40px', color: '#aaa'}}>点击背景关闭控制台</div>
-          </VideoPlaceholder>
-        </Modal>
-      )}
-    </>
+      {/* Action Controls (Right Side) */}
+      <ActionGroup>
+        <ControlBtn onClick={() => sendCommand('move-up')} title="上升">🚀</ControlBtn>
+        <ControlBtn onClick={() => sendCommand('zoom-in')} title="放大">➕</ControlBtn>
+        
+        <ControlBtn onClick={() => sendCommand('move-down')} title="下降">🛬</ControlBtn>
+        <ControlBtn onClick={() => sendCommand('zoom-out')} title="缩小">➖</ControlBtn>
+      </ActionGroup>
+    </Container>
   );
 };

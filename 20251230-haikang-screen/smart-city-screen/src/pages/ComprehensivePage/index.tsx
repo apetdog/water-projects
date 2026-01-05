@@ -29,9 +29,26 @@ export const ComprehensivePage = () => {
 
   return (
     <>
-      <LeftPageIndex data={leftData} />
-      <CenterPageIndex />
-      <RightPageIndex data={rightData} />
+      <iframe 
+        id="city-3d-iframe"
+        src="http://localhost:8080"
+        style={{
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          zIndex: 0,
+          pointerEvents: 'auto' // Allow interaction with 3D scene directly
+        }}
+        title="3D City Map"
+      />
+      <div style={{position: 'relative', zIndex: 1, display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between'}}>
+        <LeftPageIndex data={leftData} />
+        <CenterPageIndex />
+        <RightPageIndex data={rightData} />
+      </div>
     </>
   )
 }
