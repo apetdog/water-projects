@@ -13,31 +13,16 @@ const Container = styled.div`
 
 const StatsRow = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 10px;
-  height: 120px;
+  height: 140px;
+  width: 100%;
 `;
 
-const StatItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 50%;
+const ChartContainer = styled.div`
+  width: 100%;
   height: 100%;
-  position: relative;
-  
-  .chart-container {
-    width: 100%;
-    height: 100%;
-  }
-
-  .label {
-    position: absolute;
-    bottom: 0;
-    font-size: 14px;
-    color: #fff;
-    transform: translateY(10px);
-  }
 `;
 
 const TypewriterBox = styled.div`
@@ -48,7 +33,7 @@ const TypewriterBox = styled.div`
   padding: 15px;
   overflow: hidden;
   position: relative;
-  margin-top: 10px;
+  margin-top: 24px;
   
   &::before {
     content: '';
@@ -98,129 +83,76 @@ const Cursor = styled.span`
 `;
 
 const mockSummaries = [
-  "正在分析园区实时监控数据...\n检测到食堂A区人员密度较高，建议加强疏导。\n今日未佩戴安全帽违规行为同比下降 5%。\n车辆违停监测：2处，已自动通知安保人员。\nAI 综合安全评分：92分，园区运行状态良好。",
-  "系统自检完成，各传感器状态正常。\n正在扫描重点区域安全隐患...\n发现 B 区消防通道有临时堆积物，请及时清理。\n能耗分析：今日电力消耗略高于平均值，建议优化照明策略。\n环境监测：空气质量优，适宜户外活动。",
+  "AI 智能分析引擎 v3.0 已启动...\n正在实时扫描全区监控视频流。\n检测到异常入侵事件分布：非法入侵占比较高，请注意防范。\n人员聚集热点区域：食堂入口、B栋大厅。\n实时风险评估等级：低风险。",
+  "夜间巡逻无人机已就位，信号传输正常。\n今日 AI 告警总数同比下降 12%。\n烟火检测算法运行中，暂未发现异常热源。\n重点关注：车辆违停现象有所增加，建议加强停车场引导。\n系统正在生成今日安全态势日报...",
 ];
 
 type Props = {
-  noHelmet?: string;
-  illegalParking?: string;
+  data?: Array<{ name: string; value: number }>;
 }
 
-const AiBehaviorAnalysis = ({ noHelmet = '15%', illegalParking = '30%' }: Props) => {
+const AiBehaviorAnalysis = ({ data }: Props) => {
   const [text, setText] = useState('');
   const [messageIndex, setMessageIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   
-  const chart1Ref = useRef<HTMLDivElement>(null);
-  const chart2Ref = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
 
-  // Init Charts
+  // Init Chart
   useEffect(() => {
-    const initChart = (dom: HTMLElement | null, value: string, color: string, name: string) => {
-      if (!dom) return;
-      const chart = echarts.init(dom);
-      const numValue = parseFloat(value);
-      
-      const option = {
-        series: [
-          {
-            type: 'gauge',
-            startAngle: 90,
-            endAngle: -270,
-            pointer: {
-              show: false
-            },
-            progress: {
-              show: true,
-              overlap: false,
-              roundCap: true,
-              clip: false,
-              itemStyle: {
-                borderWidth: 1,
-                borderColor: '#464646'
-              }
-            },
-            axisLine: {
-              lineStyle: {
-                width: 10
-              }
-            },
-            splitLine: {
-              show: false,
-              distance: 0,
-              length: 10
-            },
-            axisTick: {
-              show: false
-            },
-            axisLabel: {
-              show: false,
-              distance: 50
-            },
-            data: [
-              {
-                value: numValue,
-                name: name,
-                title: {
-                  offsetCenter: ['0%', '20%'],
-                  fontSize: 12,
-                  color: '#fff'
-                },
-                detail: {
-                  valueAnimation: true,
-                  offsetCenter: ['0%', '-20%'],
-                  fontSize: 20,
-                  fontWeight: 'bolder',
-                  color: color,
-                  formatter: '{value}%'
-                }
-              }
-            ],
-            title: {
-              fontSize: 14
-            },
-            detail: {
-              width: 50,
-              height: 14,
-              fontSize: 14,
-              color: 'inherit',
-              borderColor: 'inherit',
-              borderRadius: 20,
-              borderWidth: 1,
-              formatter: '{value}%'
-            }
-          }
-        ]
-      };
-      
-      // Override color
-      // @ts-expect-error - dynamic option structure
-      option.series[0].itemStyle = { color: color };
-      // @ts-expect-error - dynamic option structure
-      option.series[0].progress.itemStyle.color = color;
-      
-      chart.setOption(option);
-      
-      return chart;
+    if (!chartRef.current || !data) return;
+    
+    const chart = echarts.init(chartRef.current);
+    
+    const option = {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b} : {c} ({d}%)'
+      },
+      legend: {
+        type: 'scroll',
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        bottom: 20,
+        textStyle: {
+          color: '#fff',
+          fontSize: 12
+        }
+      },
+      series: [
+        {
+          name: 'AI Event Distribution',
+          type: 'pie',
+          radius: [15, 60],
+          center: ['35%', '50%'],
+          roseType: 'area',
+          itemStyle: {
+            borderRadius: 5
+          },
+          label: {
+            show: true,
+            color: '#fff',
+            formatter: '{b}'
+          },
+          data: data.sort((a, b) => b.value - a.value)
+        }
+      ]
     };
-
-    const chart1 = initChart(chart1Ref.current, noHelmet, '#ff4d4f', '未戴帽');
-    const chart2 = initChart(chart2Ref.current, illegalParking, '#faad14', '违停');
-
+    
+    chart.setOption(option);
+    
     const handleResize = () => {
-      chart1?.resize();
-      chart2?.resize();
+      chart.resize();
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
-      chart1?.dispose();
-      chart2?.dispose();
+      chart.dispose();
       window.removeEventListener('resize', handleResize);
     };
-  }, [noHelmet, illegalParking]);
+  }, [data]);
 
   // Typewriter effect
   useEffect(() => {
@@ -249,12 +181,7 @@ const AiBehaviorAnalysis = ({ noHelmet = '15%', illegalParking = '30%' }: Props)
   return (
     <Container>
       <StatsRow>
-        <StatItem>
-          <div ref={chart1Ref} className="chart-container"></div>
-        </StatItem>
-        <StatItem>
-          <div ref={chart2Ref} className="chart-container"></div>
-        </StatItem>
+        <ChartContainer ref={chartRef} />
       </StatsRow>
       
       <TypewriterBox>

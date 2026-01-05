@@ -65,8 +65,7 @@ export const SecurityLeft = ({ accessLogs, aiAnalysis }: Props) => {
           </ModuleTitle>
           <div style={{height: 'calc(100% - 40px)', marginTop: '10px'}}>
              <AiBehaviorAnalysis 
-                noHelmet={aiAnalysis?.noHelmet} 
-                illegalParking={aiAnalysis?.illegalParking} 
+                data={aiAnalysis?.eventDistribution} 
              />
           </div>
        </BorderBox13>
