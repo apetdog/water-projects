@@ -120,6 +120,58 @@ export default class Experience {
     this.controls.maxDistance = 400;
     this.controls.minDistance = 4;
     this.controls.update();
+
+    window.addEventListener("message", (event) => {
+      const { type, action } = event.data;
+      if (type === "camera-control") {
+        const moveStep = 10;
+        const rotateStep = 0.1;
+        
+        // Get camera direction for movement
+        const direction = new THREE.Vector3();
+        this.camera.instance.getWorldDirection(direction);
+        direction.y = 0;
+        direction.normalize();
+
+        if (action === "move-forward") {
+            this.controls.target.addScaledVector(direction, moveStep);
+            this.camera.instance.position.addScaledVector(direction, moveStep);
+        } else if (action === "move-backward") {
+            this.controls.target.addScaledVector(direction, -moveStep);
+            this.camera.instance.position.addScaledVector(direction, -moveStep);
+        } else if (action === "move-up") {
+            this.controls.target.y += moveStep;
+            this.camera.instance.position.y += moveStep;
+        } else if (action === "move-down") {
+            this.controls.target.y -= moveStep;
+            this.camera.instance.position.y -= moveStep;
+        } else if (action === "rotate-left") {
+             const axis = new THREE.Vector3(0, 1, 0);
+             this.camera.instance.position.sub(this.controls.target);
+             this.camera.instance.position.applyAxisAngle(axis, rotateStep);
+             this.camera.instance.position.add(this.controls.target);
+        } else if (action === "rotate-right") {
+             const axis = new THREE.Vector3(0, 1, 0);
+             this.camera.instance.position.sub(this.controls.target);
+             this.camera.instance.position.applyAxisAngle(axis, -rotateStep);
+             this.camera.instance.position.add(this.controls.target);
+        } else if (action === "zoom-in") {
+            // Move camera closer to target
+            const distance = this.camera.instance.position.distanceTo(this.controls.target);
+            if (distance > this.controls.minDistance + moveStep) {
+                 const zoomDir = new THREE.Vector3().subVectors(this.controls.target, this.camera.instance.position).normalize();
+                 this.camera.instance.position.addScaledVector(zoomDir, moveStep);
+            }
+        } else if (action === "zoom-out") {
+             const zoomDir = new THREE.Vector3().subVectors(this.camera.instance.position, this.controls.target).normalize();
+             this.camera.instance.position.addScaledVector(zoomDir, moveStep);
+        } else if (action === "reset") {
+            this.controls.reset();
+        }
+        
+        this.controls.update();
+      }
+    });
   }
 
   setResources() {
