@@ -1,6 +1,25 @@
 import { BorderBox12, BorderBox13, ScrollBoard } from '@jiaminghi/data-view-react';
 import { ModuleTitle } from '@/style/globalStyledSet';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import styled from 'styled-components';
+
+const ScrollBoardWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  .dv-scroll-board {
+    .header {
+      font-size: 16px;
+      color: #00dcff;
+      font-weight: bold;
+    }
+    .rows {
+      .row-item {
+        font-size: 15px;
+        color: #fff;
+      }
+    }
+  }
+`;
 
 type Props = {
   alarmLogs?: any
@@ -10,6 +29,20 @@ type Props = {
 export const SecurityRight = ({ alarmLogs, deviceStats }: Props) => {
   const [showAlarm, setShowAlarm] = useState(false);
 
+  const config = useMemo(() => {
+    if (!alarmLogs) return null;
+    return {
+      ...alarmLogs,
+      headerBGC: 'rgba(0, 160, 233, 0.2)',
+      oddRowBGC: 'rgba(0, 0, 0, 0)',
+      evenRowBGC: 'rgba(80, 227, 194, 0.1)',
+      carousel: 'single',
+      waitTime: 2000,
+      rowNum: 6,
+      align: ['center', 'center', 'center']
+    };
+  }, [alarmLogs]);
+
   return (
     <div style={{ width: '450px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', position: 'relative' }}>
        <BorderBox13 style={{height: '48%', padding: '20px'}}>
@@ -18,7 +51,11 @@ export const SecurityRight = ({ alarmLogs, deviceStats }: Props) => {
               <span>安防告警列表</span>
           </ModuleTitle>
           <div style={{height: '300px', marginTop: '20px'}}>
-             {alarmLogs && <ScrollBoard config={alarmLogs} />}
+             {config && (
+               <ScrollBoardWrapper>
+                 <ScrollBoard config={config} />
+               </ScrollBoardWrapper>
+             )}
           </div>
        </BorderBox13>
        <BorderBox12 style={{height: '48%', padding: '20px'}}>

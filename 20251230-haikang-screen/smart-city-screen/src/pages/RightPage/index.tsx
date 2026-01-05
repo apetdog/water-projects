@@ -6,7 +6,7 @@ import earthRotate from '@/assets/images/earth-rotate.gif'
 import BrowseCategories from './charts/BrowseCategories'
 import { KeyMonitoring } from '@/components/KeyMonitoring'
 import HeatIndex from './charts/HeatIndex'
-import Satisfaction from './charts/Satisfaction'
+// import Satisfaction from './charts/Satisfaction'
 
 type Props = {
   data?: rightPageDataType
