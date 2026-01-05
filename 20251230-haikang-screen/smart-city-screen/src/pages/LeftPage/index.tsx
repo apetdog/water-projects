@@ -58,7 +58,7 @@ export const LeftPageIndex = ({ data }: Props) => {
           <i className='iconfont'>&#xe78f;</i>
           <span>无人机视角</span>
         </ModuleTitle>
-        <div style={{ marginTop: '20px', height: 'calc(100% - 40px)' }}>
+        <div style={{ marginTop: '8px', height: 'calc(100% - 40px)' }}>
             <DroneView />
         </div>
       </BorderBox13>

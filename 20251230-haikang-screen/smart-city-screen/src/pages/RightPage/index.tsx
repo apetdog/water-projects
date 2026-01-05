@@ -42,7 +42,7 @@ export const RightPageIndex = ({ data }: Props) => {
                 <i className='iconfont'>&#xe7fd;</i>
                 <span>重点监控</span>
               </ModuleTitle>
-              <div style={{marginTop: '20px', height: 'calc(100% - 40px)'}}>
+              <div style={{marginTop: '8px', height: 'calc(100% - 40px)'}}>
                  <KeyMonitoring />
               </div>
             </div>
