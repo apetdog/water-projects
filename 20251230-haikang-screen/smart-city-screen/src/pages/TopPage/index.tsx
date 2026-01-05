@@ -29,7 +29,7 @@ const leftTabs = [
 
 const rightTabs = [
   { key: 'video', label: '视频融合', path: '/video' },
-  { key: 'ecology', label: '绿色生态', path: '/ecology' },
+  { key: 'ecology', label: '环境检测', path: '/ecology' },
 ]
 
 const TopPageIndex = () => {
@@ -68,7 +68,7 @@ const TopPageIndex = () => {
     <>
       <TopBox>
         <div className='top_box'>
-          <Decoration10 className='top_decoration10' />
+          <Decoration10 className='top_decoration10' color={['#568aea', '#000000']} />
           <div className='title-box'>
             <Decoration8
               className='top_decoration8'
@@ -89,7 +89,7 @@ const TopPageIndex = () => {
               color={['#568aea', '#000000']}
             />
           </div>
-          <Decoration10 className='top_decoration10 top_decoration10_reverse' />
+          <Decoration10 className='top_decoration10 top_decoration10_reverse' color={['#568aea', '#000000']} />
           <TimeBox>
             <h3>{timeStr}</h3>
           </TimeBox>
@@ -120,7 +120,7 @@ const TopPageIndex = () => {
         ))}
       </RightTabBox>
     </>
-  );
+  )
 }
 
-export default TopPageIndex;
+export default TopPageIndex
