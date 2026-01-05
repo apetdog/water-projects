@@ -32,7 +32,7 @@ export const ComprehensivePage = () => {
       {/* 3D City Map Iframe */}
       <iframe 
         id="city-3d-iframe"
-        src="https://cn.moold.link/smart-city-3d"
+        src="https://cn.moodl.ink/smart-city-3d"
         style={{
           position: 'absolute', 
           top: 0, 
