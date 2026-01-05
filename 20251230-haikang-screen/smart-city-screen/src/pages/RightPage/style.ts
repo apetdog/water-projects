@@ -23,7 +23,7 @@ export const RightTopBox = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 10px;
-      background-color: rgba(19, 25, 47, 0.6);
+      background-color: rgba(19, 25, 47, 0.4);
       &-content {
         display: flex;
         justify-content: space-between;
@@ -53,7 +53,7 @@ export const RightCenterBox = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 10px;
-      background-color: rgba(19, 25, 47, 0.6);
+      background-color: rgba(19, 25, 47, 0.4);
     }
   }
 `;
@@ -71,7 +71,7 @@ export const RightBottomBox = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 10px;
-      background-color: rgba(19, 25, 47, 0.6);
+      background-color: rgba(19, 25, 47, 0.4);
       display: flex;
       flex-direction: column;
       .feedback-box {

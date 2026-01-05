@@ -24,7 +24,7 @@ export const LeftTopBox = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 10px;
-      background-color: rgba(19, 25, 47, 0.6);
+      background-color: rgba(19, 25, 47, 0.4);
     }
   }
 `;
@@ -42,7 +42,7 @@ export const LeftMiddleBox = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 10px;
-      background-color: rgba(19, 25, 47, 0.6);
+      background-color: rgba(19, 25, 47, 0.4);
     }
   }
 `;
@@ -60,7 +60,7 @@ export const LeftBottomBox = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 10px;
-      background-color: rgba(19, 25, 47, 0.6);
+      background-color: rgba(19, 25, 47, 0.4);
     }
   }
 `;

@@ -23,7 +23,7 @@ export default class Camera {
       0.1,
       15000
     );
-    this.instance.position.set(-2.7, 100, 151); // Lifted up Y
+    this.instance.position.set(-2.7, 100, 120); // Zoomed in: decreased Z from 151 to 120
     this.scene.add(this.instance);
   }
 

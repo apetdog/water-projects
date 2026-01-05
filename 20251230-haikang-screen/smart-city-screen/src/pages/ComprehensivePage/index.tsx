@@ -29,9 +29,10 @@ export const ComprehensivePage = () => {
 
   return (
     <>
+      {/* 3D City Map Iframe */}
       <iframe 
         id="city-3d-iframe"
-        src="http://localhost:8080"
+        src="https://cn.moold.link/smart-city-3d"
         style={{
           position: 'absolute', 
           top: 0, 

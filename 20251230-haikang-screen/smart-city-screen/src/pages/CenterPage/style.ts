@@ -30,7 +30,7 @@ export const CenterBottom = styled.div`
       width: 32%;
       border-radius: 5px;
       border: 1px solid #343f4b;
-      background-color: rgba(19, 25, 47, 0.8);
+      background-color: rgba(19, 25, 47, 0.4);
       img {
         width: 100px;
         height: 100px;

@@ -8,7 +8,8 @@ module.exports = {
     output:
     {
         filename: 'bundle.[contenthash].js',
-        path: path.resolve(__dirname, '../dist')
+        path: path.resolve(__dirname, '../dist'),
+        publicPath: '/smart-city-3d/'
     },
     devtool: 'source-map',
     plugins:
