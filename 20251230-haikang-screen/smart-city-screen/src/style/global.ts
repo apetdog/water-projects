@@ -65,4 +65,10 @@ export const Globalstyle = createGlobalStyle`
     width: 100%;
     height: 100%;
   }
+  
+  // 样式覆盖
+  .dv-border-box-13 .dv-border-svg-container{
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+  }
 `;
