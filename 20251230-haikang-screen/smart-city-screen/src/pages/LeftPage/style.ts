@@ -7,7 +7,7 @@ export const LeftPage = styled.div`
   padding-bottom: 0px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 20px;
 `;
 
@@ -54,7 +54,7 @@ export const LeftBottomBox = styled.div`
   width: 100%;
   .left-bottom-borderBox13 {
     width: inherit;
-    height: inherit;
+    height: 100%;
     padding: 20px 15px;
     .left-bottom {
       width: 100%;

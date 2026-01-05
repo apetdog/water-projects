@@ -1,30 +1,16 @@
-import { BorderBox12, BorderBox13, CapsuleChart } from '@jiaminghi/data-view-react';
-import { useEffect, useState } from 'react';
+import { BorderBox13, CapsuleChart } from '@jiaminghi/data-view-react';
 import { ModuleTitle } from '@/style/globalStyledSet';
 import { DroneView } from '@/components/DroneView';
 import IndustrialRadar from './charts/IndustrialRadar';
-import { LeftPage, LeftTopBox, LeftMiddleBox, LeftBottomBox } from './style';
 import { leftPageDataType } from '@/api/mock/leftPageData'
-import { get } from '@/api/http'
-import { ResultEnum } from '@/enums/httpEnum'
-import {
-  leftPageDataApi,
-} from '@/api/mock/index'
 
-export const LeftPageIndex = () => {
-  const [leftData, setLeftData] = useState<leftPageDataType | undefined>(undefined)
+type Props = {
+  data?: leftPageDataType
+}
 
-  const fetchData = async () => {
-    const res = await get(leftPageDataApi)
-    if (res.code === ResultEnum.SUCCESS) {
-      setLeftData(res.data)
-    }
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
-
+export const LeftPageIndex = ({ data }: Props) => {
+  // Prevent unused variable warning
+  void data;
   // Mock data for the middle box
   const config = {
     data: [
@@ -53,52 +39,41 @@ export const LeftPageIndex = () => {
     unit: '台'
   }
 
-  return leftData ?
-    <LeftPage>
+  return (
+    <div style={{ width: '450px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
       {/* 顶部图表 - 物联设备在线统计 */}
-      <LeftTopBox>
-        <BorderBox13 className='left-top-borderBox12'>
-          <div className='left-top'>
-            <ModuleTitle>
-              <i className='iconfont'>&#xe7eb;</i>
-              <span>物联设备在线统计</span>
-            </ModuleTitle>
-            <div style={{ width: '100%', height: 'calc(100% - 40px)', padding: '20px' }}>
-               <CapsuleChart config={config} style={{width: '100%', height: '100%'}} />
-            </div>
-          </div>
-        </BorderBox13>
-      </LeftTopBox>
+      <BorderBox13 style={{flex: 1, minHeight: 0, padding: '20px'}}>
+        <ModuleTitle>
+          <i className='iconfont'>&#xe7eb;</i>
+          <span>物联设备在线统计</span>
+        </ModuleTitle>
+        <div style={{ width: '100%', height: 'calc(100% - 40px)', padding: '20px' }}>
+            <CapsuleChart config={config} style={{width: '100%', height: '100%'}} />
+        </div>
+      </BorderBox13>
 
       {/* 中部图表 - 无人机视角 */}
-      <LeftMiddleBox>
-        <BorderBox13 className='left-middle-borderBox13'>
-          <div className='left-middle'>
-            <ModuleTitle>
-              <i className='iconfont'>&#xe78f;</i>
-              <span>无人机视角</span>
-            </ModuleTitle>
-            <div style={{ marginTop: '20px', height: 'calc(100% - 40px)' }}>
-               <DroneView />
-            </div>
-          </div>
-        </BorderBox13>
-      </LeftMiddleBox>
+      <BorderBox13 style={{flex: 1, minHeight: 0, padding: '20px'}}>
+        <ModuleTitle>
+          <i className='iconfont'>&#xe78f;</i>
+          <span>无人机视角</span>
+        </ModuleTitle>
+        <div style={{ marginTop: '8px', height: 'calc(100% - 40px)' }}>
+            <DroneView />
+        </div>
+      </BorderBox13>
 
       {/* 底部图表 */}
-      <LeftBottomBox>
-        <BorderBox13 className='left-bottom-borderBox13'>
-          <div className='left-bottom'>
-            <ModuleTitle>
-              <i className='iconfont'>&#xe88e;</i>
-              <span>产业结构分析</span>
-            </ModuleTitle>
-            {/* 图表 */}
-            <div style={{ width: '100%', height: 'calc(100% - 40px)' }}>
-              <IndustrialRadar />
-            </div>
-          </div>
-        </BorderBox13>
-      </LeftBottomBox>
-    </LeftPage> : <div>loading...</div>
+      <BorderBox13 style={{flex: 1, minHeight: 0, padding: '20px'}}>
+        <ModuleTitle>
+          <i className='iconfont'>&#xe88e;</i>
+          <span>产业结构分析</span>
+        </ModuleTitle>
+        {/* 图表 */}
+        <div style={{ width: '100%', height: 'calc(100% - 40px)' }}>
+          <IndustrialRadar />
+        </div>
+      </BorderBox13>
+    </div>
+  )
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { VideoLeft } from './components/VideoLeft';
 import { VideoCenter } from './components/VideoCenter';
 import { VideoRight } from './components/VideoRight';
@@ -25,7 +25,8 @@ export const VideoPage = () => {
     <>
       <VideoLeft captureRecords={data?.captureRecords} storageStats={data?.storageStats} />
       <VideoCenter />
-      <VideoRight qualityDiagnosis={data?.qualityDiagnosis} />
+      <VideoRight />
     </>
   );
 };
+

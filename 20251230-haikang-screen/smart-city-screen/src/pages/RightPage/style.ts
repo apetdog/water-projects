@@ -6,7 +6,7 @@ export const RightPage = styled.div`
   padding: 0px 16px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 20px;
 `;
 

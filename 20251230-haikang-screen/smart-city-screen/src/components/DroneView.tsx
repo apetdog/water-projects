@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
-  height: 250px;
+  height: 100%;
   position: relative;
   background: #000;
   border: 1px solid #1e3a8a;

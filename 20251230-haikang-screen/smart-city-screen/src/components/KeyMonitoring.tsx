@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
+import HikVideoPlayer from './HikVideoPlayer';
 
 const Container = styled.div`
   width: 100%;
-  height: 220px;
+  height: 100%;
   position: relative;
   background: #000;
-  border: 1px solid #1e3a8a;
-  cursor: pointer;
+  border: 1px solid rgba(80, 227, 194, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 
   &:hover {
     border-color: #50e3c2;
+    box-shadow: 0 0 15px rgba(80, 227, 194, 0.3);
   }
 `;
 
@@ -32,17 +34,30 @@ const Modal = styled.div`
   justify-content: center;
 `;
 
-const VideoPlaceholder = styled.div`
+const ExpandedContainer = styled.div`
   width: 80%;
   height: 80%;
-  background: #111;
+  background: #000;
   border: 2px solid #50e3c2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
+  position: relative;
+  box-shadow: 0 0 50px rgba(80, 227, 194, 0.2);
+`;
+
+const CloseButton = styled.div`
+  position: absolute;
+  top: -40px;
+  right: 0;
   color: #fff;
-  flex-direction: column;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px 10px;
+  background: rgba(80, 227, 194, 0.2);
+  border: 1px solid #50e3c2;
+  border-radius: 4px;
+  
+  &:hover {
+    background: rgba(80, 227, 194, 0.4);
+  }
 `;
 
 export const KeyMonitoring = () => {
@@ -50,25 +65,25 @@ export const KeyMonitoring = () => {
 
   return (
     <>
-      <Container onClick={() => setExpanded(true)}>
-        <div style={{textAlign: 'center'}}>
-          <div style={{fontSize: '20px', marginBottom: '10px'}}>📷 重点监控 (海康)</div>
-          <div style={{color: '#0f0'}}>● LIVE</div>
-          <div style={{fontSize: '12px', marginTop: '10px', color: '#aaa'}}>点击放大</div>
-        </div>
+      <Container onDoubleClick={() => setExpanded(true)}>
+        <HikVideoPlayer />
+        <div style={{
+          position: 'absolute', 
+          bottom: 5, 
+          left: 5, 
+          fontSize: '12px', 
+          color: 'rgba(255,255,255,0.5)', 
+          pointerEvents: 'none',
+          zIndex: 10
+        }}>双击全屏</div>
       </Container>
+      
       {expanded && (
-        <Modal onClick={() => setExpanded(false)}>
-          <VideoPlaceholder>
-            <div>重点监控画面 (海康SDK接入)</div>
-            <div style={{fontSize: '16px', marginTop: '20px', color: '#aaa'}}>点击任意处关闭</div>
-            <div style={{marginTop: '20px'}}>
-               <button style={{marginRight: '10px', padding: '5px 10px'}}>云台左</button>
-               <button style={{marginRight: '10px', padding: '5px 10px'}}>云台右</button>
-               <button style={{marginRight: '10px', padding: '5px 10px'}}>云台上</button>
-               <button style={{padding: '5px 10px'}}>云台下</button>
-            </div>
-          </VideoPlaceholder>
+        <Modal>
+          <ExpandedContainer>
+            <CloseButton onClick={() => setExpanded(false)}>关闭全屏</CloseButton>
+            <HikVideoPlayer />
+          </ExpandedContainer>
         </Modal>
       )}
     </>
