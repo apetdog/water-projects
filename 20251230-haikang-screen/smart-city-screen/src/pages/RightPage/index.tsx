@@ -55,19 +55,19 @@ export const RightPageIndex = ({ data }: Props) => {
                 <span>园区热力与满意度</span>
               </ModuleTitle>
               
-              <div style={{display: 'flex', width: '100%', flex: 1, minHeight: 0}}>
+              <div style={{display: 'flex', flex: 1, minHeight: 0}}>
                  <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-                    <div style={{textAlign: 'center', color: '#fff', marginBottom: '10px'}}>园区热力指数</div>
+                    {/* <div style={{textAlign: 'left', color: '#fff', marginBottom: '10px'}}>园区热力指数</div> */}
                     <div style={{flex: 1, minHeight: 0}}>
                       <HeatIndex />
                     </div>
                  </div>
-                 <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-                    <div style={{textAlign: 'center', color: '#fff', marginBottom: '10px'}}>企业服务满意度</div>
+                 {/* <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+                    <div style={{textAlign: 'left', color: '#fff', marginBottom: '10px'}}>企业服务满意度</div>
                     <div style={{flex: 1, minHeight: 0}}>
                       <Satisfaction />
                     </div>
-                 </div>
+                 </div> */}
               </div>
             </div>
         </BorderBox13>

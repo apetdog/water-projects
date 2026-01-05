@@ -1,4 +1,23 @@
 import { ScrollBoard } from '@jiaminghi/data-view-react';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  .dv-scroll-board {
+    .header {
+      font-size: 16px;
+      color: #fff;
+    }
+    .rows {
+      .row-item {
+        font-size: 16px;
+        color: #fff;
+      }
+    }
+  }
+`;
 
 const HeatIndex = () => {
   const config = {
@@ -9,19 +28,25 @@ const HeatIndex = () => {
       ['停车场 C', '<span style="color:#e3b337;">中</span>'],
       ['宿舍楼 D', '<span style="color:#e3b337;">中</span>'],
       ['活动中心', '<span style="color:#50e3c2;">低</span>'],
+      ['图书馆', '<span style="color:#ce2c5b;">🔥 高</span>'],
+      ['体育馆', '<span style="color:#e3b337;">中</span>'],
+      ['行政楼', '<span style="color:#50e3c2;">低</span>'],
     ],
     index: true,
-    columnWidth: [50, 150, 100],
-    align: ['center'],
-    headerBGC: 'rgba(0,0,0,0)',
-    oddRowBGC: 'rgba(0,0,0,0)',
+    columnWidth: [60, 230, 100],
+    align: ['center', 'left', 'right'],
+    headerBGC: 'rgba(255, 255, 255, 0.25)',
+    oddRowBGC: 'rgba(255, 255, 255, 0.1)',
     evenRowBGC: 'rgba(0,0,0,0)',
+    carousel: 'single',
+    waitTime: 2000,
+    rowNum: 5
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+    <Wrapper>
       <ScrollBoard config={config} />
-    </div>
+    </Wrapper>
   );
 };
 
