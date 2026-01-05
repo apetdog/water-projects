@@ -8,6 +8,7 @@ function pathResolve(dir: string) {
 }
 
 export default defineConfig({
+  base: '/smart-city/',
   resolve: {
     alias: [
       {

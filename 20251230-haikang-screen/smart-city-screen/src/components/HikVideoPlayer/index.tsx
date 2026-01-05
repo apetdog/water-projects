@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 declare global {
@@ -147,7 +147,7 @@ const HikVideoPlayer = () => {
             setStatus('请配置设备信息');
           }
         },
-        cbPluginErrorHandler: (iWndIndex: number, iErrorCode: number, oError: any) => {
+        cbPluginErrorHandler: (_: number, iErrorCode: number, oError: any) => {
           console.error(`Plugin Error: ${iErrorCode}`, oError);
           setStatus(`插件错误: ${iErrorCode}`);
         }
@@ -174,11 +174,11 @@ const HikVideoPlayer = () => {
     const { ip, port, username, password } = creds;
 
     window.WebVideoCtrl.I_Login(ip, 1, port, username, password, {
-      success: (xmlDoc: any) => {
+      success: () => {
         setStatus('登录成功，获取通道...');
         getChannelsAndPlay(ip);
       },
-      error: (status: any, xmlDoc: any) => {
+      error: (status: any) => {
         console.error('Login failed', status);
         setStatus('登录失败，请检查配置');
         setIsConfigOpen(true);
