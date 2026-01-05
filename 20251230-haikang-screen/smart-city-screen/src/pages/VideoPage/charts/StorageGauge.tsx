@@ -17,8 +17,35 @@ export const StorageGauge = ({ value }: Props) => {
 
     const option = {
       series: [
+        // Outer Scale Ring
         {
           type: 'gauge',
+          radius: '90%',
+          startAngle: 90,
+          endAngle: -270,
+          pointer: { show: false },
+          progress: { show: false },
+          axisLine: {
+            lineStyle: { width: 2, color: [[1, 'rgba(80, 227, 194, 0.1)']] }
+          },
+          axisTick: {
+            show: true,
+            distance: -10,
+            length: 5,
+            lineStyle: { color: 'rgba(80, 227, 194, 0.3)', width: 1 }
+          },
+          splitLine: {
+            show: true,
+            distance: -10,
+            length: 10,
+            lineStyle: { color: 'rgba(80, 227, 194, 0.5)', width: 2 }
+          },
+          axisLabel: { show: false }
+        },
+        // Inner Progress Ring
+        {
+          type: 'gauge',
+          radius: '75%',
           startAngle: 90,
           endAngle: -270,
           pointer: { show: false },
@@ -28,31 +55,61 @@ export const StorageGauge = ({ value }: Props) => {
             roundCap: true,
             clip: false,
             itemStyle: {
-              borderWidth: 1,
-              borderColor: '#464646'
+              color: {
+                type: 'linear',
+                x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [
+                  { offset: 0, color: '#50e3c2' },
+                  { offset: 1, color: '#00dcff' }
+                ]
+              },
+              shadowBlur: 10,
+              shadowColor: 'rgba(80, 227, 194, 0.5)'
             }
           },
           axisLine: {
-            lineStyle: { width: 40 }
+            lineStyle: {
+              width: 15,
+              color: [[1, 'rgba(255, 255, 255, 0.05)']]
+            }
           },
-          splitLine: { show: false, distance: 0, length: 10 },
+          splitLine: { show: false },
           axisTick: { show: false },
-          axisLabel: { show: false, distance: 50 },
+          axisLabel: { show: false },
           data: [
             {
               value: numValue,
               name: '存储使用率',
-              title: { offsetCenter: ['0%', '-10%'], fontSize: 14, color: '#fff' },
+              title: {
+                offsetCenter: ['0%', '0%'],
+                fontSize: 14,
+                color: '#aaa',
+                show: true
+              },
               detail: {
                 valueAnimation: true,
-                offsetCenter: ['0%', '20%'],
-                fontSize: 30,
-                color: '#50e3c2',
-                formatter: '{value}%'
-              },
-              itemStyle: { color: '#50e3c2' }
+                offsetCenter: ['0%', '30%'],
+                fontSize: 32,
+                fontWeight: 'bold',
+                color: '#fff',
+                formatter: '{value}%',
+                textShadowBlur: 5,
+                textShadowColor: 'rgba(80, 227, 194, 0.5)'
+              }
             }
           ]
+        },
+        // Decorative Inner Ring
+        {
+          type: 'pie',
+          radius: ['0%', '55%'],
+          silent: true,
+          z: 0,
+          itemStyle: {
+            color: 'rgba(0,0,0,0.2)'
+          },
+          label: { show: false },
+          data: [1]
         }
       ]
     };

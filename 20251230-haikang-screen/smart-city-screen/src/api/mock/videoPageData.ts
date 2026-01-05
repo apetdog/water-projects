@@ -24,6 +24,14 @@ const videoPageData: VideoPageDataType = {
     { plate: '人脸识别', time: '10:22', type: '人员' },
     { plate: '鄂A66666', time: '10:20', type: '车辆' },
     { plate: '鄂A99999', time: '10:15', type: '车辆' },
+    { plate: '鄂A12345', time: '10:12', type: '车辆' },
+    { plate: '人脸识别', time: '10:10', type: '人员' },
+    { plate: '鄂A54321', time: '10:08', type: '车辆' },
+    { plate: '人脸识别', time: '10:05', type: '人员' },
+    { plate: '鄂B88888', time: '10:03', type: '车辆' },
+    { plate: '鄂C12345', time: '10:00', type: '车辆' },
+    { plate: '人脸识别', time: '09:58', type: '人员' },
+    { plate: '鄂D56789', time: '09:55', type: '车辆' }
   ],
   storageStats: {
     usage: '85%',
