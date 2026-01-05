@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { VideoLeft } from './components/VideoLeft';
 import { VideoCenter } from './components/VideoCenter';
 import { VideoRight } from './components/VideoRight';

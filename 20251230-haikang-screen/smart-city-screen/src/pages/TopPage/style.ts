@@ -1,16 +1,12 @@
 import styled, { keyframes } from 'styled-components';
-import { TitleColor } from '@/style/color'
+
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 `;
 
-const glow = keyframes`
-  0% { text-shadow: 0 0 5px rgba(80, 227, 194, 0.5); }
-  50% { text-shadow: 0 0 20px rgba(80, 227, 194, 0.8), 0 0 10px rgba(80, 227, 194, 0.5); }
-  100% { text-shadow: 0 0 5px rgba(80, 227, 194, 0.5); }
-`;
+
 
 export const TopBox = styled.div`
   width: 100%;

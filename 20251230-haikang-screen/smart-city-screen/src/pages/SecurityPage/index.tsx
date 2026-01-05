@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { SecurityLeft } from './components/SecurityLeft';
 import { SecurityCenter } from './components/SecurityCenter';
 import { SecurityRight } from './components/SecurityRight';

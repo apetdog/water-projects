@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import React from 'react';
 
 const rain = keyframes`
   0% { transform: translateY(-100vh); opacity: 0; }
@@ -127,7 +126,7 @@ type Props = {
 
 export const EcologyCenter = ({ onSelectLampPost }: Props) => {
   // Generate raindrops
-  const drops = Array.from({ length: 40 }).map((_, i) => ({
+  const drops = Array.from({ length: 40 }).map(() => ({
     left: Math.random() * 100 + '%',
     delay: Math.random() * 2 + 's',
     duration: 0.5 + Math.random() * 0.5 + 's'

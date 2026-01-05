@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { EcologyLeft } from './components/EcologyLeft';
 import { EcologyCenter } from './components/EcologyCenter';
 import { EcologyRight } from './components/EcologyRight';

@@ -3,6 +3,7 @@ import { ModuleTitle } from '@/style/globalStyledSet';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import * as echarts from 'echarts';
+import { SecurityPageDataType } from '@/api/mock/securityPageData';
 
 const ScrollBoardWrapper = styled.div`
   width: 100%;
