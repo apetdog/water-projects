@@ -18,6 +18,9 @@ export type EcologyPageDataType = {
   energyAnalysis: {
     lighting: string
     ac: string
+    evCharging: string
+    waterPump: string
+    security: string
   }
   photovoltaic: {
     dailyGeneration: number
@@ -44,8 +47,11 @@ const ecologyPageData: EcologyPageDataType = {
     treeEquivalent: 10
   },
   energyAnalysis: {
-    lighting: '40%',
-    ac: '30%'
+    lighting: '35%',
+    ac: '25%',
+    evCharging: '20%',
+    waterPump: '10%',
+    security: '10%'
   },
   photovoltaic: {
     dailyGeneration: 500,
