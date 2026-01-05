@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import * as echarts from 'echarts';
 
 const Container = styled.div`
   width: 100%;
@@ -13,23 +14,29 @@ const Container = styled.div`
 const StatsRow = styled.div`
   display: flex;
   justify-content: space-around;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  height: 120px;
 `;
 
 const StatItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 50%;
+  height: 100%;
+  position: relative;
   
-  .value {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 5px;
+  .chart-container {
+    width: 100%;
+    height: 100%;
   }
-  
+
   .label {
-    font-size: 16px;
+    position: absolute;
+    bottom: 0;
+    font-size: 14px;
     color: #fff;
+    transform: translateY(10px);
   }
 `;
 
@@ -41,6 +48,7 @@ const TypewriterBox = styled.div`
   padding: 15px;
   overflow: hidden;
   position: relative;
+  margin-top: 10px;
   
   &::before {
     content: '';
@@ -67,7 +75,7 @@ const TypewriterBox = styled.div`
 
 const TextContent = styled.div`
   font-family: 'Courier New', Courier, monospace;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
   color: #50e3c2;
   white-space: pre-wrap;
@@ -76,8 +84,8 @@ const TextContent = styled.div`
 
 const Cursor = styled.span`
   display: inline-block;
-  width: 10px;
-  height: 20px;
+  width: 8px;
+  height: 16px;
   background-color: #50e3c2;
   margin-left: 5px;
   vertical-align: text-bottom;
@@ -103,7 +111,118 @@ const AiBehaviorAnalysis = ({ noHelmet = '15%', illegalParking = '30%' }: Props)
   const [text, setText] = useState('');
   const [messageIndex, setMessageIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
+  
+  const chart1Ref = useRef<HTMLDivElement>(null);
+  const chart2Ref = useRef<HTMLDivElement>(null);
 
+  // Init Charts
+  useEffect(() => {
+    const initChart = (dom: HTMLElement | null, value: string, color: string, name: string) => {
+      if (!dom) return;
+      const chart = echarts.init(dom);
+      const numValue = parseFloat(value);
+      
+      const option = {
+        series: [
+          {
+            type: 'gauge',
+            startAngle: 90,
+            endAngle: -270,
+            pointer: {
+              show: false
+            },
+            progress: {
+              show: true,
+              overlap: false,
+              roundCap: true,
+              clip: false,
+              itemStyle: {
+                borderWidth: 1,
+                borderColor: '#464646'
+              }
+            },
+            axisLine: {
+              lineStyle: {
+                width: 10
+              }
+            },
+            splitLine: {
+              show: false,
+              distance: 0,
+              length: 10
+            },
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              show: false,
+              distance: 50
+            },
+            data: [
+              {
+                value: numValue,
+                name: name,
+                title: {
+                  offsetCenter: ['0%', '20%'],
+                  fontSize: 12,
+                  color: '#fff'
+                },
+                detail: {
+                  valueAnimation: true,
+                  offsetCenter: ['0%', '-20%'],
+                  fontSize: 20,
+                  fontWeight: 'bolder',
+                  color: color,
+                  formatter: '{value}%'
+                }
+              }
+            ],
+            title: {
+              fontSize: 14
+            },
+            detail: {
+              width: 50,
+              height: 14,
+              fontSize: 14,
+              color: 'inherit',
+              borderColor: 'inherit',
+              borderRadius: 20,
+              borderWidth: 1,
+              formatter: '{value}%'
+            }
+          }
+        ]
+      };
+      
+      // Override color
+      // @ts-expect-error - dynamic option structure
+      option.series[0].itemStyle = { color: color };
+      // @ts-expect-error - dynamic option structure
+      option.series[0].progress.itemStyle.color = color;
+      
+      chart.setOption(option);
+      
+      return chart;
+    };
+
+    const chart1 = initChart(chart1Ref.current, noHelmet, '#ff4d4f', '未戴帽');
+    const chart2 = initChart(chart2Ref.current, illegalParking, '#faad14', '违停');
+
+    const handleResize = () => {
+      chart1?.resize();
+      chart2?.resize();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      chart1?.dispose();
+      chart2?.dispose();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [noHelmet, illegalParking]);
+
+  // Typewriter effect
   useEffect(() => {
     const currentMessage = mockSummaries[messageIndex];
     
@@ -131,12 +250,10 @@ const AiBehaviorAnalysis = ({ noHelmet = '15%', illegalParking = '30%' }: Props)
     <Container>
       <StatsRow>
         <StatItem>
-          <div className="value" style={{ color: '#ff4d4f' }}>{noHelmet}</div>
-          <div className="label">未戴帽</div>
+          <div ref={chart1Ref} className="chart-container"></div>
         </StatItem>
         <StatItem>
-          <div className="value" style={{ color: '#faad14' }}>{illegalParking}</div>
-          <div className="label">违停</div>
+          <div ref={chart2Ref} className="chart-container"></div>
         </StatItem>
       </StatsRow>
       

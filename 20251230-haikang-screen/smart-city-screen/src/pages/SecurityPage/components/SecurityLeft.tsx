@@ -38,7 +38,7 @@ export const SecurityLeft = ({ accessLogs, aiAnalysis }: Props) => {
       evenRowBGC: 'rgba(80, 227, 194, 0.1)',
       carousel: 'single',
       waitTime: 2000,
-      rowNum: 6,
+      rowNum: 7,
       align: ['center', 'center', 'center', 'center']
     };
   }, [accessLogs]);
