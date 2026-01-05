@@ -75,7 +75,7 @@ export const KeyMonitoring = () => {
           color: 'rgba(255,255,255,0.5)', 
           pointerEvents: 'none',
           zIndex: 10
-        }}>双击全屏 / 双击配置</div>
+        }}>双击全屏</div>
       </Container>
       
       {expanded && (
