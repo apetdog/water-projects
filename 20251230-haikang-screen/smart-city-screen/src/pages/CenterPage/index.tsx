@@ -33,6 +33,7 @@ const wave = keyframes`
 `;
 
 const AlarmBtn = styled.div`
+  pointer-events: auto;
   position: absolute;
   right: 8%;
   bottom: 8%;

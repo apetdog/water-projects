@@ -40,7 +40,7 @@ export const LeftPageIndex = ({ data }: Props) => {
   }
 
   return (
-    <div style={{ width: '450px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
+    <div style={{ width: '450px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', pointerEvents: 'auto' }}>
       {/* 顶部图表 - 物联设备在线统计 */}
       <BorderBox13 style={{flex: 1, minHeight: 0, padding: '20px'}}>
         <ModuleTitle>

@@ -15,7 +15,7 @@ type Props = {
 export const RightPageIndex = ({ data }: Props) => {
   return (
     data ? (
-      <div style={{ width: '450px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
+      <div style={{ width: '450px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', pointerEvents: 'auto' }}>
         <BorderBox13 style={{flex: 1, minHeight: 0, padding: '20px'}}>
             <div className='right-top' style={{ width: '100%', height: '100%' }}>
               <ModuleTitle>

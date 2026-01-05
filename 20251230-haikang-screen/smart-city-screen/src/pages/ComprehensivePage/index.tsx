@@ -45,7 +45,7 @@ export const ComprehensivePage = () => {
         }}
         title="3D City Map"
       />
-      <div style={{position: 'relative', zIndex: 1, display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between'}}>
+      <div style={{position: 'relative', zIndex: 1, display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', pointerEvents: 'none'}}>
         <LeftPageIndex data={leftData} />
         <CenterPageIndex />
         <RightPageIndex data={rightData} />
