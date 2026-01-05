@@ -29,7 +29,7 @@ const leftTabs = [
 
 const rightTabs = [
   { key: 'video', label: '视频融合', path: '/video' },
-  { key: 'ecology', label: '环境检测', path: '/ecology' },
+  { key: 'ecology', label: '环境监测', path: '/ecology' },
 ]
 
 const TopPageIndex = () => {

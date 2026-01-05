@@ -1,9 +1,21 @@
 import { BorderBox12, BorderBox13 } from '@jiaminghi/data-view-react';
 import { ModuleTitle } from '@/style/globalStyledSet';
+import { StorageGauge } from '../charts/StorageGauge';
+
+type CaptureRecord = {
+  plate: string
+  time: string
+  type: string
+}
+
+type StorageStats = {
+  usage: string
+  remainingDays: string
+}
 
 type Props = {
-  captureRecords?: any[]
-  storageStats?: any
+  captureRecords?: CaptureRecord[]
+  storageStats?: StorageStats
 }
 
 export const VideoLeft = ({ captureRecords, storageStats }: Props) => {
@@ -16,13 +28,30 @@ export const VideoLeft = ({ captureRecords, storageStats }: Props) => {
           </ModuleTitle>
           <div style={{display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px'}}>
              {captureRecords?.map((item, idx) => (
-                <div key={idx} style={{display: 'flex', background: 'rgba(255,255,255,0.1)', padding: '10px', alignItems: 'center'}}>
-                   <div style={{width: '60px', height: '60px', background: '#333', marginRight: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa'}}>
+                <div key={idx} style={{
+                    display: 'flex', 
+                    background: 'rgba(80, 227, 194, 0.05)', 
+                    padding: '10px', 
+                    alignItems: 'center',
+                    borderLeft: '2px solid #50e3c2',
+                    boxShadow: '0 0 10px rgba(80, 227, 194, 0.1)'
+                }}>
+                   <div style={{
+                       width: '60px', 
+                       height: '60px', 
+                       background: 'rgba(0,0,0,0.3)', 
+                       marginRight: '15px', 
+                       display: 'flex', 
+                       alignItems: 'center', 
+                       justifyContent: 'center', 
+                       color: '#50e3c2',
+                       border: '1px solid rgba(80, 227, 194, 0.3)'
+                    }}>
                       [图]
                    </div>
-                   <div style={{color: '#fff'}}>
-                      <div>{item.plate}</div>
-                      <div style={{fontSize: '12px', color: '#aaa'}}>{item.time} | {item.type}</div>
+                   <div style={{color: '#fff', flex: 1}}>
+                      <div style={{fontWeight: 'bold', fontSize: '16px', color: '#50e3c2'}}>{item.plate}</div>
+                      <div style={{fontSize: '12px', color: '#aaa', marginTop: '5px'}}>{item.time} | {item.type}</div>
                    </div>
                 </div>
              ))}
@@ -33,13 +62,21 @@ export const VideoLeft = ({ captureRecords, storageStats }: Props) => {
               <i className='iconfont'>&#xe88e;</i>
               <span>存储状态</span>
           </ModuleTitle>
-          <div style={{color: '#fff', textAlign: 'center', marginTop: '50px'}}>
-             <div style={{width: '200px', height: '200px', borderRadius: '50%', border: '10px solid #50e3c2', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px'}}>
-                {storageStats?.usage || '0%'}
+          <div style={{height: 'calc(100% - 50px)', position: 'relative'}}>
+             <StorageGauge value={storageStats?.usage || 0} />
+             <div style={{
+                 position: 'absolute', 
+                 bottom: '20px', 
+                 width: '100%', 
+                 textAlign: 'center', 
+                 color: '#fff',
+                 fontSize: '14px'
+             }}>
+                 剩余存储时间: <span style={{color: '#50e3c2', fontSize: '18px'}}>{storageStats?.remainingDays || '-'}</span> 天
              </div>
-             <div style={{marginTop: '20px'}}>剩余存储时间: {storageStats?.remainingDays || '-'}</div>
           </div>
        </BorderBox13>
     </div>
   );
 };
+

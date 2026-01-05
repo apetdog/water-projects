@@ -25,7 +25,8 @@ export const VideoPage = () => {
     <>
       <VideoLeft captureRecords={data?.captureRecords} storageStats={data?.storageStats} />
       <VideoCenter />
-      <VideoRight qualityDiagnosis={data?.qualityDiagnosis} />
+      <VideoRight />
     </>
   );
 };
+

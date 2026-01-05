@@ -82,14 +82,14 @@ export const TopBox = styled.div`
 
 export const TimeBox = styled.div`
   position: absolute;
-  right: 30px;
-  top: 40px;
+  right: 0;
+  top: 35px;
   text-align: right;
   color: #fff;
   z-index: 100;
   
   h3{
-    font-size: 16px;
+    font-size: 14px;
     font-family: 'DIN Alternate', sans-serif;
     color: #a1c4fd;
     text-shadow: 0 0 5px rgba(161, 196, 253, 0.5);
@@ -100,9 +100,9 @@ export const TimeBox = styled.div`
 export const LeftTabBox = styled.div`
   position: absolute;
   top: 45px;
-  left: 10%;
+  left: 12%;
   display: flex;
-  gap: 30px;
+  gap: 0px;
   z-index: 999;
   animation: ${fadeIn} 0.8s ease-out;
 `;
@@ -110,9 +110,9 @@ export const LeftTabBox = styled.div`
 export const RightTabBox = styled.div`
   position: absolute;
   top: 45px;
-  right: 15%;
+  right: 12%;
   display: flex;
-  gap: 30px;
+  gap: 0px;
   z-index: 999;
   animation: ${fadeIn} 0.8s ease-out;
 `;
