@@ -39,11 +39,7 @@ onMounted(() => {
         name: '告警数量',
         type: 'bar',
         barWidth: '60%',
-        data: [
-          10, 52, 200, 334, 390, 330, 220, 10, 52, 200, 334, 390, 330, 220, 10,
-          52, 200, 334, 390, 330, 220, 10, 52, 200, 334, 390, 330, 220, 10, 52,
-          200,
-        ],
+        data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 400)),
         itemStyle: {
           color: '#1890ff',
         },
@@ -55,7 +51,7 @@ onMounted(() => {
 
 <template>
   <div class="h-full w-full bg-white dark:bg-black/85 p-4 rounded-xl shadow-sm">
-    <div class="font-bold mb-4">本月告警统计</div>
+    <div class="font-bold mb-4">上月告警统计</div>
     <div class="h-[300px]">
       <EchartsUI ref="chartRef" />
     </div>
