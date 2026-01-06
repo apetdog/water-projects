@@ -10,7 +10,7 @@ const router = useRouter();
 const stats = [
   {
     title: '告警',
-    count: 0,
+    count: 3,
     icon: 'lucide:file-warning',
     color: 'bg-orange-500',
   },
