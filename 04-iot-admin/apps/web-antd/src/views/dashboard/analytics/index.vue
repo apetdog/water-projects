@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import { useRouter } from 'vue-router';
 import AlarmBarChart from './components/AlarmBarChart.vue';
 import InfoList from './components/InfoList.vue';
 import StatsCard from './components/StatsCard.vue';
 import StatusPieChart from './components/StatusPieChart.vue';
+
+const router = useRouter();
 
 const stats = [
   {
@@ -58,6 +61,12 @@ const deviceAlarms = [
   '模拟设备 M - 维护模式 - 2026-01-09 10:17:00',
   '视频监控 E - 视频流中断 - 2026-01-09 10:35:10',
 ];
+
+function handleCardClick(title: string) {
+  if (title === '告警') {
+    router.push('/dashboard/alarm-detail');
+  }
+}
 </script>
 
 <template>
@@ -70,6 +79,8 @@ const deviceAlarms = [
           v-for="(stat, index) in stats"
           :key="index"
           v-bind="stat"
+          :class="{ 'cursor-pointer hover:opacity-90': stat.title === '告警' }"
+          @click="handleCardClick(stat.title)"
         />
       </div>
       <!-- Right: Pie Chart -->

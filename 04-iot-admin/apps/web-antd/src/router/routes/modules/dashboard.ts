@@ -22,6 +22,16 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.dashboard.analytics'),
         },
       },
+      {
+        name: 'AlarmDetail',
+        path: '/dashboard/alarm-detail',
+        component: () => import('#/views/dashboard/analytics/alarm-detail/index.vue'),
+        meta: {
+          title: '告警详情',
+          hideInMenu: true,
+          currentActiveMenu: '/analytics',
+        },
+      },
     ],
   },
 ];
