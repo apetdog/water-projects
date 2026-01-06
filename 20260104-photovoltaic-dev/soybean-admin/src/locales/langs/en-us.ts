@@ -225,7 +225,12 @@ const local: App.I18n.Schema = {
     404: 'Page Not Found',
     500: 'Server Error',
     'iframe-page': 'Iframe',
-    home: 'Home'
+    home: 'Home',
+    pv: 'Photovoltaic',
+    pv_realtime: 'Real-time Monitoring',
+    pv_system: 'System Overview',
+    'pv_panel-detail': 'Panel Detail',
+    'pv_3d-model': '3D Model'
   },
   page: {
     login: {

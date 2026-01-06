@@ -222,7 +222,12 @@ const local: App.I18n.Schema = {
     404: '页面不存在',
     500: '服务器错误',
     'iframe-page': '外链页面',
-    home: '首页'
+    home: '首页',
+    pv: '光伏电站',
+    pv_realtime: '实时数据',
+    pv_system: '系统模型',
+    'pv_panel-detail': '面板详情',
+    'pv_3d-model': '3D模型'
   },
   page: {
     login: {

@@ -74,5 +74,52 @@ export const generatedRoutes: GeneratedRoute[] = [
       constant: true,
       hideInMenu: true
     }
+  },
+  {
+    name: 'pv',
+    path: '/pv',
+    component: 'layout.base',
+    meta: {
+      title: '光伏监控',
+      i18nKey: 'route.pv',
+      icon: 'mdi:solar-power-variant',
+      order: 2
+    },
+    children: [
+      {
+        name: 'pv_3d-model',
+        path: '/pv/3d-model',
+        component: 'view.pv_3d-model',
+        meta: {
+          title: '3D模型查看',
+          i18nKey: 'route.pv_3d-model',
+          keepAlive: true,
+          order: 3
+        }
+      },
+      {
+        name: 'pv_panel-detail',
+        path: '/pv/panel-detail',
+        component: 'view.pv_panel-detail',
+        props: true,
+        meta: {
+          title: '单板数据分析',
+          i18nKey: 'route.pv_panel-detail',
+          hideInMenu: true,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'pv_system',
+        path: '/pv/system',
+        component: 'view.pv_system',
+        meta: {
+          title: '光伏板状态',
+          i18nKey: 'route.pv_system',
+          keepAlive: true,
+          order: 2
+        }
+      }
+    ]
   }
 ];
