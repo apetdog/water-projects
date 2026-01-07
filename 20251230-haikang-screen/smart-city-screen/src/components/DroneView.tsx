@@ -65,10 +65,8 @@ const ControlBtn = styled.button`
 
 export const DroneView = () => {
   const sendCommand = (action: string) => {
-    const iframe = document.getElementById('city-3d-iframe') as HTMLIFrameElement;
-    if (iframe && iframe.contentWindow) {
-      iframe.contentWindow.postMessage({ type: 'camera-control', action }, '*');
-    }
+    // Dispatch event for CityModel to pick up
+    window.dispatchEvent(new CustomEvent('city-camera-control', { detail: { action } }));
   };
 
   return (

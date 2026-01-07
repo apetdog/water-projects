@@ -8,6 +8,8 @@ import { get } from '@/api/http'
 import { ResultEnum } from '@/enums/httpEnum'
 import { leftPageDataApi, rightPageDataApi } from '@/api/mock/index'
 
+import { CityModel } from '@/components/CityModel';
+
 export const ComprehensivePage = () => {
   const [leftData, setLeftData] = useState<leftPageDataType | undefined>(undefined)
   const [rightData, setRightData] = useState<rightPageDataType | undefined>(undefined)
@@ -29,22 +31,8 @@ export const ComprehensivePage = () => {
 
   return (
     <>
-      {/* 3D City Map Iframe */}
-      <iframe 
-        id="city-3d-iframe"
-        src="https://cn.moodl.ink/smart-city-3d"
-        style={{
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          zIndex: 0,
-          pointerEvents: 'auto' // Allow interaction with 3D scene directly
-        }}
-        title="3D City Map"
-      />
+      {/* 3D City Model */}
+      <CityModel />
       <div style={{position: 'relative', zIndex: 1, display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', pointerEvents: 'none'}}>
         <LeftPageIndex data={leftData} />
         <CenterPageIndex />
