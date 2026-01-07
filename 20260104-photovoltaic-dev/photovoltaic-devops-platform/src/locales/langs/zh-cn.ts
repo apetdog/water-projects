@@ -224,7 +224,6 @@ const local: App.I18n.Schema = {
     'iframe-page': '外链页面',
     home: '首页',
     pv: '光伏电站',
-    pv_realtime: '实时数据',
     pv_system: '光伏板状态',
     'pv_panel-detail': '面板详情',
     'pv_3d-model': '3D模型'

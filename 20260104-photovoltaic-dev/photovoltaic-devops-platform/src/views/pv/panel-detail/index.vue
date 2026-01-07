@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import * as echarts from 'echarts';
 
@@ -8,8 +8,13 @@ defineOptions({
 });
 
 const route = useRoute();
-const panelId = String(route.params.id || '');
-const status = computed(() => String(route.query.status || 'normal'));
+const panelId = computed(() => String(route.query.id || ''));
+const status = computed(() => {
+  const s = String(route.query.status || 'normal');
+  if (s === 'serious') return 'warning';
+  if (s === 'accident') return 'error';
+  return s;
+});
 const statusType = computed<'success' | 'warning' | 'error'>(() => {
   if (status.value === 'error') return 'error';
   if (status.value === 'warning') return 'warning';
@@ -21,6 +26,14 @@ const statusText = computed(() => {
   if (status.value === 'warning') return '预警';
   return '故障';
 });
+
+const abnormalTitle = computed(() => {
+  if (status.value === 'warning') return '预警提示';
+  if (status.value === 'error') return '故障提示';
+  return '运行正常';
+});
+
+const pageTitle = computed(() => `单板数据分析 - ${panelId.value}（${statusText.value}）`);
 
 const vChartRef = ref<HTMLDivElement | null>(null);
 const iChartRef = ref<HTMLDivElement | null>(null);
@@ -34,6 +47,66 @@ function genTimes(n = 24) {
   return Array.from({ length: n }).map((_, i) => `${String(i).padStart(2, '0')}:00`);
 }
 
+function seedFromId(id: string) {
+  let s = 1;
+  for (let i = 0; i < id.length; i += 1) {
+    s = (s * 131 + id.charCodeAt(i)) % 2147483647;
+  }
+  return s;
+}
+
+function createLCG(seed: number) {
+  let state = seed % 2147483647;
+  if (state <= 0) state += 2147483646;
+  function nextLCG() {
+    state = (state * 48271) % 2147483647;
+    return state / 2147483647;
+  }
+  return nextLCG;
+}
+
+function genSeriesByIdAndStatus(id: string, s: 'normal' | 'warning' | 'error') {
+  const rnd = createLCG(seedFromId(id));
+  const hours = 24;
+  const v: number[] = [];
+  const i: number[] = [];
+  const t: number[] = [];
+
+  let perfFactor = 1;
+  let tempFactor = 1;
+  if (s === 'warning') {
+    perfFactor = 0.93;
+    tempFactor = 1.05;
+  } else if (s === 'error') {
+    perfFactor = 0.82;
+    tempFactor = 1.12;
+  }
+
+  for (let h = 0; h < hours; h += 1) {
+    const x = (h - 12.5) / 5;
+    const shape = Math.max(0, Math.exp(-x * x));
+    const jitterV = (rnd() - 0.5) * 1.2;
+    const jitterI = (rnd() - 0.5) * 0.9;
+    const jitterT = (rnd() - 0.5) * 2.0;
+
+    let vVal = (34 + 1.6 * shape + jitterV) * perfFactor;
+    let iVal = (8 + 3.2 * shape + jitterI) * perfFactor;
+    let tVal = (42 + 6.5 * shape + jitterT) * tempFactor;
+
+    if (s === 'error' && h >= 10 && h <= 15) {
+      vVal *= 0.95;
+      iVal *= 0.9;
+      tVal *= 1.03;
+    }
+
+    v.push(Number(vVal.toFixed(2)));
+    i.push(Number(iVal.toFixed(2)));
+    t.push(Number(tVal.toFixed(2)));
+  }
+
+  return { v, i, t };
+}
+
 function initCharts() {
   if (vChartRef.value) {
     vChart = echarts.init(vChartRef.value);
@@ -41,7 +114,7 @@ function initCharts() {
       tooltip: { trigger: 'axis' },
       xAxis: { type: 'category', data: genTimes() },
       yAxis: { type: 'value', name: 'V' },
-      series: [{ type: 'line', data: Array.from({ length: 24 }).map(() => 34 + Math.random() * 2), smooth: true }]
+      series: [{ type: 'line', data: [], smooth: true }]
     });
   }
   if (iChartRef.value) {
@@ -50,7 +123,7 @@ function initCharts() {
       tooltip: { trigger: 'axis' },
       xAxis: { type: 'category', data: genTimes() },
       yAxis: { type: 'value', name: 'A' },
-      series: [{ type: 'line', data: Array.from({ length: 24 }).map(() => 8 + Math.random() * 1.5), smooth: true }]
+      series: [{ type: 'line', data: [], smooth: true }]
     });
   }
   if (tChartRef.value) {
@@ -59,13 +132,21 @@ function initCharts() {
       tooltip: { trigger: 'axis' },
       xAxis: { type: 'category', data: genTimes() },
       yAxis: { type: 'value', name: '℃' },
-      series: [{ type: 'line', data: Array.from({ length: 24 }).map(() => 45 + Math.random() * 5), smooth: true }]
+      series: [{ type: 'line', data: [], smooth: true }]
     });
   }
 }
 
+function updateCharts() {
+  const series = genSeriesByIdAndStatus(panelId.value, status.value as 'normal' | 'warning' | 'error');
+  vChart?.setOption({ series: [{ data: series.v }] });
+  iChart?.setOption({ series: [{ data: series.i }] });
+  tChart?.setOption({ series: [{ data: series.t }] });
+}
+
 onMounted(() => {
   initCharts();
+  updateCharts();
 });
 
 onBeforeUnmount(() => {
@@ -73,11 +154,15 @@ onBeforeUnmount(() => {
   iChart?.dispose();
   tChart?.dispose();
 });
+
+watch([panelId, status], () => {
+  updateCharts();
+});
 </script>
 
 <template>
   <div class="flex-col-stretch gap-16px">
-    <NCard :bordered="false" :title="`单板数据分析 - ${panelId}`">
+    <NCard :bordered="false" :title="pageTitle">
       <div class="mb-8px">
         <NTag :type="statusType" size="small">
           {{ statusText }}
@@ -102,8 +187,11 @@ onBeforeUnmount(() => {
         </NGi>
       </NGrid>
       <div class="mt-12px">
-        <NAlert v-if="status !== 'normal'" type="warning" title="异常提示">
-          检测到该面板存在性能异常，建议检查连接、遮挡与积灰情况。
+        <NAlert v-if="status !== 'normal'" :type="statusType" :title="abnormalTitle">
+          检测到该面板存在
+          <span v-if="status === 'warning'">预警</span>
+          <span v-else>故障</span>
+          ，建议检查连接、遮挡与积灰情况。
         </NAlert>
         <NAlert v-else type="success" title="运行正常">该面板运行状态正常，各项指标在合理范围。</NAlert>
       </div>

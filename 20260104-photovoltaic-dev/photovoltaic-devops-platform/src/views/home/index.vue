@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import * as echarts from 'echarts';
+import { useDeviceStore } from '@/store/modules/device';
 
 defineOptions({
   name: 'HomePage'
 });
+
+const deviceStore = useDeviceStore();
 
 // --- Refs ---
 const gaugeChartRef = ref<HTMLDivElement | null>(null);
@@ -12,8 +16,9 @@ const trendChartRef = ref<HTMLDivElement | null>(null);
 let gaugeChart: echarts.ECharts | null = null;
 let trendChart: echarts.ECharts | null = null;
 const activeTab = ref<'day' | 'month' | 'year'>('day');
+const router = useRouter();
+let trendTimer: number | null = null;
 
-// --- Data ---
 const stationInfo = {
   name: '安科瑞光伏电站',
   price: '0.67 元/kW·h',
@@ -42,35 +47,24 @@ const weatherInfo = {
   windSpeed: '1.4 m/s'
 };
 
-const inverters = [
-  {
-    id: '101001400001',
-    name: '安科瑞A楼5F',
-    factory: '阳光电源股份有限公司',
-    model: 'SG33CX-2P-CN',
-    status: 'running',
-    power: '33kW',
-    type: '组串'
-  },
-  {
-    id: '101001400002',
-    name: '安科瑞B楼3F',
-    factory: '江苏固德威电源科技有限公司',
-    model: 'GW20K-DT',
-    status: 'running',
-    power: '20kW',
-    type: '组串'
-  },
-  {
-    id: '101001400003',
-    name: '安科瑞E楼6F',
-    factory: '锦浪科技股份有限公司',
-    model: 'GCI-3P20K-5G',
-    status: 'running',
-    power: '20kW',
-    type: '组串'
-  }
-];
+function statusText(s: string) {
+  if (s === 'serious') return '严重';
+  if (s === 'accident') return '事故';
+  return '运行正常';
+}
+
+function statusClass(s: string) {
+  if (s === 'serious') return 'text-amber-400';
+  if (s === 'accident') return 'text-red-400';
+  return 'text-neon-green';
+}
+
+function openInvDetail(id: string, status: string) {
+  router.push({
+    name: 'pv_panel-detail',
+    query: { id, status }
+  });
+}
 
 // --- Charts ---
 function initGaugeChart() {
@@ -171,32 +165,30 @@ function getTrendData() {
   let xAxisData: string[] = [];
   let seriesData: number[] = [];
 
-  // Simulated current date: 2026-01-07 10:00
-  const currentMonth = 1; // January
-  const currentDay = 7;
-  const currentHour = 10;
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  const currentDay = now.getDate();
+  const currentHour = now.getHours();
+  const sunrise = 6;
+  const sunset = 19;
 
   if (type === 'day') {
     xAxisData = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
     seriesData = xAxisData.map((_, i) => {
-      // Future hours have no data
       if (i > currentHour) return 0;
-
-      if (i < 6 || i > 19) return 0;
+      if (i < sunrise || i >= sunset) return 0;
       const x = (i - 12.5) / 5;
       return Math.max(0, 45 * Math.exp(-x * x) + Math.random() * 5);
     });
   } else if (type === 'month') {
     xAxisData = Array.from({ length: 30 }, (_, i) => `${i + 1}日`);
     seriesData = xAxisData.map((_, i) => {
-      // Only show data up to the 7th
       if (i + 1 > currentDay) return 0;
       return Math.random() * 200 + 100;
     });
   } else {
     xAxisData = Array.from({ length: 12 }, (_, i) => `${i + 1}月`);
     seriesData = xAxisData.map((_, i) => {
-      // Only show data for January
       if (i + 1 > currentMonth) return 0;
       return Math.random() * 5000 + 3000;
     });
@@ -287,6 +279,20 @@ function updateTrendChart(tab: 'day' | 'month' | 'year') {
       }
     ]
   });
+
+  if (trendTimer) {
+    clearInterval(trendTimer);
+    trendTimer = null;
+  }
+  if (tab === 'day') {
+    trendTimer = window.setInterval(() => {
+      const { xAxisData: xa, seriesData: sd } = getTrendData();
+      trendChart?.setOption({
+        xAxis: { data: xa },
+        series: [{ data: sd }]
+      });
+    }, 60000);
+  }
 }
 
 function downloadChart() {
@@ -341,6 +347,7 @@ function downloadChart() {
 onMounted(() => {
   initGaugeChart();
   initTrendChart();
+  updateTrendChart(activeTab.value);
 
   window.addEventListener('resize', () => {
     gaugeChart?.resize();
@@ -351,11 +358,15 @@ onMounted(() => {
 onBeforeUnmount(() => {
   gaugeChart?.dispose();
   trendChart?.dispose();
+  if (trendTimer) {
+    clearInterval(trendTimer);
+    trendTimer = null;
+  }
 });
 </script>
 
 <template>
-  <div class="tech-dashboard flex-col-stretch gap-16px p-16px text-gray-100">
+  <div class="tech-dashboard relative flex-col-stretch gap-16px p-16px text-gray-100">
     <!-- Row 1: Station Info, Energy/Revenue, Video -->
     <NGrid :x-gap="16" :y-gap="16" cols="1 l:4" responsive="screen" item-responsive>
       <!-- Station Info (25%) -->
@@ -595,28 +606,34 @@ onBeforeUnmount(() => {
       </NGi>
     </NGrid>
 
-    <!-- Row 3: Inverter List -->
-    <div class="tech-card relative overflow-hidden p-4">
+    <!-- Row 3: Device List -->
+    <div ref="invSectionRef" class="tech-card inverter-section relative overflow-hidden p-4">
       <div class="tech-card-bg absolute inset-0"></div>
       <div class="relative z-10">
         <div class="text-neon-cyan mb-4 flex-y-center gap-2 font-bold">
           <div class="i-carbon-iot-connect"></div>
-          逆变器状态监控
+          设备状态监控
         </div>
-        <div class="grid grid-cols-1 gap-16px lg:grid-cols-3 md:grid-cols-2">
-          <div v-for="inv in inverters" :key="inv.id" class="tech-item-card group">
-            <!-- Device Image -->
+        <div class="inv-topbar">
+          <div v-for="inv in deviceStore.devices" :key="inv.id" class="inv-segment">
+            <span class="segment-name">{{ inv.name }}</span>
+            <span class="segment-status">
+              <span class="i-carbon-plug mr-4px text-14px"></span>
+              在线
+            </span>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 gap-16px md:grid-cols-3">
+          <div v-for="inv in deviceStore.devices" :key="inv.id" class="tech-item-card group">
             <div
-              class="relative h-100px w-80px flex-center overflow-hidden border border-cyan-500/20 rd-4px bg-cyan-900/20"
+              class="relative h-140px w-full flex-center overflow-hidden border border-cyan-500/20 rd-6px bg-cyan-900/20"
             >
               <img src="@/assets/imgs/inverter.png" class="h-full w-full object-contain" alt="Inverter" />
               <div class="absolute bottom-0 h-1px w-full bg-cyan-400 shadow-[0_0_10px_#00f2f1]"></div>
             </div>
-
-            <!-- Info -->
-            <div class="flex-col flex-1 gap-6px text-12px">
-              <div class="mb-1 flex items-start justify-between border-b border-cyan-500/10 pb-2">
-                <span class="text-14px text-gray-200 font-bold">{{ inv.name }}</span>
+            <div class="w-full flex-col gap-8px text-13px">
+              <div class="flex items-center justify-between border-b border-cyan-500/10 pb-6">
+                <span class="device-name text-gray-200 font-bold">{{ inv.name }}</span>
                 <div
                   class="text-neon-green bg-neon-green/10 border-neon-green/20 flex-y-center gap-4px border rd-full px-2"
                 >
@@ -624,26 +641,35 @@ onBeforeUnmount(() => {
                   <span>在线</span>
                 </div>
               </div>
-
-              <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-                <div class="text-gray-500">
-                  厂家:
-                  <span class="text-gray-300">{{ inv.factory.substring(0, 4) }}...</span>
+              <div class="flex-col gap-8px">
+                <div class="info-line">
+                  厂家：
+                  <span class="info-value">{{ inv.factory }}</span>
                 </div>
-                <div class="text-gray-500">
-                  型号:
-                  <span class="text-gray-300">{{ inv.model }}</span>
+                <div class="info-line">
+                  运行ID：
+                  <span class="info-value">{{ inv.id }}</span>
                 </div>
-                <div class="text-gray-500">
-                  功率:
-                  <span class="text-neon-cyan">{{ inv.power }}</span>
+                <div class="info-line">
+                  设备型号：
+                  <span class="info-value">{{ inv.model }}</span>
                 </div>
-                <div class="text-gray-500">
-                  类型:
-                  <span class="text-gray-300">{{ inv.type }}</span>
+                <div class="info-line">
+                  状态：
+                  <span :class="statusClass(inv.status)">{{ statusText(inv.status) }}</span>
+                </div>
+                <div class="info-line">
+                  额定功率：
+                  <span class="info-value power text-neon-cyan">{{ inv.power }}</span>
+                </div>
+                <div class="info-line">
+                  设备类型：
+                  <span class="info-value">{{ inv.type }}</span>
                 </div>
               </div>
-              <div class="mt-1 text-xs text-gray-500">ID: {{ inv.id }}</div>
+              <div class="mt-6 w-full flex-center">
+                <button class="detail-btn" @click="openInvDetail(inv.id, inv.status)">查看详情</button>
+              </div>
             </div>
           </div>
         </div>
@@ -664,7 +690,7 @@ onBeforeUnmount(() => {
   --card-bg: rgba(15, 23, 42, 0.6);
   --card-border: rgba(0, 242, 241, 0.2);
 
-  background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+  background: linear-gradient(180deg, #0e2a47 0%, #0b1f33 50%, #091a2c 100%);
   min-height: 100%;
 }
 
@@ -787,17 +813,83 @@ onBeforeUnmount(() => {
 /* Inverter Items */
 .tech-item-card {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 12px;
-  padding: 12px;
+  padding: 14px;
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
   transition: all 0.3s;
 }
 .tech-item-card:hover {
   background: rgba(0, 242, 241, 0.05);
-  border-color: rgba(0, 242, 241, 0.3);
+  border-color: rgba(0, 242, 241, 0.35);
   transform: translateY(-2px);
+}
+
+.inverter-section .device-name {
+  font-size: 18px;
+}
+.inverter-section .info-line {
+  color: #94a3b8;
+  font-size: 15px;
+}
+.inverter-section .info-value {
+  color: #e2e8f0;
+}
+.inverter-section .power {
+  font-weight: 600;
+}
+.inverter-section {
+  background: rgba(9, 26, 44, 0.65);
+  border-color: rgba(56, 113, 199, 0.25);
+}
+
+.detail-btn {
+  background: transparent;
+  border: 1px solid rgba(0, 242, 241, 0.4);
+  color: var(--neon-cyan);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+.detail-btn:hover {
+  background: rgba(0, 242, 241, 0.15);
+  border-color: var(--neon-cyan);
+}
+
+.inv-topbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: rgba(0, 120, 255, 0.12);
+  border: 1px solid rgba(0, 120, 255, 0.25);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+}
+.inv-segment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+.inv-segment:last-child {
+  border-right: none;
+}
+.segment-name {
+  color: #e2e8f0;
+  font-weight: 600;
+  font-size: 15px;
+}
+.segment-status {
+  color: #10b981;
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
 }
 
 /* Animations */

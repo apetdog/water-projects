@@ -227,7 +227,6 @@ const local: App.I18n.Schema = {
     'iframe-page': 'Iframe',
     home: 'Home',
     pv: 'Photovoltaic',
-    pv_realtime: 'Real-time Monitoring',
     pv_system: 'Photovoltaic Panel Status',
     'pv_panel-detail': 'Panel Detail',
     'pv_3d-model': '3D Model'
