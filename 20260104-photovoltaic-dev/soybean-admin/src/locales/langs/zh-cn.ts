@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'Soybean 管理系统',
+    title: '光伏电站监控系统',
     updateTitle: '系统版本更新通知',
     updateContent: '检测到系统有新版本发布，是否立即刷新页面？',
     updateConfirm: '立即刷新',
@@ -225,7 +225,7 @@ const local: App.I18n.Schema = {
     home: '首页',
     pv: '光伏电站',
     pv_realtime: '实时数据',
-    pv_system: '系统模型',
+    pv_system: '光伏板状态',
     'pv_panel-detail': '面板详情',
     'pv_3d-model': '3D模型'
   },

@@ -21,6 +21,7 @@ function initThree() {
   // 创建相机
   camera = new THREE.PerspectiveCamera(75, containerRef.value.clientWidth / containerRef.value.clientHeight, 0.1, 1000);
   camera.position.set(0, 2, 5);
+  scene.add(camera); // 将相机添加到场景中，以便跟随相机的光源生效
 
   // 创建渲染器
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -38,23 +39,23 @@ function initThree() {
   controls.maxDistance = 20;
 
   // 添加环境光
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
   scene.add(ambientLight);
 
   // 添加方向光
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
   directionalLight.position.set(10, 15, 8);
   scene.add(directionalLight);
 
   // 添加点光源
-  const pointLight = new THREE.PointLight(0x409eff, 0.4);
+  const pointLight = new THREE.PointLight(0x409eff, 0.5);
   pointLight.position.set(-5, 6, -5);
   scene.add(pointLight);
 
-  // 添加正面补光
-  const frontLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  frontLight.position.set(0, 5, 10);
-  scene.add(frontLight);
+  // 添加跟随相机的正面补光
+  const cameraLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  cameraLight.position.set(0, 0, 10);
+  camera.add(cameraLight);
 
   // 加载模型
   const loader = new GLTFLoader();

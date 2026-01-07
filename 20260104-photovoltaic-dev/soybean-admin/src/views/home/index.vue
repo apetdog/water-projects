@@ -171,13 +171,17 @@ function getTrendData() {
   let xAxisData: string[] = [];
   let seriesData: number[] = [];
 
-  // Simulated current date: 2026-01-07
+  // Simulated current date: 2026-01-07 10:00
   const currentMonth = 1; // January
   const currentDay = 7;
+  const currentHour = 10;
 
   if (type === 'day') {
     xAxisData = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
     seriesData = xAxisData.map((_, i) => {
+      // Future hours have no data
+      if (i > currentHour) return 0;
+
       if (i < 6 || i > 19) return 0;
       const x = (i - 12.5) / 5;
       return Math.max(0, 45 * Math.exp(-x * x) + Math.random() * 5);
@@ -288,10 +292,10 @@ function updateTrendChart(tab: 'day' | 'month' | 'year') {
 function downloadChart() {
   if (!trendChart) return;
 
-  // Determine title based on active tab and simulated date (2026-01-07)
+  // Determine title based on active tab and simulated date (2026-01-07 10:00)
   let titleText = '';
   if (activeTab.value === 'day') {
-    titleText = '2026年1月7日 功率趋势';
+    titleText = '2026年1月7日 10:00 功率趋势';
   } else if (activeTab.value === 'month') {
     titleText = '2026年1月 发电量趋势';
   } else {
@@ -701,6 +705,7 @@ onBeforeUnmount(() => {
 .text-gradient-gold {
   background: linear-gradient(to right, #ffd700, #ffaa00);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

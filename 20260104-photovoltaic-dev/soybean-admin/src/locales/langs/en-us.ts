@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'SoybeanAdmin',
+    title: 'PV Monitor System',
     updateTitle: 'System Version Update Notification',
     updateContent: 'A new version of the system has been detected. Do you want to refresh the page immediately?',
     updateConfirm: 'Refresh immediately',
@@ -228,7 +228,7 @@ const local: App.I18n.Schema = {
     home: 'Home',
     pv: 'Photovoltaic',
     pv_realtime: 'Real-time Monitoring',
-    pv_system: 'System Overview',
+    pv_system: 'Photovoltaic Panel Status',
     'pv_panel-detail': 'Panel Detail',
     'pv_3d-model': '3D Model'
   },
