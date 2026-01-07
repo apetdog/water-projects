@@ -21,7 +21,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   "iframe-page": () => import("@/views/_builtin/iframe-page/[url].vue"),
   login: () => import("@/views/_builtin/login/index.vue"),
   home: () => import("@/views/home/index.vue"),
-  "pv-realtime": () => import("@/views/pv/realtime.vue"),
-  "pv-system": () => import("@/views/pv/system.vue"),
-  "pv-panel-detail": () => import("@/views/pv/panel-detail.vue"),
+  "pv_3d-model": () => import("@/views/pv/3d-model/index.vue"),
+  "pv_panel-detail": () => import("@/views/pv/panel-detail/index.vue"),
+  pv_system: () => import("@/views/pv/system/index.vue"),
 };

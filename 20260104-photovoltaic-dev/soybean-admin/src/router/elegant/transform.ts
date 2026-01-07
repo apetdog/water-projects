@@ -168,7 +168,11 @@ const routeMap: RouteMap = {
   "500": "/500",
   "home": "/home",
   "iframe-page": "/iframe-page/:url",
-  "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?"
+  "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?",
+  "pv": "/pv",
+  "pv_3d-model": "/pv/3d-model",
+  "pv_panel-detail": "/pv/panel-detail",
+  "pv_system": "/pv/system"
 };
 
 /**
