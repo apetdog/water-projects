@@ -98,7 +98,7 @@ const InfoBox = styled.div`
     }
 `;
 
-type LampPost = {
+export type LampPost = {
   id: number;
   top: string;
   left: string;

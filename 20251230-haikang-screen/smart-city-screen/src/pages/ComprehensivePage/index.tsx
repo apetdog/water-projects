@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import { LeftPageIndex } from '../LeftPage';
 import { CenterPageIndex } from '../CenterPage';
 import { RightPageIndex } from '../RightPage';

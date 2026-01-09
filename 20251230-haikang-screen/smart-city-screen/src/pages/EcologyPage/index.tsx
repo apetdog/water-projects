@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { EcologyLeft } from './components/EcologyLeft';
-import { EcologyCenter } from './components/EcologyCenter';
+import { EcologyCenter, LampPost } from './components/EcologyCenter';
 import { EcologyRight } from './components/EcologyRight';
 import { ecologyPageDataApi } from '@/api/mock/index'
 import { get } from '@/api/http'
@@ -9,7 +9,7 @@ import { EcologyPageDataType } from '@/api/mock/ecologyPageData'
 
 export const EcologyPage = () => {
   const [data, setData] = useState<EcologyPageDataType | undefined>(undefined);
-  const [selectedLampPost, setSelectedLampPost] = useState(null);
+  const [selectedLampPost, setSelectedLampPost] = useState<LampPost | null>(null);
 
   const fetchData = async () => {
     const res = await get(ecologyPageDataApi)

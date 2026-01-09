@@ -1,6 +1,35 @@
-import React, { useEffect, useRef, Suspense } from "react";
+import { useEffect, useRef, Suspense } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { useGLTF, OrbitControls, Stage } from "@react-three/drei";
+import { useGLTF, OrbitControls, Stage, Html, useProgress } from "@react-three/drei";
+
+function Loader() {
+  const { progress } = useProgress();
+  return (
+    <Html center>
+      <div style={{ color: 'white', textAlign: 'center', fontFamily: 'sans-serif' }}>
+        <div style={{ marginBottom: 10, fontSize: 14, letterSpacing: 2 }}>LOADING MODEL</div>
+        <div style={{ 
+          width: 200, 
+          height: 4, 
+          background: 'rgba(255,255,255,0.2)', 
+          borderRadius: 2,
+          overflow: 'hidden'
+        }}>
+          <div 
+            style={{ 
+              width: `${progress}%`, 
+              height: '100%', 
+              background: '#50e3c2', 
+              transition: 'width 0.3s ease-out',
+              boxShadow: '0 0 10px #50e3c2'
+            }} 
+          />
+        </div>
+        <div style={{ marginTop: 8, fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{progress.toFixed(0)}%</div>
+      </div>
+    </Html>
+  );
+}
 
 const Model = () => {
   const { scene } = useGLTF(
@@ -112,7 +141,7 @@ export const CityModel = () => {
           attach="background"
           args={["#000"]}
         />
-        <Suspense fallback={null}>
+        <Suspense fallback={<Loader />}>
           <Stage
             environment="city"
             intensity={0.5}
