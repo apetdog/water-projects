@@ -43,12 +43,12 @@ export function setupElegantRouter() {
 
       if (key === '3d-model') {
         meta.icon = 'mdi:cube-outline';
-        meta.order = 3;
+        meta.order = 3; // Ensure order is 3
       }
 
       if (key === 'pv-status') {
         meta.icon = 'mdi:solar-power';
-        meta.order = 2;
+        meta.order = 2; // Ensure order is 2
       }
 
       if (key === 'panel-detail') {

@@ -25,17 +25,19 @@ onMounted(() => {
     <!-- Left: 3D Model Area -->
     <div class="bento-card group relative flex-1 overflow-hidden p-0 lg:flex-[2]">
       <!-- Title Overlay -->
-      <div class="absolute left-6 top-6 z-10">
+      <div class="absolute left-10 top-10 z-10">
         <h2 class="text-2xl text-gray-900 font-bold dark:text-white">单体组件详情</h2>
         <p
-          class="mt-1 inline-block rounded-md bg-white/50 px-2 py-1 text-sm text-gray-500 font-mono backdrop-blur-md dark:bg-black/50 dark:text-gray-400"
+          class="mt-1 inline-block rounded-md bg-white/20 px-2 py-1 text-sm text-gray-500 font-mono backdrop-blur-md dark:bg-black/50 dark:text-gray-400"
         >
           ID: PV-2024-X89
         </p>
       </div>
 
       <!-- Model Viewer Component -->
-      <div class="h-full w-full transform transition-transform duration-700 group-hover:scale-[1.02]">
+      <div
+        class="h-full w-full transform overflow-hidden rounded-xl transition-transform duration-700 group-hover:scale-[1.02]"
+      >
         <ModelViewer />
       </div>
 

@@ -14,7 +14,7 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: '3d-model',
       i18nKey: 'route.3d-model',
       icon: 'mdi:cube-outline',
-      order: 2
+      order: 3
     }
   },
   {
@@ -104,7 +104,7 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'pv-status',
       i18nKey: 'route.pv-status',
       icon: 'mdi:solar-power',
-      order: 3
+      order: 2
     }
   }
 ];
