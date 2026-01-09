@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import { LeftPageIndex } from '../LeftPage';
 import { CenterPageIndex } from '../CenterPage';
 import { RightPageIndex } from '../RightPage';
@@ -8,7 +8,7 @@ import { get } from '@/api/http'
 import { ResultEnum } from '@/enums/httpEnum'
 import { leftPageDataApi, rightPageDataApi } from '@/api/mock/index'
 
-import { CityModel } from '@/components/CityModel';
+const CityModel = lazy(() => import('@/components/CityModel').then(module => ({ default: module.CityModel })));
 
 export const ComprehensivePage = () => {
   const [leftData, setLeftData] = useState<leftPageDataType | undefined>(undefined)

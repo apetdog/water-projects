@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { CityModel } from '@/components/CityModel';
+// import { CityModel } from '@/components/CityModel';
+const CityModel = lazy(() => import('@/components/CityModel').then(module => ({ default: module.CityModel })));
 
 // Keyframes for pulse animation
 const pulse = keyframes`

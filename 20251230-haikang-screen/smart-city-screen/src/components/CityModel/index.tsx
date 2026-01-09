@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, Suspense } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useGLTF, OrbitControls, Stage } from "@react-three/drei";
 
@@ -107,17 +107,19 @@ export const CityModel = () => {
       <Canvas
         shadows
         dpr={[1, 2]}
-        camera={{ position: [50, 50, 20], fov: 35 }}>
+        camera={{ position: [-50, 85, 25], fov: 30 }}>
         <color
           attach="background"
           args={["#000"]}
         />
-        <Stage
-          environment="city"
-          intensity={0.5}
-          adjustCamera={false}>
-          <Model />
-        </Stage>
+        <Suspense fallback={null}>
+          <Stage
+            environment="city"
+            intensity={0.5}
+            adjustCamera={false}>
+            <Model />
+          </Stage>
+        </Suspense>
         <CameraController />
       </Canvas>
     </div>
