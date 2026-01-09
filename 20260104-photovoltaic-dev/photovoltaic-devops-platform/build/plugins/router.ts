@@ -31,6 +31,30 @@ export function setupElegantRouter() {
         i18nKey: `route.${key}` as App.I18n.I18nKey
       };
 
+      const titleMap: Record<string, string> = {
+        '3d-model': '3D模型',
+        'pv-status': '光伏板状态',
+        'panel-detail': '光伏板详情'
+      };
+
+      if (titleMap[key]) {
+        meta.title = titleMap[key];
+      }
+
+      if (key === '3d-model') {
+        meta.icon = 'mdi:cube-outline';
+        meta.order = 2;
+      }
+
+      if (key === 'pv-status') {
+        meta.icon = 'mdi:solar-power';
+        meta.order = 3;
+      }
+
+      if (key === 'panel-detail') {
+        meta.hideInMenu = true;
+      }
+
       if (constantRoutes.includes(key)) {
         meta.constant = true;
       }

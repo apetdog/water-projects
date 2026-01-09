@@ -51,7 +51,7 @@ function openPanelDetail(id: string) {
   const p = panels.value.find(x => x.id === id);
   // Jump to 3D model page with panel info
   router.push({
-    name: 'pv_3d-model',
+    name: '3d-model',
     query: {
       panelId: id,
       status: p?.status || 'normal'
@@ -63,7 +63,7 @@ function openPanelDetail(id: string) {
 <template>
   <div class="flex-col-stretch gap-16px">
     <NCard :bordered="false" title="光伏板状态">
-      <div class="mb-12px text-12px text-#666">已脱敏显示：面板编号为匿名编码</div>
+      <div class="mb-12px text-12px text-gray-500 dark:text-gray-400">已脱敏显示：面板编号为匿名编码</div>
       <div class="grid-container" :style="{ gridTemplateColumns: `repeat(${cols}, 1fr)` }">
         <div
           v-for="p in panels"

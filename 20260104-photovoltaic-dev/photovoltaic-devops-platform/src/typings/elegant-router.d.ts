@@ -17,16 +17,15 @@ declare module "@elegant-router/types" {
   export type RouteMap = {
     "root": "/";
     "not-found": "/:pathMatch(.*)*";
+    "3d-model": "/3d-model";
     "403": "/403";
     "404": "/404";
     "500": "/500";
     "home": "/home";
     "iframe-page": "/iframe-page/:url";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
-    "pv": "/pv";
-    "pv_3d-model": "/pv/3d-model";
-    "pv_panel-detail": "/pv/panel-detail";
-    "pv_system": "/pv/system";
+    "panel-detail": "/panel-detail";
+    "pv-status": "/pv-status";
   };
 
   /**
@@ -58,13 +57,15 @@ declare module "@elegant-router/types" {
    */
   export type FirstLevelRouteKey = Extract<
     RouteKey,
+    | "3d-model"
     | "403"
     | "404"
     | "500"
     | "home"
     | "iframe-page"
     | "login"
-    | "pv"
+    | "panel-detail"
+    | "pv-status"
   >;
 
   /**
@@ -81,15 +82,15 @@ declare module "@elegant-router/types" {
    */
   export type LastLevelRouteKey = Extract<
     RouteKey,
+    | "3d-model"
     | "403"
     | "404"
     | "500"
     | "iframe-page"
     | "login"
     | "home"
-    | "pv_3d-model"
-    | "pv_panel-detail"
-    | "pv_system"
+    | "panel-detail"
+    | "pv-status"
   >;
 
   /**

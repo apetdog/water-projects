@@ -2,12 +2,14 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import * as echarts from 'echarts';
+import { useThemeStore } from '@/store/modules/theme';
 
 defineOptions({
   name: 'PvPanelDetail'
 });
 
 const route = useRoute();
+const themeStore = useThemeStore();
 const panelId = computed(() => String(route.query.id || ''));
 const status = computed(() => {
   const s = String(route.query.status || 'normal');
@@ -108,32 +110,78 @@ function genSeriesByIdAndStatus(id: string, s: 'normal' | 'warning' | 'error') {
 }
 
 function initCharts() {
+  const isDark = themeStore.darkMode;
+  
+  const textColor = isDark ? '#e2e8f0' : '#1e293b';
+  const axisColor = isDark ? '#94a3b8' : '#64748b';
+  const splitColor = isDark ? '#334155' : '#e2e8f0';
+  const tooltipBg = isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+
+  const getOption = (unit: string, color: string) => ({
+    tooltip: { 
+      trigger: 'axis',
+      backgroundColor: tooltipBg,
+      borderColor: color,
+      textStyle: { color: textColor }
+    },
+    grid: {
+      top: '15%',
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: { 
+      type: 'category', 
+      data: genTimes(),
+      axisLabel: { color: axisColor },
+      axisLine: { lineStyle: { color: splitColor } }
+    },
+    yAxis: { 
+      type: 'value', 
+      name: unit,
+      nameTextStyle: { color: axisColor },
+      axisLabel: { color: axisColor },
+      splitLine: {
+        lineStyle: {
+          type: 'dashed',
+          color: splitColor
+        }
+      }
+    },
+    series: [{ 
+      type: 'line', 
+      data: [], 
+      smooth: true,
+      showSymbol: false,
+      itemStyle: { color },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color }, // You might want to use rgba here for transparency
+          { offset: 1, color: isDark ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0)' }
+        ])
+      }
+    }]
+  });
+
+  const vColor = isDark ? '#00f2f1' : '#0284c7';
+  const iColor = isDark ? '#00ff9d' : '#16a34a';
+  const tColor = isDark ? '#ff9f0e' : '#d97706';
+
   if (vChartRef.value) {
+    if (vChart) vChart.dispose();
     vChart = echarts.init(vChartRef.value);
-    vChart.setOption({
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: genTimes() },
-      yAxis: { type: 'value', name: 'V' },
-      series: [{ type: 'line', data: [], smooth: true }]
-    });
+    vChart.setOption(getOption('V', vColor));
   }
   if (iChartRef.value) {
+    if (iChart) iChart.dispose();
     iChart = echarts.init(iChartRef.value);
-    iChart.setOption({
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: genTimes() },
-      yAxis: { type: 'value', name: 'A' },
-      series: [{ type: 'line', data: [], smooth: true }]
-    });
+    iChart.setOption(getOption('A', iColor));
   }
   if (tChartRef.value) {
+    if (tChart) tChart.dispose();
     tChart = echarts.init(tChartRef.value);
-    tChart.setOption({
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: genTimes() },
-      yAxis: { type: 'value', name: '℃' },
-      series: [{ type: 'line', data: [], smooth: true }]
-    });
+    tChart.setOption(getOption('℃', tColor));
   }
 }
 
@@ -168,7 +216,7 @@ watch([panelId, status], () => {
           {{ statusText }}
         </NTag>
       </div>
-      <div class="text-12px text-#666">已脱敏显示：仅展示匿名编号与统计指标</div>
+      <div class="text-12px text-gray-500 dark:text-gray-400">已脱敏显示：仅展示匿名编号与统计指标</div>
       <NGrid :x-gap="16" :y-gap="16" cols="1 s:1 m:3">
         <NGi>
           <NCard :bordered="false" title="电压趋势">

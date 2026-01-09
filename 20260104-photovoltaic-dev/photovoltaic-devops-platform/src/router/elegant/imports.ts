@@ -15,13 +15,13 @@ export const layouts: Record<RouteLayout, RouteComponent | (() => Promise<RouteC
 };
 
 export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<RouteComponent>)> = {
+  "3d-model": () => import("@/views/3d-model/index.vue"),
   403: () => import("@/views/_builtin/403/index.vue"),
   404: () => import("@/views/_builtin/404/index.vue"),
   500: () => import("@/views/_builtin/500/index.vue"),
   "iframe-page": () => import("@/views/_builtin/iframe-page/[url].vue"),
   login: () => import("@/views/_builtin/login/index.vue"),
   home: () => import("@/views/home/index.vue"),
-  "pv_3d-model": () => import("@/views/pv/3d-model/index.vue"),
-  "pv_panel-detail": () => import("@/views/pv/panel-detail/index.vue"),
-  pv_system: () => import("@/views/pv/system/index.vue"),
+  "panel-detail": () => import("@/views/panel-detail/index.vue"),
+  "pv-status": () => import("@/views/pv-status/index.vue"),
 };
