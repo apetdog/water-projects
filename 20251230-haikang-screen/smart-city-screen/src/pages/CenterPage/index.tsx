@@ -1,7 +1,7 @@
-import { useState, lazy } from 'react';
+import { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 // import { CityModel } from '@/components/CityModel';
-const CityModel = lazy(() => import('@/components/CityModel').then(module => ({ default: module.CityModel })));
+// const CityModel = lazy(() => import('@/components/CityModel').then(module => ({ default: module.CityModel })));
 
 // Keyframes for pulse animation
 const pulse = keyframes`
@@ -321,7 +321,7 @@ export const CenterPageIndex = () => {
 
   return (
     <div className='center-page' style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
-      <CityModel />
+      {/* <CityModel /> moved to LayoutPage */}
       <AlarmBtn onClick={handleCall}>
         <i className='iconfont'>&#xe61d;</i>
         <WaveChart>
@@ -350,7 +350,7 @@ export const CenterPageIndex = () => {
               <InfoBox>
                 <InfoRow>
                   <span className="label">报警区域</span>
-                  <span className="value">ZONE-001 高级客房区</span>
+                  <span className="value">智慧路灯1区</span>
                 </InfoRow>
                 <InfoRow>
                   <span className="label">警情等级</span>

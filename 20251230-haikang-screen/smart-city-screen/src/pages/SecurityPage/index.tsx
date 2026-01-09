@@ -22,10 +22,10 @@ export const SecurityPage = () => {
   }, [])
 
   return (
-    <>
+    <div style={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between' }}>
       <SecurityLeft accessLogs={data?.accessLogs} aiAnalysis={data?.aiAnalysis} />
       <SecurityCenter />
       <SecurityRight alarmLogs={data?.alarmLogs} deviceStats={data?.deviceStats} />
-    </>
+    </div>
   );
 };

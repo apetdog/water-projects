@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy } from 'react';
+import { useEffect, useState } from 'react';
 import { LeftPageIndex } from '../LeftPage';
 import { CenterPageIndex } from '../CenterPage';
 import { RightPageIndex } from '../RightPage';
@@ -8,7 +8,7 @@ import { get } from '@/api/http'
 import { ResultEnum } from '@/enums/httpEnum'
 import { leftPageDataApi, rightPageDataApi } from '@/api/mock/index'
 
-const CityModel = lazy(() => import('@/components/CityModel').then(module => ({ default: module.CityModel })));
+// const CityModel = lazy(() => import('@/components/CityModel').then(module => ({ default: module.CityModel })));
 
 export const ComprehensivePage = () => {
   const [leftData, setLeftData] = useState<leftPageDataType | undefined>(undefined)
@@ -31,8 +31,8 @@ export const ComprehensivePage = () => {
 
   return (
     <>
-      {/* 3D City Model */}
-      <CityModel />
+      {/* 3D City Model moved to LayoutPage for persistence */}
+      {/* <CityModel /> */}
       <div style={{position: 'relative', zIndex: 1, display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between', pointerEvents: 'none'}}>
         <LeftPageIndex data={leftData} />
         <CenterPageIndex />

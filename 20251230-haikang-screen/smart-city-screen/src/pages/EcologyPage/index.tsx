@@ -23,7 +23,7 @@ export const EcologyPage = () => {
   }, [])
 
   return (
-    <>
+    <div style={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'space-between' }}>
       <EcologyLeft 
          environmentFactors={data?.environmentFactors}
          waterQuality={data?.waterQuality}
@@ -35,6 +35,6 @@ export const EcologyPage = () => {
          energyAnalysis={data?.energyAnalysis}
          photovoltaic={data?.photovoltaic}
       />
-    </>
+    </div>
   );
 };
