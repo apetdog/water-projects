@@ -1,4 +1,6 @@
 import styled, { keyframes } from 'styled-components';
+import lightOnImg from '@/assets/light-on.png';
+import lightOffImg from '@/assets/light-off.png';
 
 const rain = keyframes`
   0% { transform: translateY(-100vh); opacity: 0; }
@@ -65,36 +67,12 @@ const LampPostWrapper = styled.div<{ active?: boolean, top: string, left: string
   }
 `;
 
-const LampPostGraphic = styled.div<{ color: string }>`
-    width: 6px;
-    height: 120px;
-    background: ${props => props.color};
-    margin: 0 auto;
-    position: relative;
-    box-shadow: 0 0 10px ${props => props.color};
-    
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -12px;
-        width: 30px;
-        height: 4px;
-        background: ${props => props.color};
-        border-radius: 2px;
-        box-shadow: 0 0 15px ${props => props.color};
-    }
-    
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: -10px;
-        width: 26px;
-        height: 6px;
-        background: #333;
-        border-radius: 50%;
-    }
+const LampPostImage = styled.img`
+    height: 160px;
+    width: auto;
+    filter: drop-shadow(0 0 15px rgba(80, 227, 194, 0.4));
+    transition: all 0.3s;
+    object-fit: contain;
 `;
 
 const InfoBox = styled.div`
@@ -120,8 +98,19 @@ const InfoBox = styled.div`
     }
 `;
 
+type LampPost = {
+  id: number;
+  top: string;
+  left: string;
+  scale: number;
+  status: string;
+  name: string;
+  wifiUsers: number;
+  screenText: string;
+};
+
 type Props = {
-  onSelectLampPost: (post: any) => void
+  onSelectLampPost: (post: LampPost) => void
 }
 
 export const EcologyCenter = ({ onSelectLampPost }: Props) => {
@@ -168,7 +157,7 @@ export const EcologyCenter = ({ onSelectLampPost }: Props) => {
                   scale={post.scale}
                   onClick={() => onSelectLampPost(post)}
                >
-                  <LampPostGraphic color={color} />
+                  <LampPostImage src={isActive ? lightOnImg : lightOffImg} alt={post.name} />
                   <InfoBox className="info-box">
                       <span className="status-dot" style={{background: color}}></span>
                       {post.name} ({post.status})

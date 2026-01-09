@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { CityModel } from '@/components/CityModel';
 
 // Keyframes for pulse animation
 const pulse = keyframes`
@@ -53,7 +54,7 @@ const AlarmBtn = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: radial-gradient(circle at center, rgba(80, 227, 194, 0.4) 0%, rgba(80, 227, 194, 0.1) 70%, transparent 100%);
+    background: radial-gradient(circle at center, rgba(80, 227, 194, 0.4) 0%, rgba(0, 50, 80, 0.8) 100%);
     border: 2px solid rgba(80, 227, 194, 0.6);
     box-shadow: 0 0 15px rgba(80, 227, 194, 0.4), inset 0 0 10px rgba(80, 227, 194, 0.4);
     animation: ${pulse} 2s infinite;
@@ -208,7 +209,6 @@ const PopupHeader = styled.div`
     &:hover {
       color: #50e3c2;
       text-shadow: 0 0 10px #50e3c2;
-      transform: rotate(90deg);
     }
   }
 `;
@@ -320,7 +320,7 @@ export const CenterPageIndex = () => {
 
   return (
     <div className='center-page' style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
-      
+      <CityModel />
       <AlarmBtn onClick={handleCall}>
         <i className='iconfont'>&#xe61d;</i>
         <WaveChart>
@@ -333,15 +333,19 @@ export const CenterPageIndex = () => {
       </AlarmBtn>
 
       {showAlarm && (
-        <Overlay onClick={handleClose}>
-          <PopupBox onClick={e => e.stopPropagation()}>
+        <Overlay onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            handleClose();
+          }
+        }}>
+          <PopupBox style={{ pointerEvents: 'auto' }}>
             <div className="scan-line"></div>
             <PopupHeader>
               <div className="title">系统警告 SYSTEM WARNING</div>
               <div className="close-btn" onClick={handleClose}>×</div>
             </PopupHeader>
             <PopupContent>
-              <AlarmMessage>⚠ 星级酒店606客房 紧急报警</AlarmMessage>
+              <AlarmMessage>⚠ 智慧路灯001 紧急报警</AlarmMessage>
               <InfoBox>
                 <InfoRow>
                   <span className="label">报警区域</span>

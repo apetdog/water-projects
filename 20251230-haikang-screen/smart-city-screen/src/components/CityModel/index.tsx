@@ -1,13 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { Canvas, useThree, useFrame } from '@react-three/fiber';
-import { useGLTF, OrbitControls, Environment, Stage } from '@react-three/drei';
-import * as THREE from 'three';
+import { Canvas, useThree } from '@react-three/fiber';
+import { useGLTF, OrbitControls, Stage } from '@react-three/drei';
 
 const Model = () => {
-  const { scene } = useGLTF(`${import.meta.env.BASE_URL}cbd.glb`);
+  const { scene } = useGLTF(`${import.meta.env.BASE_URL}imaginary_city_i/scene.gltf`);
   
-  // Auto-center and scale model logic could go here, 
-  // but Stage handles a lot of this.
   return <primitive object={scene} />;
 };
 
@@ -77,9 +74,10 @@ const CameraController = () => {
 
 export const CityModel = () => {
   return (
-    <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 0 }}>
-      <Canvas shadows dpr={[1, 2]} camera={{ position: [100, 100, 100], fov: 45 }}>
-        <Stage environment="city" intensity={0.5}>
+    <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
+      <Canvas shadows dpr={[1, 2]} camera={{ position: [200, 400, 200], fov: 35 }}>
+        <color attach="background" args={['#000']} />
+        <Stage environment="city" intensity={0.5} adjustCamera={false}>
             <Model />
         </Stage>
         <CameraController />
@@ -88,4 +86,4 @@ export const CityModel = () => {
   );
 };
 
-useGLTF.preload(`${import.meta.env.BASE_URL}cbd.glb`);
+useGLTF.preload(`${import.meta.env.BASE_URL}imaginary_city_i/scene.gltf`);
