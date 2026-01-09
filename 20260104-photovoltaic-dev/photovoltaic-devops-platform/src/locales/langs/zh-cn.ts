@@ -223,10 +223,9 @@ const local: App.I18n.Schema = {
     500: '服务器错误',
     'iframe-page': '外链页面',
     home: '首页',
-    pv: '光伏电站',
-    pv_system: '光伏板状态',
-    'pv_panel-detail': '面板详情',
-    'pv_3d-model': '3D模型'
+    'pv-status': '光伏阵列',
+    '3d-model': '组件详情',
+    'panel-detail': '面板详情'
   },
   page: {
     login: {

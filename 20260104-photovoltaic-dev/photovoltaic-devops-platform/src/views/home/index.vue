@@ -56,9 +56,9 @@ function statusText(s: string) {
 }
 
 function statusClass(s: string) {
-  if (s === 'serious') return 'text-amber-400';
-  if (s === 'accident') return 'text-red-400';
-  return 'text-neon-green';
+  if (s === 'serious') return 'text-orange-500';
+  if (s === 'accident') return 'text-red-500';
+  return 'text-green-500';
 }
 
 function openInvDetail(id: string, status: string) {
@@ -72,20 +72,16 @@ function openInvDetail(id: string, status: string) {
 function initGaugeChart() {
   if (!gaugeChartRef.value) return;
   
-  // Dispose existing instance to avoid theme conflicts or just setOption?
-  // echarts.init takes theme as second arg, but here we handle colors manually.
   if (gaugeChart) {
     gaugeChart.dispose();
   }
   gaugeChart = echarts.init(gaugeChartRef.value);
   
   const isDark = themeStore.darkMode;
-  const primaryColor = isDark ? '#00f2f1' : '#0284c7';
-  const shadowColor = isDark ? 'rgba(0,242,241,0.8)' : 'rgba(2,132,199,0.5)';
-  const trackColor = isDark ? '#1e293b' : '#e2e8f0';
-  const tickColor = isDark ? '#475569' : '#94a3b8';
-  const textColor = isDark ? '#94a3b8' : '#64748b';
-  const valueColor = isDark ? '#00f2f1' : '#0284c7';
+  const primaryColor = isDark ? '#0a84ff' : '#007aff'; // Apple Blue
+  const trackColor = isDark ? '#3a3a3c' : '#e5e5ea';
+  const textColor = isDark ? '#98989d' : '#8e8e93';
+  const valueColor = isDark ? '#ffffff' : '#000000';
 
   const option = {
     series: [
@@ -98,9 +94,7 @@ function initGaugeChart() {
         splitNumber: 5,
         radius: '90%',
         itemStyle: {
-          color: primaryColor,
-          shadowColor,
-          shadowBlur: 15
+          color: primaryColor
         },
         progress: {
           show: true,
@@ -108,13 +102,7 @@ function initGaugeChart() {
           width: 12
         },
         pointer: {
-          icon: 'path://M2.9,22.9C5.3,25.2,8.6,26.5,12,26.5c3.4,0,6.7-1.3,9.1-3.6l10.6-26.6l-29.7,26.6z',
-          length: '75%',
-          width: 12,
-          offsetCenter: [0, '5%'],
-          itemStyle: {
-            color: primaryColor
-          }
+          show: false // Cleaner look without pointer, just progress
         },
         axisLine: {
           roundCap: true,
@@ -123,50 +111,27 @@ function initGaugeChart() {
             color: [[1, trackColor]]
           }
         },
-        axisTick: {
-          splitNumber: 2,
-          lineStyle: {
-            width: 2,
-            color: tickColor
-          }
-        },
-        splitLine: {
-          length: 12,
-          lineStyle: {
-            width: 3,
-            color: tickColor
-          }
-        },
-        axisLabel: {
-          distance: 20,
-          color: textColor,
-          fontSize: 10
-        },
+        axisTick: { show: false },
+        splitLine: { show: false },
+        axisLabel: { show: false },
         title: { show: false },
         detail: {
-          backgroundColor: isDark ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.9)',
-          borderColor: primaryColor,
-          borderWidth: 1,
-          width: '70%',
-          lineHeight: 24,
-          height: 24,
-          borderRadius: 12,
-          offsetCenter: [0, '40%'],
           valueAnimation: true,
+          offsetCenter: [0, '0%'],
           formatter(value: number) {
-            return `{value|${value.toFixed(1)}}{unit|kW}`;
+            return `{value|${value.toFixed(1)}}\n{unit|kW}`;
           },
           rich: {
             value: {
-              fontSize: 18,
-              fontWeight: 'bolder',
+              fontSize: 32,
+              fontWeight: '600',
               color: valueColor,
-              fontFamily: 'monospace'
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
             },
             unit: {
-              fontSize: 12,
+              fontSize: 14,
               color: textColor,
-              padding: [0, 0, 0, 4]
+              padding: [5, 0, 0, 0]
             }
           }
         },
@@ -224,23 +189,27 @@ function initTrendChart() {
   const { xAxisData, seriesData } = getTrendData();
   const isDark = themeStore.darkMode;
   
-  const primaryColor = isDark ? '#00f2f1' : '#0284c7';
-  const tooltipBg = isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)';
-  const tooltipText = isDark ? '#e2e8f0' : '#1e293b';
-  const axisColor = isDark ? '#94a3b8' : '#64748b';
-  const splitLineColor = isDark ? '#334155' : '#e2e8f0';
-  const areaGradientStart = isDark ? 'rgba(0, 242, 241, 0.4)' : 'rgba(2, 132, 199, 0.4)';
-  const areaGradientEnd = isDark ? 'rgba(0, 242, 241, 0.01)' : 'rgba(2, 132, 199, 0.01)';
+  const primaryColor = isDark ? '#0a84ff' : '#007aff';
+  const tooltipBg = isDark ? 'rgba(28, 28, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+  const tooltipText = isDark ? '#ffffff' : '#000000';
+  const axisColor = isDark ? '#98989d' : '#8e8e93';
+  const splitLineColor = isDark ? '#3a3a3c' : '#e5e5ea';
+  const areaGradientStart = isDark ? 'rgba(10, 132, 255, 0.3)' : 'rgba(0, 122, 255, 0.3)';
+  const areaGradientEnd = isDark ? 'rgba(10, 132, 255, 0.0)' : 'rgba(0, 122, 255, 0.0)';
 
   const option = {
     tooltip: {
       trigger: 'axis',
       backgroundColor: tooltipBg,
-      borderColor: primaryColor,
-      textStyle: { color: tooltipText }
+      borderColor: 'transparent',
+      textStyle: { color: tooltipText },
+      padding: [10, 15],
+      borderRadius: 12,
+      shadowColor: 'rgba(0, 0, 0, 0.1)',
+      shadowBlur: 10
     },
     grid: {
-      top: '15%',
+      top: '10%',
       left: '3%',
       right: '4%',
       bottom: '3%',
@@ -251,7 +220,8 @@ function initTrendChart() {
       boundaryGap: false,
       data: xAxisData,
       axisLabel: { color: axisColor },
-      axisLine: { lineStyle: { color: splitLineColor } }
+      axisLine: { show: false },
+      axisTick: { show: false }
     },
     yAxis: {
       type: 'value',
@@ -278,9 +248,7 @@ function initTrendChart() {
           ])
         },
         itemStyle: {
-          color: primaryColor,
-          shadowColor: isDark ? 'rgba(0, 242, 241, 0.5)' : 'rgba(2, 132, 199, 0.5)',
-          shadowBlur: 10
+          color: primaryColor
         },
         lineStyle: {
           width: 3
@@ -295,13 +263,8 @@ function initTrendChart() {
 function updateTrendChart(tab: 'day' | 'month' | 'year') {
   activeTab.value = tab;
   if (!trendChart) return;
-  // Re-init to update colors if theme changed
   initTrendChart(); 
-
-  // But if we just want to update data, we could use setOption. 
-  // initTrendChart already calls setOption with full config.
   
-  // Restart timer for day view
   if (trendTimer) {
     clearInterval(trendTimer);
     trendTimer = null;
@@ -336,16 +299,16 @@ function downloadChart() {
       left: 'center',
       top: 10,
       textStyle: {
-        color: themeStore.darkMode ? '#e2e8f0' : '#1e293b',
+        color: themeStore.darkMode ? '#ffffff' : '#000000',
         fontSize: 16,
-        fontWeight: 'bold'
+        fontWeight: '600'
       }
     }
   });
 
   const url = trendChart.getDataURL({
     type: 'png',
-    backgroundColor: themeStore.darkMode ? '#0f172a' : '#ffffff',
+    backgroundColor: themeStore.darkMode ? '#1c1c1e' : '#ffffff',
     pixelRatio: 2
   });
 
@@ -390,58 +353,52 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="tech-dashboard relative flex-col-stretch gap-16px p-16px dark:bg-[#0f172a] dark:text-slate-200">
+  <div class="flex flex-col gap-4 p-4 dark:text-white">
     <!-- Row 1: Station Info, Energy/Revenue, Video -->
     <NGrid :x-gap="16" :y-gap="16" cols="1 l:4" responsive="screen" item-responsive>
       <!-- Station Info (25%) -->
       <NGi span="1">
-        <div class="tech-card relative h-full flex flex-col overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
-          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
-          <div class="relative z-10 h-full flex flex-col">
-            <div class="mb-2 flex-y-center justify-between">
-              <span class="text-gradient-gold text-18px font-bold">{{ stationInfo.name }}</span>
-              <div
-                class="text-neon-green bg-neon-green/10 border-neon-green/30 flex-y-center gap-1 border rd-full px-2 py-0.5 text-12px"
-              >
-                <div class="i-carbon-checkmark-filled"></div>
-                运行中
-              </div>
+        <div class="bento-card h-full flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-lg font-semibold">{{ stationInfo.name }}</span>
+            <div class="flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-medium">
+              <div class="i-carbon-checkmark-filled"></div>
+              运行中
             </div>
+          </div>
 
-            <!-- Gauge Chart -->
-            <div ref="gaugeChartRef" class="h-180px w-full"></div>
-            <div class="mb-4 text-center text-12px text-cyan-600/70 dark:text-cyan-200/70 -mt-6">实时发电功率</div>
-
-            <!-- Attributes -->
-            <div class="mt-auto flex-col gap-10px text-13px">
-              <div class="attr-row">
-                <span class="label">
-                  <div class="i-carbon-currency text-14px"></div>
-                  补贴电价
-                </span>
-                <span class="value">{{ stationInfo.price }}</span>
-              </div>
-              <div class="attr-row">
-                <span class="label">
-                  <div class="i-carbon-flash text-14px"></div>
-                  装机容量
-                </span>
-                <span class="value">{{ stationInfo.capacity }}</span>
-              </div>
-              <div class="attr-row">
-                <span class="label">
-                  <div class="i-carbon-server text-14px"></div>
-                  逆变器数
-                </span>
-                <span class="value">{{ stationInfo.inverterCount }} 个</span>
-              </div>
-              <div class="attr-row">
-                <span class="label">
-                  <div class="i-carbon-connection-two-way text-14px"></div>
-                  并网电压
-                </span>
-                <span class="value">{{ stationInfo.voltage }}</span>
-              </div>
+          <!-- Gauge Chart -->
+          <div ref="gaugeChartRef" class="h-40 w-full"></div>
+          
+          <!-- Attributes -->
+          <div class="mt-4 space-y-3">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                <div class="i-carbon-currency"></div>
+                补贴电价
+              </span>
+              <span class="font-medium font-mono">{{ stationInfo.price }}</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                <div class="i-carbon-flash"></div>
+                装机容量
+              </span>
+              <span class="font-medium font-mono">{{ stationInfo.capacity }}</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                <div class="i-carbon-server"></div>
+                逆变器数
+              </span>
+              <span class="font-medium font-mono">{{ stationInfo.inverterCount }} 个</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                <div class="i-carbon-connection-two-way"></div>
+                并网电压
+              </span>
+              <span class="font-medium font-mono">{{ stationInfo.voltage }}</span>
             </div>
           </div>
         </div>
@@ -449,71 +406,70 @@ onBeforeUnmount(() => {
 
       <!-- Energy & Revenue (50%) -->
       <NGi span="2">
-        <div class="tech-card relative h-full overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
-          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
-          <div class="relative z-10 h-full flex-col gap-24px">
-            <!-- Energy Section -->
-            <div class="flex-col gap-12px">
-              <div class="text-neon-blue flex-y-center gap-8px">
-                <div class="i-carbon-sun animate-pulse-slow text-20px"></div>
-                <span class="text-16px font-bold tracking-wider">发电量信息</span>
+        <div class="bento-card h-full flex flex-col gap-6">
+          <!-- Energy Section -->
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-2 text-blue-500 dark:text-blue-400">
+              <div class="i-carbon-sun text-xl"></div>
+              <span class="text-base font-semibold">发电量信息</span>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex flex-col gap-1">
+                <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <div class="i-carbon-chart-line"></div>
+                  日发电量
+                </div>
+                <div class="text-xl font-semibold text-gray-900 dark:text-white font-mono">{{ energyData.day }}</div>
               </div>
-              <div class="grid grid-cols-3 gap-16px">
-                <div class="tech-stat-box">
-                  <div class="label">
-                    <div class="i-carbon-chart-line"></div>
-                    日发电量
-                  </div>
-                  <div class="value text-neon-cyan">{{ energyData.day }}</div>
+              <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex flex-col gap-1">
+                <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <div class="i-carbon-calendar"></div>
+                  月发电量
                 </div>
-                <div class="tech-stat-box">
-                  <div class="label">
-                    <div class="i-carbon-calendar"></div>
-                    月发电量
-                  </div>
-                  <div class="value text-neon-cyan">{{ energyData.month }}</div>
+                <div class="text-xl font-semibold text-gray-900 dark:text-white font-mono">{{ energyData.month }}</div>
+              </div>
+              <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex flex-col gap-1">
+                <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <div class="i-carbon-time"></div>
+                  年发电量
                 </div>
-                <div class="tech-stat-box">
-                  <div class="label">
-                    <div class="i-carbon-time"></div>
-                    年发电量
-                  </div>
-                  <div class="value text-neon-cyan">{{ energyData.year }}</div>
-                </div>
+                <div class="text-xl font-semibold text-gray-900 dark:text-white font-mono">{{ energyData.year }}</div>
               </div>
             </div>
+          </div>
 
-            <div class="my-4 h-1px from-transparent via-cyan-500/30 to-transparent bg-gradient-to-r"></div>
+          <div class="h-px bg-gray-100 dark:bg-gray-800"></div>
 
-            <!-- Revenue Section -->
-            <div class="flex-col gap-12px">
-              <div class="text-neon-gold flex-y-center gap-8px">
-                <div class="i-carbon-currency-yen text-20px"></div>
-                <span class="text-16px font-bold tracking-wider">收益信息</span>
-                <span class="ml-auto text-12px text-gray-500 dark:text-gray-400 font-normal opacity-70">截止: 2025-01-01</span>
+          <!-- Revenue Section -->
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center justify-between text-orange-500 dark:text-orange-400">
+              <div class="flex items-center gap-2">
+                <div class="i-carbon-currency-yen text-xl"></div>
+                <span class="text-base font-semibold">收益信息</span>
               </div>
-              <div class="grid grid-cols-3 gap-16px">
-                <div class="tech-stat-box">
-                  <div class="label">
-                    <div class="i-carbon-chart-bar"></div>
-                    日收益
-                  </div>
-                  <div class="value text-neon-gold">{{ revenueData.day }}</div>
+              <span class="text-xs text-gray-400 font-normal">截止: 2025-01-01</span>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex flex-col gap-1">
+                <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <div class="i-carbon-chart-bar"></div>
+                  日收益
                 </div>
-                <div class="tech-stat-box">
-                  <div class="label">
-                    <div class="i-carbon-calendar-heat-map"></div>
-                    月收益
-                  </div>
-                  <div class="value text-neon-gold">{{ revenueData.month }}</div>
+                <div class="text-xl font-semibold text-gray-900 dark:text-white font-mono">{{ revenueData.day }}</div>
+              </div>
+              <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex flex-col gap-1">
+                <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <div class="i-carbon-calendar-heat-map"></div>
+                  月收益
                 </div>
-                <div class="tech-stat-box">
-                  <div class="label">
-                    <div class="i-carbon-money"></div>
-                    年收益
-                  </div>
-                  <div class="value text-neon-gold">{{ revenueData.year }}</div>
+                <div class="text-xl font-semibold text-gray-900 dark:text-white font-mono">{{ revenueData.month }}</div>
+              </div>
+              <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex flex-col gap-1">
+                <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <div class="i-carbon-money"></div>
+                  年收益
                 </div>
+                <div class="text-xl font-semibold text-gray-900 dark:text-white font-mono">{{ revenueData.year }}</div>
               </div>
             </div>
           </div>
@@ -522,27 +478,18 @@ onBeforeUnmount(() => {
 
       <!-- Video (25%) -->
       <NGi span="1">
-        <div class="tech-card relative h-full flex flex-col overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
-          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
-          <div class="text-neon-purple relative z-10 mb-3 flex-y-center gap-2">
-            <div class="i-carbon-video text-18px"></div>
-            <span class="font-bold">实时监控</span>
+        <div class="bento-card h-full flex flex-col p-0 overflow-hidden">
+          <div class="p-4 flex items-center gap-2 text-purple-500 dark:text-purple-400 border-b border-gray-100 dark:border-gray-800">
+            <div class="i-carbon-video text-lg"></div>
+            <span class="font-semibold">实时监控</span>
           </div>
-          <div
-            class="group relative w-full flex-center flex-1 overflow-hidden border border-cyan-500/20 rd-4px bg-black/40"
-          >
-            <!-- Placeholder for video feed -->
-            <div class="absolute inset-0 flex-center from-transparent to-black/60 bg-gradient-to-b">
-              <div
-                class="i-carbon-video text-64px text-cyan-500/20 transition-colors group-hover:text-cyan-500/40"
-              ></div>
+          <div class="relative flex-1 bg-black group cursor-pointer">
+             <div class="absolute inset-0 flex items-center justify-center">
+              <div class="i-carbon-play-filled text-4xl text-white/50 transition-all group-hover:text-white/80 group-hover:scale-110"></div>
             </div>
-            <!-- Scan line effect -->
-            <div class="scan-line absolute inset-x-0 h-4px bg-cyan-400/30 blur-sm"></div>
-
-            <div class="absolute bottom-3 left-3 text-xs text-cyan-100/80 font-mono">CAM-01 [LIVE]</div>
-            <div class="absolute right-3 top-3 flex items-center gap-2">
-              <span class="h-2 w-2 animate-ping rounded-full bg-red-500"></span>
+            <div class="absolute bottom-3 left-3 text-xs text-white/80 font-mono bg-black/50 px-2 py-1 rounded">CAM-01 [LIVE]</div>
+            <div class="absolute right-3 top-3 flex items-center gap-2 bg-black/50 px-2 py-1 rounded-full">
+              <span class="h-2 w-2 animate-pulse rounded-full bg-red-500"></span>
               <span class="text-xs text-red-400 font-bold tracking-widest">REC</span>
             </div>
           </div>
@@ -554,43 +501,40 @@ onBeforeUnmount(() => {
     <NGrid :x-gap="16" :y-gap="16" cols="1 l:4" responsive="screen" item-responsive>
       <!-- Weather (25%) -->
       <NGi span="1">
-        <div class="tech-card relative h-full overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
-          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
-          <div class="relative z-10 h-full flex flex-col justify-around">
-            <div class="text-neon-blue mb-2 flex-y-center gap-2 font-bold">
-              <div class="i-carbon-cloud-satellite"></div>
-              气象数据
-            </div>
+        <div class="bento-card h-full flex flex-col justify-around">
+          <div class="text-blue-500 dark:text-blue-400 flex items-center gap-2 font-semibold mb-2">
+            <div class="i-carbon-cloud-satellite"></div>
+            气象数据
+          </div>
 
-            <div class="flex items-center justify-between border-b border-cyan-500/10 py-2">
-              <div class="flex-y-center gap-3">
-                <div class="i-carbon-sun animate-spin-slow-reverse text-32px text-orange-500 dark:text-orange-400"></div>
-                <div class="flex flex-col">
-                  <span class="text-12px text-gray-500 dark:text-gray-400">辐照度</span>
-                  <span class="text-16px text-gray-700 dark:text-gray-200 font-mono">{{ weatherInfo.irradiance }}</span>
-                </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
+            <div class="flex items-center gap-4">
+              <div class="i-carbon-sun text-3xl text-orange-500"></div>
+              <div class="flex flex-col">
+                <span class="text-xs text-gray-500 dark:text-gray-400">辐照度</span>
+                <span class="text-lg font-medium font-mono">{{ weatherInfo.irradiance }}</span>
               </div>
             </div>
+          </div>
 
-            <div class="flex items-center justify-between border-b border-cyan-500/10 py-2">
-              <div class="flex-y-center gap-3">
-                <div class="i-carbon-temperature text-32px text-cyan-400"></div>
-                <div class="flex flex-col">
-                  <span class="text-12px text-gray-500 dark:text-gray-400">环境温湿度</span>
-                  <span class="text-16px text-gray-700 dark:text-gray-200 font-mono">
-                    {{ weatherInfo.temp }} / {{ weatherInfo.humidity }}
-                  </span>
-                </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
+            <div class="flex items-center gap-4">
+              <div class="i-carbon-temperature text-3xl text-blue-400"></div>
+              <div class="flex flex-col">
+                <span class="text-xs text-gray-500 dark:text-gray-400">环境温湿度</span>
+                <span class="text-lg font-medium font-mono">
+                  {{ weatherInfo.temp }} / {{ weatherInfo.humidity }}
+                </span>
               </div>
             </div>
+          </div>
 
-            <div class="flex items-center justify-between py-2">
-              <div class="flex-y-center gap-3">
-                <div class="i-carbon-windy animate-pulse text-32px text-green-600 dark:text-green-400"></div>
-                <div class="flex flex-col">
-                  <span class="text-12px text-gray-500 dark:text-gray-400">风速</span>
-                  <span class="text-16px text-gray-700 dark:text-gray-200 font-mono">{{ weatherInfo.windSpeed }}</span>
-                </div>
+          <div class="flex items-center justify-between py-3">
+            <div class="flex items-center gap-4">
+              <div class="i-carbon-windy text-3xl text-green-500"></div>
+              <div class="flex flex-col">
+                <span class="text-xs text-gray-500 dark:text-gray-400">风速</span>
+                <span class="text-lg font-medium font-mono">{{ weatherInfo.windSpeed }}</span>
               </div>
             </div>
           </div>
@@ -599,71 +543,74 @@ onBeforeUnmount(() => {
 
       <!-- Trend Chart (75%) -->
       <NGi span="3">
-        <div class="tech-card relative h-full overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
-          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
-          <div class="relative z-10 h-full flex flex-col">
-            <div class="mb-2 flex items-center justify-between">
-              <div class="text-neon-cyan flex-y-center gap-2 font-bold">
-                <div class="i-carbon-chart-line-data"></div>
-                功率及发电量趋势
-              </div>
-              <div class="flex gap-2">
-                <button class="tech-tab" :class="{ active: activeTab === 'day' }" @click="updateTrendChart('day')">
-                  日
-                </button>
-                <button class="tech-tab" :class="{ active: activeTab === 'month' }" @click="updateTrendChart('month')">
-                  月
-                </button>
-                <button class="tech-tab" :class="{ active: activeTab === 'year' }" @click="updateTrendChart('year')">
-                  年
-                </button>
-                <div class="mx-1 h-20px w-1px self-center bg-cyan-500/30"></div>
-                <button class="tech-tab flex-y-center gap-1" @click="downloadChart">
-                  <div class="i-carbon-download"></div>
-                  导出
-                </button>
-              </div>
+        <div class="bento-card h-full flex flex-col">
+          <div class="mb-4 flex items-center justify-between">
+            <div class="text-gray-900 dark:text-white flex items-center gap-2 font-bold text-lg">
+              <div class="i-carbon-chart-line-data text-blue-500"></div>
+              功率及发电量趋势
             </div>
-            <div ref="trendChartRef" class="min-h-240px w-full flex-1"></div>
+            <div class="flex gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+              <button 
+                class="px-3 py-1 text-xs font-medium rounded-md transition-all" 
+                :class="activeTab === 'day' ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'"
+                @click="updateTrendChart('day')"
+              >
+                日
+              </button>
+              <button 
+                class="px-3 py-1 text-xs font-medium rounded-md transition-all" 
+                :class="activeTab === 'month' ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'"
+                @click="updateTrendChart('month')"
+              >
+                月
+              </button>
+              <button 
+                class="px-3 py-1 text-xs font-medium rounded-md transition-all" 
+                :class="activeTab === 'year' ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'"
+                @click="updateTrendChart('year')"
+              >
+                年
+              </button>
+            </div>
           </div>
+          <div ref="trendChartRef" class="w-full flex-1 min-h-[300px]"></div>
         </div>
       </NGi>
     </NGrid>
 
     <!-- Row 3: Device List -->
-    <div ref="invSectionRef" class="tech-card inverter-section relative overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
-      <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
-      <div class="relative z-10">
-        <div class="text-neon-cyan mb-4 flex-y-center gap-2 font-bold">
-          <div class="i-carbon-iot-connect"></div>
+    <div class="bento-card">
+      <div class="mb-6 flex items-center justify-between">
+        <div class="text-gray-900 dark:text-white flex items-center gap-2 font-bold text-lg">
+          <div class="i-carbon-iot-connect text-blue-500"></div>
           设备状态监控
         </div>
-        <div class="inv-topbar">
-          <div v-for="inv in deviceStore.devices" :key="inv.id" class="inv-segment">
-            <span class="segment-name">{{ inv.name }}</span>
-            <span class="segment-status">
-              <span class="i-carbon-plug mr-4px text-14px"></span>
+        <div class="flex gap-4">
+           <div v-for="inv in deviceStore.devices" :key="inv.id" class="flex items-center gap-2 text-sm">
+            <span class="font-medium text-gray-700 dark:text-gray-300">{{ inv.name }}</span>
+            <span class="flex items-center gap-1 text-green-500 text-xs bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-full">
+              <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
               在线
             </span>
           </div>
         </div>
-        <div class="grid grid-cols-1 gap-16px md:grid-cols-3">
-          <div v-for="inv in deviceStore.devices" :key="inv.id" class="tech-item-card group">
-            <div
-              class="flex flex-1 flex-col gap-2 cursor-pointer"
-              @click="openInvDetail(inv.id, 'normal')"
-            >
-              <div class="flex justify-between">
-                <span class="device-name font-bold text-gray-700 dark:text-gray-200">{{ inv.name }}</span>
-                <span :class="statusClass('normal')">{{ statusText('normal') }}</span>
-              </div>
-              <div class="info-line flex justify-between">
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div v-for="inv in deviceStore.devices" :key="inv.id" class="group bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 transition-all hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer" @click="openInvDetail(inv.id, 'normal')">
+          <div class="flex flex-col gap-3">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-gray-900 dark:text-white">{{ inv.name }}</span>
+              <span class="text-xs font-medium px-2 py-1 rounded bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">运行正常</span>
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
                 <span class="text-gray-500 dark:text-gray-400">当前功率</span>
-                <span class="info-value power text-gray-700 dark:text-gray-200">{{ (Math.random() * 5 + 2).toFixed(2) }} kW</span>
+                <span class="font-mono font-medium text-gray-900 dark:text-white">{{ (Math.random() * 5 + 2).toFixed(2) }} kW</span>
               </div>
-              <div class="info-line flex justify-between">
+              <div class="flex justify-between text-sm">
                 <span class="text-gray-500 dark:text-gray-400">日发电量</span>
-                <span class="info-value text-gray-700 dark:text-gray-200">{{ (Math.random() * 30 + 10).toFixed(1) }} kWh</span>
+                <span class="font-mono font-medium text-gray-900 dark:text-white">{{ (Math.random() * 30 + 10).toFixed(1) }} kWh</span>
               </div>
             </div>
           </div>
@@ -674,255 +621,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* CSS Variables for Theme */
-.tech-dashboard {
-  --bg-color: #f8fafc;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --card-bg-start: #ffffff;
-  --card-bg-end: #f1f5f9;
-  --border-color: #e2e8f0;
-  
-  --neon-cyan: #0284c7; /* Blue for Light */
-  --neon-blue: #2563eb;
-  --neon-green: #16a34a;
-  --neon-gold: #d97706;
-  --neon-purple: #9333ea;
-  
-  --stat-box-bg: rgba(2, 132, 199, 0.05);
-  --stat-box-border: rgba(2, 132, 199, 0.1);
-  
-  background-color: var(--bg-color);
-  color: var(--text-primary);
-  transition: all 0.3s ease;
-}
-
-/* Dark Mode Overrides */
-:global(.dark) .tech-dashboard {
-  --bg-color: #0f172a;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --card-bg-start: #0e2a47;
-  --card-bg-end: #091a2c;
-  --border-color: rgba(255, 255, 255, 0.1);
-  
-  --neon-cyan: #00f2f1;
-  --neon-blue: #0078ff;
-  --neon-green: #00ff9d;
-  --neon-gold: #ffd700;
-  --neon-purple: #bc13fe;
-  
-  --stat-box-bg: rgba(0, 242, 241, 0.05);
-  --stat-box-border: rgba(0, 242, 241, 0.1);
-  
-  background: linear-gradient(180deg, #0e2a47 0%, #0b1f33 50%, #091a2c 100%);
-}
-
-.text-neon-cyan { color: var(--neon-cyan); }
-.text-neon-blue { color: var(--neon-blue); }
-.text-neon-green { color: var(--neon-green); }
-.text-neon-gold { color: var(--neon-gold); }
-.text-neon-purple { color: var(--neon-purple); }
-
-.bg-neon-green\/10 { background-color: rgba(22, 163, 74, 0.1); }
-:global(.dark) .bg-neon-green\/10 { background-color: rgba(0, 255, 157, 0.1); }
-
-.border-neon-green\/30 { border-color: rgba(22, 163, 74, 0.3); }
-:global(.dark) .border-neon-green\/30 { border-color: rgba(0, 255, 157, 0.3); }
-
-/* Text Gradient for Light/Dark */
-.text-gradient-gold {
-  background: linear-gradient(to right, var(--neon-gold), var(--neon-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Card Styling */
-.tech-card {
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  background-color: var(--card-bg-start);
-}
-:global(.dark) .tech-card {
-  box-shadow: 0 0 15px rgba(0, 120, 255, 0.15) inset;
-  background: transparent; /* Uses tech-card-bg div for gradient */
-}
-
-.tech-card-bg {
-  background: linear-gradient(135deg, var(--card-bg-start), var(--card-bg-end));
-  opacity: 0.8;
-}
-
-/* Attribute Rows */
-.attr-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-.attr-row:last-child {
-  border-bottom: none;
-}
-.attr-row .label {
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.attr-row .value {
-  color: var(--text-primary);
-  font-family: 'Courier New', monospace;
-  font-weight: bold;
-}
-
-/* Stat Boxes */
-.tech-stat-box {
-  background: var(--stat-box-bg);
-  border: 1px solid var(--stat-box-border);
-  border-radius: 6px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  transition: all 0.3s ease;
-}
-.tech-stat-box:hover {
-  background: rgba(0, 120, 255, 0.1);
-  border-color: var(--neon-cyan);
-}
-.tech-stat-box .label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.tech-stat-box .value {
-  font-size: 16px;
-  font-weight: bold;
-  font-family: monospace;
-}
-
-/* Tabs */
-.tech-tab {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  padding: 2px 12px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.tech-tab:first-child {
-  border-radius: 4px 0 0 4px;
-}
-.tech-tab:last-child {
-  border-radius: 0 4px 4px 0;
-}
-.tech-tab:hover,
-.tech-tab.active {
-  background: rgba(0, 120, 255, 0.1);
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
-}
-
-/* Inverter Items */
-.tech-item-card {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 12px;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  transition: all 0.3s;
-}
-:global(.dark) .tech-item-card {
-  background: rgba(255, 255, 255, 0.02);
-}
-.tech-item-card:hover {
-  background: rgba(0, 120, 255, 0.05);
-  border-color: var(--neon-cyan);
-  transform: translateY(-2px);
-}
-
-.inverter-section .device-name {
-  font-size: 18px;
-  color: var(--text-primary);
-}
-.inverter-section .info-line {
-  color: var(--text-secondary);
-  font-size: 15px;
-}
-.inverter-section .info-value {
-  color: var(--text-primary);
-}
-.inverter-section .power {
-  font-weight: 600;
-}
-.inverter-section {
-  background: var(--card-bg-start);
-  border-color: var(--border-color);
-}
-:global(.dark) .inverter-section {
-  background: rgba(9, 26, 44, 0.65);
-  border-color: rgba(56, 113, 199, 0.25);
-}
-
-.inv-topbar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  background: rgba(0, 120, 255, 0.05);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 8px 10px;
-  margin-bottom: 12px;
-}
-.inv-segment {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 10px;
-  border-right: 1px solid var(--border-color);
-}
-.inv-segment:last-child {
-  border-right: none;
-}
-.segment-name {
-  color: var(--text-primary);
-  font-weight: 600;
-  font-size: 15px;
-}
-.segment-status {
-  color: #10b981;
-  display: inline-flex;
-  align-items: center;
-  font-size: 14px;
-}
-
-/* Animations */
-.scan-line {
-  animation: scan 3s linear infinite;
-}
-@keyframes scan {
-  0% { top: -10%; opacity: 0; }
-  50% { opacity: 1; }
-  100% { top: 110%; opacity: 0; }
-}
-
-.animate-spin-slow-reverse {
-  animation: spin-reverse 8s linear infinite;
-}
-@keyframes spin-reverse {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-
-.animate-pulse-slow {
-  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.bento-card {
+  @apply bg-white dark:bg-[#1c1c1e] rounded-[24px] p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-all duration-300 hover:shadow-lg relative;
 }
 </style>

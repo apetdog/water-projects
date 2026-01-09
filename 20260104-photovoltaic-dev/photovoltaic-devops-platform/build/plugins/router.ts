@@ -32,9 +32,9 @@ export function setupElegantRouter() {
       };
 
       const titleMap: Record<string, string> = {
-        '3d-model': '3D模型',
-        'pv-status': '光伏板状态',
-        'panel-detail': '光伏板详情'
+        '3d-model': '组件详情',
+        'pv-status': '光伏阵列',
+        'panel-detail': '面板详情'
       };
 
       if (titleMap[key]) {
@@ -43,12 +43,12 @@ export function setupElegantRouter() {
 
       if (key === '3d-model') {
         meta.icon = 'mdi:cube-outline';
-        meta.order = 2;
+        meta.order = 3;
       }
 
       if (key === 'pv-status') {
         meta.icon = 'mdi:solar-power';
-        meta.order = 3;
+        meta.order = 2;
       }
 
       if (key === 'panel-detail') {
