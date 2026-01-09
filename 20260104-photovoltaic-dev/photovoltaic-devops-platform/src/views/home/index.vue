@@ -390,13 +390,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="tech-dashboard relative flex-col-stretch gap-16px p-16px">
+  <div class="tech-dashboard relative flex-col-stretch gap-16px p-16px dark:bg-[#0f172a] dark:text-slate-200">
     <!-- Row 1: Station Info, Energy/Revenue, Video -->
     <NGrid :x-gap="16" :y-gap="16" cols="1 l:4" responsive="screen" item-responsive>
       <!-- Station Info (25%) -->
       <NGi span="1">
-        <div class="tech-card relative h-full flex flex-col overflow-hidden p-4">
-          <div class="tech-card-bg absolute inset-0"></div>
+        <div class="tech-card relative h-full flex flex-col overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
+          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
           <div class="relative z-10 h-full flex flex-col">
             <div class="mb-2 flex-y-center justify-between">
               <span class="text-gradient-gold text-18px font-bold">{{ stationInfo.name }}</span>
@@ -410,7 +410,7 @@ onBeforeUnmount(() => {
 
             <!-- Gauge Chart -->
             <div ref="gaugeChartRef" class="h-180px w-full"></div>
-            <div class="mb-4 text-center text-12px text-cyan-200/70 -mt-6">实时发电功率</div>
+            <div class="mb-4 text-center text-12px text-cyan-600/70 dark:text-cyan-200/70 -mt-6">实时发电功率</div>
 
             <!-- Attributes -->
             <div class="mt-auto flex-col gap-10px text-13px">
@@ -449,8 +449,8 @@ onBeforeUnmount(() => {
 
       <!-- Energy & Revenue (50%) -->
       <NGi span="2">
-        <div class="tech-card relative h-full overflow-hidden p-4">
-          <div class="tech-card-bg absolute inset-0"></div>
+        <div class="tech-card relative h-full overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
+          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
           <div class="relative z-10 h-full flex-col gap-24px">
             <!-- Energy Section -->
             <div class="flex-col gap-12px">
@@ -490,7 +490,7 @@ onBeforeUnmount(() => {
               <div class="text-neon-gold flex-y-center gap-8px">
                 <div class="i-carbon-currency-yen text-20px"></div>
                 <span class="text-16px font-bold tracking-wider">收益信息</span>
-                <span class="ml-auto text-12px text-gray-400 font-normal opacity-70">截止: 2025-01-01</span>
+                <span class="ml-auto text-12px text-gray-500 dark:text-gray-400 font-normal opacity-70">截止: 2025-01-01</span>
               </div>
               <div class="grid grid-cols-3 gap-16px">
                 <div class="tech-stat-box">
@@ -522,8 +522,8 @@ onBeforeUnmount(() => {
 
       <!-- Video (25%) -->
       <NGi span="1">
-        <div class="tech-card relative h-full flex flex-col overflow-hidden p-4">
-          <div class="tech-card-bg absolute inset-0"></div>
+        <div class="tech-card relative h-full flex flex-col overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
+          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
           <div class="text-neon-purple relative z-10 mb-3 flex-y-center gap-2">
             <div class="i-carbon-video text-18px"></div>
             <span class="font-bold">实时监控</span>
@@ -554,8 +554,8 @@ onBeforeUnmount(() => {
     <NGrid :x-gap="16" :y-gap="16" cols="1 l:4" responsive="screen" item-responsive>
       <!-- Weather (25%) -->
       <NGi span="1">
-        <div class="tech-card relative h-full overflow-hidden p-4">
-          <div class="tech-card-bg absolute inset-0"></div>
+        <div class="tech-card relative h-full overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
+          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
           <div class="relative z-10 h-full flex flex-col justify-around">
             <div class="text-neon-blue mb-2 flex-y-center gap-2 font-bold">
               <div class="i-carbon-cloud-satellite"></div>
@@ -564,10 +564,10 @@ onBeforeUnmount(() => {
 
             <div class="flex items-center justify-between border-b border-cyan-500/10 py-2">
               <div class="flex-y-center gap-3">
-                <div class="i-carbon-sun animate-spin-slow-reverse text-32px text-orange-400"></div>
+                <div class="i-carbon-sun animate-spin-slow-reverse text-32px text-orange-500 dark:text-orange-400"></div>
                 <div class="flex flex-col">
-                  <span class="text-12px text-gray-400">辐照度</span>
-                  <span class="text-16px text-gray-200 font-mono">{{ weatherInfo.irradiance }}</span>
+                  <span class="text-12px text-gray-500 dark:text-gray-400">辐照度</span>
+                  <span class="text-16px text-gray-700 dark:text-gray-200 font-mono">{{ weatherInfo.irradiance }}</span>
                 </div>
               </div>
             </div>
@@ -576,8 +576,8 @@ onBeforeUnmount(() => {
               <div class="flex-y-center gap-3">
                 <div class="i-carbon-temperature text-32px text-cyan-400"></div>
                 <div class="flex flex-col">
-                  <span class="text-12px text-gray-400">环境温湿度</span>
-                  <span class="text-16px text-gray-200 font-mono">
+                  <span class="text-12px text-gray-500 dark:text-gray-400">环境温湿度</span>
+                  <span class="text-16px text-gray-700 dark:text-gray-200 font-mono">
                     {{ weatherInfo.temp }} / {{ weatherInfo.humidity }}
                   </span>
                 </div>
@@ -586,10 +586,10 @@ onBeforeUnmount(() => {
 
             <div class="flex items-center justify-between py-2">
               <div class="flex-y-center gap-3">
-                <div class="i-carbon-windy animate-pulse text-32px text-green-400"></div>
+                <div class="i-carbon-windy animate-pulse text-32px text-green-600 dark:text-green-400"></div>
                 <div class="flex flex-col">
-                  <span class="text-12px text-gray-400">风速</span>
-                  <span class="text-16px text-gray-200 font-mono">{{ weatherInfo.windSpeed }}</span>
+                  <span class="text-12px text-gray-500 dark:text-gray-400">风速</span>
+                  <span class="text-16px text-gray-700 dark:text-gray-200 font-mono">{{ weatherInfo.windSpeed }}</span>
                 </div>
               </div>
             </div>
@@ -599,8 +599,8 @@ onBeforeUnmount(() => {
 
       <!-- Trend Chart (75%) -->
       <NGi span="3">
-        <div class="tech-card relative h-full overflow-hidden p-4">
-          <div class="tech-card-bg absolute inset-0"></div>
+        <div class="tech-card relative h-full overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
+          <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
           <div class="relative z-10 h-full flex flex-col">
             <div class="mb-2 flex items-center justify-between">
               <div class="text-neon-cyan flex-y-center gap-2 font-bold">
@@ -631,8 +631,8 @@ onBeforeUnmount(() => {
     </NGrid>
 
     <!-- Row 3: Device List -->
-    <div ref="invSectionRef" class="tech-card inverter-section relative overflow-hidden p-4">
-      <div class="tech-card-bg absolute inset-0"></div>
+    <div ref="invSectionRef" class="tech-card inverter-section relative overflow-hidden p-4 dark:bg-transparent dark:shadow-[inset_0_0_15px_rgba(0,120,255,0.15)]">
+      <div class="tech-card-bg absolute inset-0 dark:from-[#0e2a47] dark:to-[#091a2c] dark:bg-gradient-to-b"></div>
       <div class="relative z-10">
         <div class="text-neon-cyan mb-4 flex-y-center gap-2 font-bold">
           <div class="i-carbon-iot-connect"></div>
@@ -654,16 +654,16 @@ onBeforeUnmount(() => {
               @click="openInvDetail(inv.id, 'normal')"
             >
               <div class="flex justify-between">
-                <span class="device-name font-bold text-gray-200">{{ inv.name }}</span>
+                <span class="device-name font-bold text-gray-700 dark:text-gray-200">{{ inv.name }}</span>
                 <span :class="statusClass('normal')">{{ statusText('normal') }}</span>
               </div>
               <div class="info-line flex justify-between">
-                <span>当前功率</span>
-                <span class="info-value power">{{ (Math.random() * 5 + 2).toFixed(2) }} kW</span>
+                <span class="text-gray-500 dark:text-gray-400">当前功率</span>
+                <span class="info-value power text-gray-700 dark:text-gray-200">{{ (Math.random() * 5 + 2).toFixed(2) }} kW</span>
               </div>
               <div class="info-line flex justify-between">
-                <span>日发电量</span>
-                <span class="info-value">{{ (Math.random() * 30 + 10).toFixed(1) }} kWh</span>
+                <span class="text-gray-500 dark:text-gray-400">日发电量</span>
+                <span class="info-value text-gray-700 dark:text-gray-200">{{ (Math.random() * 30 + 10).toFixed(1) }} kWh</span>
               </div>
             </div>
           </div>
