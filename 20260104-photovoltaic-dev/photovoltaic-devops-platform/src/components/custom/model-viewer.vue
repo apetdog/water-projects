@@ -60,7 +60,7 @@ function initThree() {
   // 加载模型
   const loader = new GLTFLoader();
   loader.load(
-    '/models/zhufu2_asm_1_1_asm-250219.gltf',
+    '/energy-solar/models/zhufu2_asm_1_1_asm-250219.gltf',
     gltf => {
       model = gltf.scene;
 
@@ -68,7 +68,7 @@ function initThree() {
       const box = new THREE.Box3().setFromObject(model);
       const size = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 2 / maxDim;
+      const scale = 4 / maxDim;
       model.scale.setScalar(scale);
 
       // 居中模型

@@ -32,8 +32,8 @@ export function setupElegantRouter() {
       };
 
       const titleMap: Record<string, string> = {
-        '3d-model': '组件详情',
         'pv-status': '光伏阵列',
+        '3d-model': '组件详情',
         'panel-detail': '面板详情'
       };
 
