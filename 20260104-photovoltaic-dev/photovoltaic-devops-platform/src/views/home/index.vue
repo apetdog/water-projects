@@ -37,29 +37,17 @@ const energyData = {
 };
 
 const revenueData = {
-  day: '140.83 元',
-  month: '799.71 元',
-  year: '799.71 元'
+  day: '126.00 元',
+  month: '4914.00 元',
+  year: '54054.00 元'
 };
 
 const weatherInfo = {
   irradiance: '0.0 W/m²',
-  temp: '31.9 °C',
+  temp: '12.5 °C',
   humidity: '71.7 %',
   windSpeed: '1.4 m/s'
 };
-
-function statusText(s: string) {
-  if (s === 'serious') return '严重';
-  if (s === 'accident') return '事故';
-  return '运行正常';
-}
-
-function statusClass(s: string) {
-  if (s === 'serious') return 'text-orange-500';
-  if (s === 'accident') return 'text-red-500';
-  return 'text-green-500';
-}
 
 function openInvDetail(id: string, status: string) {
   router.push({
@@ -147,33 +135,18 @@ function getTrendData() {
   let xAxisData: string[] = [];
   let seriesData: number[] = [];
 
-  const now = new Date();
-  const currentMonth = now.getMonth() + 1;
-  const currentDay = now.getDate();
-  const currentHour = now.getHours();
-  const sunrise = 6;
-  const sunset = 19;
-
   if (type === 'day') {
     xAxisData = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
-    seriesData = xAxisData.map((_, i) => {
-      if (i > currentHour) return 0;
-      if (i < sunrise || i >= sunset) return 0;
-      const x = (i - 12.5) / 5;
-      return Math.max(0, 45 * Math.exp(-x * x) + Math.random() * 5);
-    });
+    seriesData = [12, 15, 22, 28, 32, 35, 36, 35, 34, 38, 45, 52, 58, 62, 60, 55, 50, 48, 52, 60, 68, 75, 78, 80];
   } else if (type === 'month') {
     xAxisData = Array.from({ length: 30 }, (_, i) => `${i + 1}日`);
-    seriesData = xAxisData.map((_, i) => {
-      if (i + 1 > currentDay) return 0;
-      return Math.random() * 200 + 100;
-    });
+    seriesData = [
+      120, 132, 145, 150, 148, 155, 165, 170, 180, 175, 160, 155, 165, 180, 200, 210, 220, 215, 200, 190, 205, 225, 240,
+      255, 250, 260, 275, 290, 300, 310
+    ];
   } else {
     xAxisData = Array.from({ length: 12 }, (_, i) => `${i + 1}月`);
-    seriesData = xAxisData.map((_, i) => {
-      if (i + 1 > currentMonth) return 0;
-      return Math.random() * 5000 + 3000;
-    });
+    seriesData = [3200, 3400, 3600, 4100, 4500, 4800, 5100, 4900, 4700, 5300, 5600, 5900];
   }
 
   return { xAxisData, seriesData };
@@ -278,52 +251,6 @@ function updateTrendChart(tab: 'day' | 'month' | 'year') {
       });
     }, 60000);
   }
-}
-
-function downloadChart() {
-  if (!trendChart) return;
-
-  let titleText = '';
-  if (activeTab.value === 'day') {
-    titleText = '2026年1月7日 10:00 功率趋势';
-  } else if (activeTab.value === 'month') {
-    titleText = '2026年1月 发电量趋势';
-  } else {
-    titleText = '2026年 发电量趋势';
-  }
-
-  trendChart.setOption({
-    title: {
-      show: true,
-      text: titleText,
-      left: 'center',
-      top: 10,
-      textStyle: {
-        color: themeStore.darkMode ? '#ffffff' : '#000000',
-        fontSize: 16,
-        fontWeight: '600'
-      }
-    }
-  });
-
-  const url = trendChart.getDataURL({
-    type: 'png',
-    backgroundColor: themeStore.darkMode ? '#1c1c1e' : '#ffffff',
-    pixelRatio: 2
-  });
-
-  trendChart.setOption({
-    title: {
-      show: false
-    }
-  });
-
-  const link = document.createElement('a');
-  link.download = `${titleText}.png`;
-  link.href = url;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
 }
 
 watch(
@@ -445,37 +372,51 @@ onBeforeUnmount(() => {
 
           <div class="h-px bg-gray-100 dark:bg-gray-800"></div>
 
-          <!-- Revenue Section -->
-          <div class="flex flex-col gap-3">
-            <div class="flex items-center justify-between text-orange-500 dark:text-orange-400">
-              <div class="flex items-center gap-2">
-                <div class="i-carbon-currency-yen text-xl"></div>
-                <span class="text-base font-semibold">收益信息</span>
-              </div>
-              <span class="text-xs text-gray-400 font-normal">截止: 2025-01-01</span>
-            </div>
-            <div class="grid grid-cols-3 gap-4">
-              <div class="flex flex-col gap-1 rounded-xl bg-gray-50 p-4 dark:bg-gray-800/50">
-                <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                  <div class="i-carbon-chart-bar"></div>
-                  日收益
+          <!-- Trend Chart Section -->
+          <div class="flex flex-col flex-1 gap-3">
+            <div class="bento-card h-full flex flex-col">
+              <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-lg text-gray-900 font-bold dark:text-white">
+                  <div class="i-carbon-chart-line-data text-blue-500"></div>
+                  功率及发电量趋势
                 </div>
-                <div class="text-xl text-gray-900 font-semibold font-mono dark:text-white">{{ revenueData.day }}</div>
-              </div>
-              <div class="flex flex-col gap-1 rounded-xl bg-gray-50 p-4 dark:bg-gray-800/50">
-                <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                  <div class="i-carbon-calendar-heat-map"></div>
-                  月收益
+                <div class="flex gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800">
+                  <button
+                    class="rounded-md px-3 py-1 text-xs font-medium transition-all"
+                    :class="
+                      activeTab === 'day'
+                        ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
+                        : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
+                    "
+                    @click="updateTrendChart('day')"
+                  >
+                    日
+                  </button>
+                  <button
+                    class="rounded-md px-3 py-1 text-xs font-medium transition-all"
+                    :class="
+                      activeTab === 'month'
+                        ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
+                        : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
+                    "
+                    @click="updateTrendChart('month')"
+                  >
+                    月
+                  </button>
+                  <button
+                    class="rounded-md px-3 py-1 text-xs font-medium transition-all"
+                    :class="
+                      activeTab === 'year'
+                        ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
+                        : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
+                    "
+                    @click="updateTrendChart('year')"
+                  >
+                    年
+                  </button>
                 </div>
-                <div class="text-xl text-gray-900 font-semibold font-mono dark:text-white">{{ revenueData.month }}</div>
               </div>
-              <div class="flex flex-col gap-1 rounded-xl bg-gray-50 p-4 dark:bg-gray-800/50">
-                <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                  <div class="i-carbon-money"></div>
-                  年收益
-                </div>
-                <div class="text-xl text-gray-900 font-semibold font-mono dark:text-white">{{ revenueData.year }}</div>
-              </div>
+              <div ref="trendChartRef" class="min-h-[300px] w-full flex-1"></div>
             </div>
           </div>
         </div>
@@ -485,12 +426,11 @@ onBeforeUnmount(() => {
       <NGi span="1">
         <div class="bento-card h-full flex flex-col overflow-hidden p-0">
           <div
-            class="flex items-center gap-2 border-b border-gray-100 p-4 text-purple-500 dark:border-gray-800 dark:text-purple-400"
+            class="flex items-center gap-2 border-b border-gray-100 py-2 text-purple-500 dark:border-gray-800 dark:text-purple-400"
           >
-            <div class="i-carbon-video text-lg"></div>
             <span class="font-semibold">实时监控</span>
           </div>
-          <div class="group relative flex-1 cursor-pointer bg-black">
+          <div class="group relative flex-1 cursor-pointer rounded-xl bg-black">
             <div class="absolute inset-0 flex items-center justify-center">
               <div
                 class="i-carbon-play-filled text-4xl text-white/50 transition-all group-hover:scale-110 group-hover:text-white/80"
@@ -550,51 +490,42 @@ onBeforeUnmount(() => {
         </div>
       </NGi>
 
-      <!-- Trend Chart (75%) -->
+      <!-- Revenue Section (75%) -->
       <NGi span="3">
-        <div class="bento-card h-full flex flex-col">
-          <div class="mb-4 flex items-center justify-between">
-            <div class="flex items-center gap-2 text-lg text-gray-900 font-bold dark:text-white">
-              <div class="i-carbon-chart-line-data text-blue-500"></div>
-              功率及发电量趋势
+        <div class="bento-card h-full flex flex-col justify-center">
+          <!-- Revenue Section -->
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center justify-between text-orange-500 dark:text-orange-400">
+              <div class="flex items-center gap-2">
+                <div class="i-carbon-currency-yen text-xl"></div>
+                <span class="text-base font-semibold">收益信息</span>
+              </div>
+              <span class="text-xs text-gray-400 font-normal">截止: 2025-01-01</span>
             </div>
-            <div class="flex gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800">
-              <button
-                class="rounded-md px-3 py-1 text-xs font-medium transition-all"
-                :class="
-                  activeTab === 'day'
-                    ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
-                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                "
-                @click="updateTrendChart('day')"
-              >
-                日
-              </button>
-              <button
-                class="rounded-md px-3 py-1 text-xs font-medium transition-all"
-                :class="
-                  activeTab === 'month'
-                    ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
-                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                "
-                @click="updateTrendChart('month')"
-              >
-                月
-              </button>
-              <button
-                class="rounded-md px-3 py-1 text-xs font-medium transition-all"
-                :class="
-                  activeTab === 'year'
-                    ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
-                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                "
-                @click="updateTrendChart('year')"
-              >
-                年
-              </button>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="flex flex-col gap-1 rounded-xl bg-gray-50 p-4 dark:bg-gray-800/50">
+                <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                  <div class="i-carbon-chart-bar"></div>
+                  日收益
+                </div>
+                <div class="text-xl text-gray-900 font-semibold font-mono dark:text-white">{{ revenueData.day }}</div>
+              </div>
+              <div class="flex flex-col gap-1 rounded-xl bg-gray-50 p-4 dark:bg-gray-800/50">
+                <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                  <div class="i-carbon-calendar-heat-map"></div>
+                  月收益
+                </div>
+                <div class="text-xl text-gray-900 font-semibold font-mono dark:text-white">{{ revenueData.month }}</div>
+              </div>
+              <div class="flex flex-col gap-1 rounded-xl bg-gray-50 p-4 dark:bg-gray-800/50">
+                <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                  <div class="i-carbon-money"></div>
+                  年收益
+                </div>
+                <div class="text-xl text-gray-900 font-semibold font-mono dark:text-white">{{ revenueData.year }}</div>
+              </div>
             </div>
           </div>
-          <div ref="trendChartRef" class="min-h-[300px] w-full flex-1"></div>
         </div>
       </NGi>
     </NGrid>
