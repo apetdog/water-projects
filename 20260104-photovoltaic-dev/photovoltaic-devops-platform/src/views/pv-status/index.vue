@@ -11,6 +11,7 @@ const router = useRouter();
 interface Panel {
   id: string;
   status: 'normal' | 'warning' | 'error' | 'displacement';
+  isFixed?: boolean;
 }
 
 const rows = 6;
@@ -18,23 +19,46 @@ const cols = 8; // Reduced cols for better aspect ratio in demo
 
 const panels = ref<Panel[]>([]);
 
+const fixedPanelIndex = 10; // Choose a specific panel index to fix (e.g., 2nd row, 3rd col)
+
 function initPanels() {
   panels.value = Array.from({ length: rows * cols }).map((_, i) => {
     return { id: `P-${String(i + 1).padStart(3, '0')}`, status: 'normal' };
   });
 
+  // Default set fixed panel to error
+  panels.value[fixedPanelIndex].status = 'error';
+  panels.value[fixedPanelIndex].isFixed = true;
+
   // Simulate random events
   setInterval(() => {
-    const idx = Math.floor(Math.random() * panels.value.length);
+    // Filter out fixed panels to avoid selecting them for random events
+    const availableIndices = panels.value
+      .map((p, i) => ({ ...p, originalIndex: i }))
+      .filter(p => !p.isFixed)
+      .map(p => p.originalIndex);
+    
+    if (availableIndices.length === 0) return;
+
+    const randomIdx = Math.floor(Math.random() * availableIndices.length);
+    const idx = availableIndices[randomIdx];
+    
     const r = Math.random();
     if (r > 0.7) {
       // Randomly set a status, then revert after some time
       const types: Panel['status'][] = ['error', 'warning', 'displacement'];
       const type = types[Math.floor(Math.random() * types.length)];
+      
+      // Double check if it's fixed (though filtered above)
+      if (panels.value[idx].isFixed) return;
+      
       panels.value[idx].status = type;
 
       setTimeout(() => {
-        panels.value[idx].status = 'normal';
+        // Only revert if it hasn't become fixed in the meantime
+        if (!panels.value[idx].isFixed) {
+          panels.value[idx].status = 'normal';
+        }
       }, 3000);
     }
   }, 2000);
@@ -55,6 +79,14 @@ const counts = computed(() => {
 
 function openPanelDetail(id: string) {
   const p = panels.value.find(x => x.id === id);
+  if (!p) return;
+
+  // If it is the fixed panel, toggle status and do not navigate
+  if (p.isFixed) {
+    p.status = p.status === 'error' ? 'normal' : 'error';
+    return;
+  }
+
   router.push({
     name: '3d-model',
     query: {
