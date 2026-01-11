@@ -44,7 +44,7 @@ export const LayoutPage = () => {
                <CityModel />
             </Suspense>
           </div>
-          <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
+          <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', pointerEvents: 'none' }}>
             <Outlet />
           </div>
         </IndexPageContent>

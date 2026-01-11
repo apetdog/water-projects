@@ -1,4 +1,5 @@
 import { useEffect, useRef, Suspense } from "react";
+import * as THREE from "three";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useGLTF, OrbitControls, Stage, Html, useProgress } from "@react-three/drei";
 
@@ -31,10 +32,34 @@ function Loader() {
   );
 }
 
+const MODEL_RELATIVE_PATH = 'modern-industrial-park/scene.glb';
+// const MODEL_RELATIVE_PATH = 'city_pack_7.glb';
+
 const Model = () => {
   const { scene } = useGLTF(
-    `${import.meta.env.BASE_URL}imaginary_city_i/scene.gltf`
+    `${import.meta.env.BASE_URL}${MODEL_RELATIVE_PATH}`
   );
+
+  useEffect(() => {
+    if (scene) {
+      // Auto-scale and center the model
+      const box = new THREE.Box3().setFromObject(scene);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      
+      // Reset position to center
+      scene.position.x += (scene.position.x - center.x);
+      scene.position.y += (scene.position.y - center.y);
+      scene.position.z += (scene.position.z - center.z);
+      
+      // Scale to fit
+      const maxDim = Math.max(size.x, size.y, size.z);
+      if (maxDim > 0) {
+        const scale = 5 / maxDim; // Adjust 5 based on desired size
+        scene.scale.setScalar(scale);
+      }
+    }
+  }, [scene]);
 
   return <primitive object={scene} />;
 };
@@ -155,4 +180,4 @@ export const CityModel = () => {
   );
 };
 
-useGLTF.preload(`${import.meta.env.BASE_URL}imaginary_city_i/scene.gltf`);
+useGLTF.preload(`${import.meta.env.BASE_URL}${MODEL_RELATIVE_PATH}`);
