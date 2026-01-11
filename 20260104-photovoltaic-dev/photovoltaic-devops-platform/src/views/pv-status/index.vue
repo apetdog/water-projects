@@ -95,6 +95,13 @@ function openPanelDetail(id: string) {
     }
   });
 }
+
+function toggleFixedError() {
+  const p = panels.value[fixedPanelIndex];
+  if (p) {
+    p.status = p.status === 'error' ? 'normal' : 'error';
+  }
+}
 </script>
 
 <template>
@@ -110,7 +117,10 @@ function openPanelDetail(id: string) {
           <span class="h-2.5 w-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></span>
           <span class="text-sm text-gray-600 font-medium dark:text-gray-300">正常运行 ({{ counts.normal }})</span>
         </div>
-        <div class="flex items-center gap-2">
+        <div
+          class="flex cursor-pointer items-center gap-2 transition-opacity hover:opacity-80"
+          @click="toggleFixedError"
+        >
           <span class="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></span>
           <span class="text-sm text-gray-600 font-medium dark:text-gray-300">异物遮挡 ({{ counts.error }})</span>
         </div>
