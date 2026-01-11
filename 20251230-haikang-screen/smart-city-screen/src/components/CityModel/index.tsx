@@ -32,32 +32,38 @@ function Loader() {
   );
 }
 
-const MODEL_RELATIVE_PATH = 'modern-industrial-park/scene.glb';
-// const MODEL_RELATIVE_PATH = 'city_pack_7.glb';
+const MODEL_RELATIVE_PATH = 'city_pack_7.glb';
+// const MODEL_RELATIVE_PATH = 'modern-industrial-park/scene.glb';
 
 const Model = () => {
-  const { scene } = useGLTF(
-    `${import.meta.env.BASE_URL}${MODEL_RELATIVE_PATH}`
-  );
+  const modelUrl = `${import.meta.env.BASE_URL}${MODEL_RELATIVE_PATH}`;
+  console.log('Loading model from:', modelUrl);
+  
+  const { scene } = useGLTF(modelUrl);
 
   useEffect(() => {
     if (scene) {
+      console.log('Scene loaded:', scene);
       // Auto-scale and center the model
       const box = new THREE.Box3().setFromObject(scene);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
       
+      console.log('Model Box Size:', size);
+      console.log('Model Box Center:', center);
+
       // Reset position to center
-      scene.position.x += (scene.position.x - center.x);
-      scene.position.y += (scene.position.y - center.y);
-      scene.position.z += (scene.position.z - center.z);
+      // scene.position.x += (scene.position.x - center.x);
+      // scene.position.y += (scene.position.y - center.y);
+      // scene.position.z += (scene.position.z - center.z);
       
       // Scale to fit
-      const maxDim = Math.max(size.x, size.y, size.z);
-      if (maxDim > 0) {
-        const scale = 5 / maxDim; // Adjust 5 based on desired size
-        scene.scale.setScalar(scale);
-      }
+      // const maxDim = Math.max(size.x, size.y, size.z);
+      // if (maxDim > 0) {
+      //   const scale = 5 / maxDim; // Adjust 5 based on desired size
+      //   console.log('Scaling model by:', scale);
+      //   scene.scale.setScalar(scale);
+      // }
     }
   }, [scene]);
 
@@ -66,6 +72,7 @@ const Model = () => {
 
 const CameraController = () => {
   const { camera, gl } = useThree();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
 
   useEffect(() => {
@@ -164,13 +171,13 @@ export const CityModel = () => {
         camera={{ position: [-50, 85, 25], fov: 30 }}>
         <color
           attach="background"
-          args={["#000"]}
+          args={["#333"]}
         />
         <Suspense fallback={<Loader />}>
           <Stage
             environment="city"
             intensity={0.5}
-            adjustCamera={false}>
+          >
             <Model />
           </Stage>
         </Suspense>
