@@ -27,7 +27,7 @@ function initPanels() {
   });
 
   // Default set fixed panel to error
-  panels.value[fixedPanelIndex].status = 'error';
+  // panels.value[fixedPanelIndex].status = 'error';
   panels.value[fixedPanelIndex].isFixed = true;
 
   // Simulate random events
