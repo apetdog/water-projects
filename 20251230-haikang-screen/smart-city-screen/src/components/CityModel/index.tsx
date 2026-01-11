@@ -1,62 +1,83 @@
 import { useEffect, useRef, Suspense } from "react";
 import * as THREE from "three";
 import { Canvas, useThree } from "@react-three/fiber";
-import { useGLTF, OrbitControls, Stage, Html, useProgress } from "@react-three/drei";
+import {
+  useGLTF,
+  OrbitControls,
+  Stage,
+  Html,
+  useProgress,
+} from "@react-three/drei";
 
 function Loader() {
   const { progress } = useProgress();
   return (
     <Html center>
-      <div style={{ color: 'white', textAlign: 'center', fontFamily: 'sans-serif' }}>
-        <div style={{ marginBottom: 10, fontSize: 14, letterSpacing: 2 }}>LOADING MODEL</div>
-        <div style={{ 
-          width: 200, 
-          height: 4, 
-          background: 'rgba(255,255,255,0.2)', 
-          borderRadius: 2,
-          overflow: 'hidden'
+      <div
+        style={{
+          color: "white",
+          textAlign: "center",
+          fontFamily: "sans-serif",
         }}>
-          <div 
-            style={{ 
-              width: `${progress}%`, 
-              height: '100%', 
-              background: '#50e3c2', 
-              transition: 'width 0.3s ease-out',
-              boxShadow: '0 0 10px #50e3c2'
-            }} 
+        <div style={{ marginBottom: 10, fontSize: 14, letterSpacing: 2 }}>
+          LOADING MODEL
+        </div>
+        <div
+          style={{
+            width: 200,
+            height: 4,
+            background: "rgba(255,255,255,0.2)",
+            borderRadius: 2,
+            overflow: "hidden",
+          }}>
+          <div
+            style={{
+              width: `${progress}%`,
+              height: "100%",
+              background: "#50e3c2",
+              transition: "width 0.3s ease-out",
+              boxShadow: "0 0 10px #50e3c2",
+            }}
           />
         </div>
-        <div style={{ marginTop: 8, fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{progress.toFixed(0)}%</div>
+        <div
+          style={{
+            marginTop: 8,
+            fontSize: 12,
+            color: "rgba(255,255,255,0.6)",
+          }}>
+          {progress.toFixed(0)}%
+        </div>
       </div>
     </Html>
   );
 }
 
-const MODEL_RELATIVE_PATH = 'city_pack_7.glb';
+const MODEL_RELATIVE_PATH = "city_pack_7.glb";
 // const MODEL_RELATIVE_PATH = 'modern-industrial-park/scene.glb';
 
 const Model = () => {
   const modelUrl = `${import.meta.env.BASE_URL}${MODEL_RELATIVE_PATH}`;
-  console.log('Loading model from:', modelUrl);
-  
+  console.log("Loading model from:", modelUrl);
+
   const { scene } = useGLTF(modelUrl);
 
   useEffect(() => {
     if (scene) {
-      console.log('Scene loaded:', scene);
+      console.log("Scene loaded:", scene);
       // Auto-scale and center the model
       const box = new THREE.Box3().setFromObject(scene);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
-      
-      console.log('Model Box Size:', size);
-      console.log('Model Box Center:', center);
+
+      console.log("Model Box Size:", size);
+      console.log("Model Box Center:", center);
 
       // Reset position to center
       // scene.position.x += (scene.position.x - center.x);
       // scene.position.y += (scene.position.y - center.y);
       // scene.position.z += (scene.position.z - center.z);
-      
+
       // Scale to fit
       // const maxDim = Math.max(size.x, size.y, size.z);
       // if (maxDim > 0) {
@@ -76,6 +97,12 @@ const CameraController = () => {
   const controlsRef = useRef<any>(null);
 
   useEffect(() => {
+    console.log("camera", camera);
+    camera.position.set(1355.58, 20199.36, 20711.35);
+    camera.rotation.set(-0.77, 0.05, 0.05);
+    camera.zoom = 1.2;
+    camera.updateProjectionMatrix();
+
     const handleControl = (event: CustomEvent) => {
       const { action } = event.detail;
       if (!controlsRef.current) return;
@@ -176,8 +203,7 @@ export const CityModel = () => {
         <Suspense fallback={<Loader />}>
           <Stage
             environment="city"
-            intensity={0.5}
-          >
+            intensity={0.5}>
             <Model />
           </Stage>
         </Suspense>
