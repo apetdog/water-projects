@@ -75,4 +75,8 @@ export const Globalstyle = createGlobalStyle`
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(8px);
   }
+  .dv-border-box-13 h3,
+  .dv-border-box-12 h3 {
+    font-size: 18px;
+  }
 `;
