@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, Suspense } from "react";
+import React, { useEffect, useRef, Suspense, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useThree } from "@react-three/fiber";
 import {
@@ -8,6 +8,7 @@ import {
   Html,
   useProgress,
 } from "@react-three/drei";
+import { getCachedModelUrl, clearModelCache } from "@/utils/modelCache";
 
 function Loader() {
   const { progress } = useProgress();
@@ -56,7 +57,8 @@ function Loader() {
 const MODEL_URL = "https://chaomei-1259670296.cos.ap-guangzhou.myqcloud.com/moodlink/smart-city.gltf";
 
 // Preload the model to prevent flickering and enable caching
-useGLTF.preload(MODEL_URL);
+// We can't preload the blob URL here because it's async. 
+// Instead, we rely on the component to handle loading and caching.
 
 class ErrorBoundary extends React.Component<{ children: React.ReactNode, onRetry?: () => void }, { hasError: boolean }> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -123,9 +125,9 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode, onRetry
   }
 }
 
-const Model = () => {
-  const { scene } = useGLTF(MODEL_URL);
-  console.log("Loading model from:", MODEL_URL);
+const Model = ({ url }: { url: string }) => {
+  const { scene } = useGLTF(url);
+  console.log("Loading model from:", url);
 
   useEffect(() => {
     if (scene) {
@@ -269,6 +271,19 @@ const CameraController = () => {
 };
 
 export const CityModel = () => {
+  const [modelUrl, setModelUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    getCachedModelUrl(MODEL_URL).then(url => {
+      setModelUrl(url);
+      useGLTF.preload(url);
+    }).catch(err => {
+      console.error("Failed to load cached model:", err);
+      // Fallback to direct URL if cache fails (though getCachedModelUrl handles fetch)
+      setModelUrl(MODEL_URL);
+    });
+  }, []);
+
   return (
     <div
       style={{
@@ -293,16 +308,25 @@ export const CityModel = () => {
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
         <ErrorBoundary onRetry={() => {
-          useGLTF.clear(MODEL_URL);
-          useGLTF.preload(MODEL_URL);
+          if (modelUrl) {
+            useGLTF.clear(modelUrl);
+            clearModelCache(MODEL_URL).then(() => {
+                setModelUrl(null); // Trigger re-fetch
+                getCachedModelUrl(MODEL_URL).then(url => setModelUrl(url));
+            });
+          } else {
+             getCachedModelUrl(MODEL_URL).then(url => setModelUrl(url));
+          }
         }}>
           <Suspense fallback={<Loader />}>
-            <Stage
-              adjustCamera={false}
-              environment={null}
-              intensity={0.5}>
-              <Model />
-            </Stage>
+            {modelUrl && (
+              <Stage
+                adjustCamera={false}
+                environment={null}
+                intensity={0.5}>
+                <Model url={modelUrl} />
+              </Stage>
+            )}
           </Suspense>
         </ErrorBoundary>
         <CameraController />
