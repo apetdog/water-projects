@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import lightOnImg from '@/assets/light-on.png';
 import lightOffImg from '@/assets/light-off.png';
@@ -124,13 +125,19 @@ export const EcologyCenter = ({ onSelectLampPost }: Props) => {
 
   const lampPosts = [
     { id: 1, top: '50%', left: '50%', scale: 1.2, status: '在线', name: '灯杆 #001', wifiUsers: 45, screenText: '欢迎莅临' },
-    { id: 2, top: '45%', left: '30%', scale: 0.9, status: '在线', name: '灯杆 #002', wifiUsers: 23, screenText: '车位充足' },
+    { id: 2, top: '45%', left: '30%', scale: 0.9, status: '离线', name: '灯杆 #002', wifiUsers: 0, screenText: '设备离线' },
     { id: 3, top: '55%', left: '75%', scale: 1.0, status: '离线', name: '灯杆 #003', wifiUsers: 0, screenText: '设备维护' },
-    { id: 4, top: '40%', left: '60%', scale: 0.7, status: '在线', name: '灯杆 #004', wifiUsers: 12, screenText: '天气晴朗' },
-    { id: 5, top: '65%', left: '40%', scale: 1.4, status: '在线', name: '灯杆 #005', wifiUsers: 67, screenText: '注意安全' },
-    { id: 6, top: '35%', left: '80%', scale: 0.6, status: '在线', name: '灯杆 #006', wifiUsers: 8, screenText: '公益广告' },
-    { id: 7, top: '30%', left: '20%', scale: 0.5, status: '在线', name: '灯杆 #007', wifiUsers: 5, screenText: '园区导航' },
+    { id: 4, top: '40%', left: '60%', scale: 0.7, status: '离线', name: '灯杆 #004', wifiUsers: 0, screenText: '设备离线' },
+    { id: 5, top: '65%', left: '40%', scale: 1.4, status: '离线', name: '灯杆 #005', wifiUsers: 0, screenText: '设备离线' },
+    { id: 6, top: '35%', left: '80%', scale: 0.6, status: '离线', name: '灯杆 #006', wifiUsers: 0, screenText: '设备离线' },
+    { id: 7, top: '30%', left: '20%', scale: 0.5, status: '离线', name: '灯杆 #007', wifiUsers: 0, screenText: '设备离线' },
   ];
+
+  useEffect(() => {
+    if (lampPosts.length > 0) {
+      onSelectLampPost(lampPosts[0]);
+    }
+  }, []);
 
   return (
     <SceneContainer>

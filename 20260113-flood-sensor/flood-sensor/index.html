@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水浸传感器数据监测平台</title>
+    <script src="./echarts.min.js"></script>
+    <style>
+        /* Global Styles & Vercel-like Theme */
+        :root {
+            --bg-color: #fafafa;
+            --card-bg: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --border-color: #eaeaea;
+            --hover-border: #000000;
+            --accent-blue: #0070f3;
+            --accent-red: #e00000;
+            --accent-green: #008f28;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
+            --shadow-hover: 0 5px 10px rgba(0,0,0,0.12);
+            --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --radius: 8px;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 24px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header */
+        header {
+            padding-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Card Component */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            border-color: #ddd;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .text-red { color: var(--accent-red); }
+        .text-green { color: var(--accent-green); }
+
+        /* Section Titles */
+        .section-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Data Table */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px 24px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+            background: #fafafa;
+        }
+
+        th:first-child { border-top-left-radius: var(--radius); }
+        th:last-child { border-top-right-radius: var(--radius); }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            color: #333;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            font-weight: 500;
+        }
+        
+        .status-alarm { color: var(--accent-red); }
+        .status-normal { color: var(--accent-green); }
+
+        /* Chart */
+        .chart-box {
+            height: 400px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header>
+            <h1>水浸传感器数据监测平台</h1>
+        </header>
+
+        <!-- Top Stats -->
+        <div class="stats-grid">
+            <div class="card stat-item">
+                <div class="stat-label">在线传感器数</div>
+                <div class="stat-value">12</div>
+            </div>
+            <div class="card stat-item">
+                <div class="stat-label">水浸告警数</div>
+                <div class="stat-value text-red">2</div>
+            </div>
+            <div class="card stat-item">
+                <div class="stat-label">正常运行数</div>
+                <div class="stat-value text-green">10</div>
+            </div>
+            <div class="card stat-item">
+                <div class="stat-label">今日监测次数</div>
+                <div class="stat-value">286</div>
+            </div>
+        </div>
+
+        <!-- Real-time Data Table -->
+        <div class="card">
+            <div class="section-header">传感器实时数据</div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>传感器编号</th>
+                            <th>安装位置</th>
+                            <th>检测状态</th>
+                            <th>最新更新时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>S001</td>
+                            <td>1号逆变器</td>
+                            <td><span class="status-badge status-alarm">水浸告警</span></td>
+                            <td>2026-01-13 10:25:30</td>
+                        </tr>
+                        <tr>
+                            <td>S002</td>
+                            <td>2号逆变器</td>
+                            <td><span class="status-badge status-alarm">水浸告警</span></td>
+                            <td>2026-01-13 10:20:15</td>
+                        </tr>
+                        <tr>
+                            <td>S003</td>
+                            <td>3号逆变器</td>
+                            <td><span class="status-badge status-normal">正常</span></td>
+                            <td>2026-01-13 10:18:40</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Trend Chart -->
+        <div class="card">
+            <div class="section-header">近7天水浸检测趋势</div>
+            <div id="trendChart" class="chart-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize ECharts
+        document.addEventListener('DOMContentLoaded', function() {
+            var chartDom = document.getElementById('trendChart');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                color: ['#e00000'],
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderColor: '#eaeaea',
+                    textStyle: {
+                        color: '#333'
+                    }
+                },
+                legend: {
+                    data: ['告警次数'],
+                    right: 0,
+                    icon: 'rect',
+                    itemWidth: 12,
+                    itemHeight: 12
+                },
+                grid: {
+                    left: '20',
+                    right: '20',
+                    bottom: '10',
+                    top: '40',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    axisLine: {
+                        lineStyle: {
+                            color: '#eaeaea'
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: '#666',
+                        margin: 12
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    splitLine: {
+                        lineStyle: {
+                            color: '#f0f0f0',
+                            type: 'dashed'
+                        }
+                    },
+                    axisLabel: {
+                        color: '#666'
+                    }
+                },
+                series: [
+                    {
+                        name: '告警次数',
+                        type: 'line',
+                        smooth: true,
+                        showSymbol: true,
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        itemStyle: {
+                            color: '#e00000',
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        },
+                        lineStyle: {
+                            width: 3
+                        },
+                        data: [1, 0, 1, 0, 0, 1, 4] // Mimicking the trend in image
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+
+            // Responsive Resize
+            window.addEventListener('resize', function() {
+                myChart.resize();
+            });
+        });
+    </script>
+</body>
+</html>
