@@ -1,4 +1,4 @@
-import { useEffect, useRef, Suspense } from "react";
+import React, { useEffect, useRef, Suspense } from "react";
 import * as THREE from "three";
 import { Canvas, useThree } from "@react-three/fiber";
 import {
@@ -53,14 +53,79 @@ function Loader() {
   );
 }
 
-const MODEL_RELATIVE_PATH = "smart-city.gltf";
-// const MODEL_RELATIVE_PATH = 'modern-industrial-park/scene.glb';
+const MODEL_URL = "https://chaomei-1259670296.cos.ap-guangzhou.myqcloud.com/moodlink/smart-city.gltf";
+
+// Preload the model to prevent flickering and enable caching
+useGLTF.preload(MODEL_URL);
+
+class ErrorBoundary extends React.Component<{ children: React.ReactNode, onRetry?: () => void }, { hasError: boolean }> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+  static getDerivedStateFromError(_error: any) {
+    return { hasError: true };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error("Model loading error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <Html center>
+          <div style={{ 
+            background: 'rgba(0, 20, 40, 0.9)', 
+            padding: '24px', 
+            borderRadius: '8px', 
+            border: '1px solid #50e3c2',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '16px',
+            minWidth: '200px',
+            pointerEvents: 'auto'
+          }}>
+            <div style={{ color: '#ff4d4f', fontSize: '16px', fontWeight: 'bold' }}>⚠️ 模型加载失败</div>
+            <div style={{ color: '#aaa', fontSize: '12px', textAlign: 'center' }}>可能是网络波动或资源跨域</div>
+            <button 
+              onClick={() => {
+                this.setState({ hasError: false });
+                if (this.props.onRetry) this.props.onRetry();
+              }}
+              style={{
+                background: 'linear-gradient(90deg, #50e3c2 0%, #29a08e 100%)',
+                border: 'none',
+                padding: '8px 24px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: '14px',
+                boxShadow: '0 0 10px rgba(80, 227, 194, 0.4)'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+            >
+              重新加载
+            </button>
+          </div>
+        </Html>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 const Model = () => {
-  const modelUrl = `${import.meta.env.BASE_URL}${MODEL_RELATIVE_PATH}`;
-  console.log("Loading model from:", modelUrl);
-
-  const { scene } = useGLTF(modelUrl);
+  const { scene } = useGLTF(MODEL_URL);
+  console.log("Loading model from:", MODEL_URL);
 
   useEffect(() => {
     if (scene) {
@@ -103,33 +168,6 @@ const CameraController = () => {
     // camera.rotation.set(-0.77, 0.05, 0.05); // Let OrbitControls handle rotation via target
     camera.zoom = 1.6;
     camera.updateProjectionMatrix();
-
-    if (controlsRef.current) {
-      controlsRef.current.target.set(-3.5437712085504316, -7.527547177687339, -2.655221688055306);
-      controlsRef.current.update();
-      
-      const onControlsChange = () => {
-        console.log("Camera Position:", camera.position);
-        console.log("Camera Rotation:", camera.rotation);
-        console.log("Camera Zoom:", camera.zoom);
-        // Also log target to help debug center
-        console.log("Controls Target:", controlsRef.current.target);
-      };
-
-      controlsRef.current.addEventListener('change', onControlsChange);
-      
-      // Cleanup listener
-      return () => {
-        if (controlsRef.current) {
-          controlsRef.current.removeEventListener('change', onControlsChange);
-        }
-        window.removeEventListener(
-          "city-camera-control",
-          handleControl as EventListener
-        );
-      };
-    }
-
 
     const handleControl = (event: CustomEvent) => {
       const { action } = event.detail;
@@ -192,6 +230,34 @@ const CameraController = () => {
       handleControl as EventListener
     );
 
+    let onControlsChange;
+
+    if (controlsRef.current) {
+      controlsRef.current.target.set(-3.5437712085504316, -7.527547177687339, -2.655221688055306);
+      controlsRef.current.update();
+      
+      onControlsChange = () => {
+        console.log("Camera Position:", camera.position);
+        console.log("Camera Rotation:", camera.rotation);
+        console.log("Camera Zoom:", camera.zoom);
+        // Also log target to help debug center
+        console.log("Controls Target:", controlsRef.current.target);
+      };
+
+      controlsRef.current.addEventListener('change', onControlsChange);
+    }
+      
+    // Cleanup listener
+    return () => {
+      if (controlsRef.current && onControlsChange) {
+        controlsRef.current.removeEventListener('change', onControlsChange);
+      }
+      window.removeEventListener(
+        "city-camera-control",
+        handleControl as EventListener
+      );
+    };
+
   }, [camera, gl]);
 
   return (
@@ -224,18 +290,25 @@ export const CityModel = () => {
           attach="background"
           args={["#333"]}
         />
-        <Suspense fallback={<Loader />}>
-          <Stage
-            adjustCamera={false}
-            environment="city"
-            intensity={0.5}>
-            <Model />
-          </Stage>
-        </Suspense>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 5]} intensity={1} />
+        <ErrorBoundary onRetry={() => {
+          useGLTF.clear(MODEL_URL);
+          useGLTF.preload(MODEL_URL);
+        }}>
+          <Suspense fallback={<Loader />}>
+            <Stage
+              adjustCamera={false}
+              environment={null}
+              intensity={0.5}>
+              <Model />
+            </Stage>
+          </Suspense>
+        </ErrorBoundary>
         <CameraController />
       </Canvas>
     </div>
   );
 };
 
-useGLTF.preload(`${import.meta.env.BASE_URL}${MODEL_RELATIVE_PATH}`);
+useGLTF.preload(MODEL_URL);

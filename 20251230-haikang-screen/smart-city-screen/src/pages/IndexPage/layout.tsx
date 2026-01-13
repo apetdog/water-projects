@@ -5,6 +5,7 @@ import TopPage from '../TopPage';
 import { previewFitScale } from '@/utils/previewScale'
 
 const CityModel = lazy(() => import('@/components/CityModel').then(module => ({ default: module.CityModel })));
+// const CityModel = lazy(() => import('@/components/CityModel/CityImage').then(module => ({ default: module.CityImage })));
 
 // 总页面
 export const LayoutPage = () => {
