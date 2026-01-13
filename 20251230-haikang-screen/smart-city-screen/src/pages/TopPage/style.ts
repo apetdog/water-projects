@@ -121,13 +121,13 @@ export const TabItem = styled.div<{ $active: boolean }>`
   position: relative;
   cursor: pointer;
   padding: 8px 30px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   letter-spacing: 2px;
-  color: ${props => props.$active ? '#fff' : 'rgba(255, 255, 255, 0.6)'};
+  color: ${props => props.$active ? '#fff' : 'rgba(255, 255, 255, 0.9)'};
   background: ${props => props.$active ? 
     'linear-gradient(90deg, rgba(80, 227, 194, 0.1) 0%, rgba(80, 227, 194, 0.4) 50%, rgba(80, 227, 194, 0.1) 100%)' : 
-    'rgba(0, 0, 0, 0.3)'};
+    'rgba(0, 0, 0, 0.6)'};
   clip-path: polygon(15% 0, 100% 0, 85% 100%, 0% 100%);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border-bottom: 2px solid ${props => props.$active ? '#50e3c2' : 'transparent'};

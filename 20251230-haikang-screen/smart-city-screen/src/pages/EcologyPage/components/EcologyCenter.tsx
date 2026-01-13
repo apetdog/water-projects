@@ -29,6 +29,7 @@ const SceneContainer = styled.div`
   overflow: hidden;
   background: radial-gradient(circle at center, #001529 0%, #000 100%);
   perspective: 1000px;
+  pointer-events: auto;
 `;
 
 const FloorGrid = styled.div`
