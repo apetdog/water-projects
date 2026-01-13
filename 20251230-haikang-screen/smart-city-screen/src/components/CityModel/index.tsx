@@ -53,7 +53,7 @@ function Loader() {
   );
 }
 
-const MODEL_RELATIVE_PATH = "city_pack_7.glb";
+const MODEL_RELATIVE_PATH = "smart-city.gltf";
 // const MODEL_RELATIVE_PATH = 'modern-industrial-park/scene.glb';
 
 const Model = () => {
@@ -95,13 +95,41 @@ const CameraController = () => {
   const { camera, gl } = useThree();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
+  
 
   useEffect(() => {
-    console.log("camera", camera);
-    camera.position.set(1355.58, 20199.36, 20711.35);
-    camera.rotation.set(-0.77, 0.05, 0.05);
-    camera.zoom = 1.2;
+    // Updated camera settings based on model size and user request
+    camera.position.set(383.57, -162.34, 197.25);
+    // camera.rotation.set(-0.77, 0.05, 0.05); // Let OrbitControls handle rotation via target
+    camera.zoom = 1.6;
     camera.updateProjectionMatrix();
+
+    if (controlsRef.current) {
+      controlsRef.current.target.set(-3.5437712085504316, -7.527547177687339, -2.655221688055306);
+      controlsRef.current.update();
+      
+      const onControlsChange = () => {
+        console.log("Camera Position:", camera.position);
+        console.log("Camera Rotation:", camera.rotation);
+        console.log("Camera Zoom:", camera.zoom);
+        // Also log target to help debug center
+        console.log("Controls Target:", controlsRef.current.target);
+      };
+
+      controlsRef.current.addEventListener('change', onControlsChange);
+      
+      // Cleanup listener
+      return () => {
+        if (controlsRef.current) {
+          controlsRef.current.removeEventListener('change', onControlsChange);
+        }
+        window.removeEventListener(
+          "city-camera-control",
+          handleControl as EventListener
+        );
+      };
+    }
+
 
     const handleControl = (event: CustomEvent) => {
       const { action } = event.detail;
@@ -163,11 +191,7 @@ const CameraController = () => {
       "city-camera-control",
       handleControl as EventListener
     );
-    return () =>
-      window.removeEventListener(
-        "city-camera-control",
-        handleControl as EventListener
-      );
+
   }, [camera, gl]);
 
   return (
@@ -202,6 +226,7 @@ export const CityModel = () => {
         />
         <Suspense fallback={<Loader />}>
           <Stage
+            adjustCamera={false}
             environment="city"
             intensity={0.5}>
             <Model />

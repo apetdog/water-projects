@@ -2,9 +2,13 @@ import { createGlobalStyle } from 'styled-components';
 
 
 export const Globalstyle = createGlobalStyle`
+  html {
+    font-size: 125%;
+  }
   body {
     background-color: #04060D;
     overflow: hidden;
+    // zoom: 1.1;
   }
   html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
