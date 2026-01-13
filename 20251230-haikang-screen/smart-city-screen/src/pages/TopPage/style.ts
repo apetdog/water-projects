@@ -121,7 +121,7 @@ export const TabItem = styled.div<{ $active: boolean }>`
   position: relative;
   cursor: pointer;
   padding: 8px 30px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   letter-spacing: 2px;
   color: ${props => props.$active ? '#fff' : 'rgba(255, 255, 255, 0.9)'};
