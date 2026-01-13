@@ -293,7 +293,7 @@ export const CityModel = () => {
         top: 0,
         left: 0,
         right: 0,
-        bottom: 140,
+        bottom: 0,
         margin: "0 auto auto",
         zIndex: 1,
       }}>
