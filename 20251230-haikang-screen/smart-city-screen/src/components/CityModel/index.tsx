@@ -300,6 +300,7 @@ export const CityModel = () => {
       <Canvas
         shadows
         dpr={[1, 2]}
+        resize={{ offsetSize: true }}
         camera={{ position: [-50, 85, 25], fov: 30 }}>
         <color
           attach="background"
