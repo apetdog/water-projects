@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>传感器 S002 详情</title>
+    <script src="./echarts.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #fafafa;
+            --card-bg: #ffffff;
+            --text-primary: #000000;
+            --accent-blue: #0070f3;
+            --accent-red: #e00000;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
+        
+        .nav-back:hover { opacity: 0.7; }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .header-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .big-stat-val {
+                font-size: 48px !important;
+            }
+            .chart-box {
+                height: 300px !important;
+            }
+            .card { padding: 16px; }
+        }
+
+        .device-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .device-loc {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .status-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-alarm { background: #ffebeb; color: #e00000; }
+        .status-normal { background: #e6fffa; color: #0070f3; }
+
+        .big-stat {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .big-stat-val {
+            font-size: 64px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            color: var(--accent-red); /* 这里的数值也用红色，区分一下 */
+        }
+
+        .big-stat-label {
+            color: #888;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .chart-box {
+            height: 350px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="nav-back">← 返回首页</a>
+
+        <div class="card">
+            <div class="header-row">
+                <div>
+                    <h1 class="device-title">传感器 S002</h1>
+                    <div class="device-loc">安装位置：2号逆变器</div>
+                </div>
+                <span class="status-tag status-alarm">水浸告警</span>
+            </div>
+            
+            <div class="big-stat">
+                <div class="big-stat-val">4.2 <span style="font-size:24px">cm</span></div>
+                <div class="big-stat-label">当前积水深度</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top:0">24小时水位波动</h3>
+            <div id="chart" class="chart-box"></div>
+        </div>
+    </div>
+
+    <script>
+        var chartDom = document.getElementById('chart');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        var xData = [];
+        var yData = [];
+        for (var i = 0; i < 100; i++) {
+            xData.push(i);
+            // 不同的波形：加大系数
+            yData.push(Math.cos(i / 10) * 3 + Math.random() * 2 + 4);
+        }
+
+        option = {
+            grid: { top: 20, right: 20, bottom: 20, left: 40, containLabel: true },
+            tooltip: { trigger: 'axis' },
+            xAxis: { 
+                type: 'category', 
+                data: xData, 
+                show: false 
+            },
+            yAxis: { 
+                type: 'value',
+                splitLine: { lineStyle: { type: 'dashed' } }
+            },
+            series: [{
+                data: yData,
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                itemStyle: { color: '#e00000' }, // 用红色线条
+                lineStyle: { width: 3 },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(224,0,0, 0.3)' },
+                        { offset: 1, color: 'rgba(224,0,0, 0)' }
+                    ])
+                }
+            }]
+        };
+
+        myChart.setOption(option);
+        window.addEventListener('resize', () => myChart.resize());
+    </script>
+</body>
+</html>
