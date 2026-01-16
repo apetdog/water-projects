@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import monitorCover from '../../assets/monitor-cover.jpg';
 
 declare global {
   interface Window {
@@ -475,6 +476,28 @@ const HikVideoPlayer = () => {
           </div>
         </div>
       )}
+      <div 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `url(${monitorCover})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          zIndex: 200,
+          // cursor: 'pointer'
+        }}
+        // onClick={(e) => {
+        //   e.stopPropagation();
+        //   setShowCover(false);
+        //   if (status !== 'LIVE') {
+        //     setIsConfigOpen(true);
+        //   }
+        // }}
+        // title="点击配置设备"
+      />
     </Wrapper>
   );
 };
